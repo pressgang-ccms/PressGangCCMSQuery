@@ -68,12 +68,12 @@ public class ImageFilterQueryBuilder extends BaseFilterQueryBuilder<ImageFile> i
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<ImageFile> subQuery = getCriteriaQuery().subquery(ImageFile.class);
         final Root<LanguageImage> root = subQuery.from(LanguageImage.class);
-        subQuery.select(root.get("image").as(ImageFile.class));
+        subQuery.select(root.get("imageFile").as(ImageFile.class));
 
         // Create the Condition for the subquery
         final Predicate imageIdMatch = criteriaBuilder.equal(getRootPath().get("imageFileId"), root.get("imageFile").get("imageFileId"));
-        final Predicate filenameMatch = criteriaBuilder.equal(criteriaBuilder.lower(root.get("originalFileName").as(String.class)),
-                filename.toLowerCase(Locale.ENGLISH));
+        final Predicate filenameMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("originalFileName").as(String.class)),
+                '%' + filename.toLowerCase(Locale.ENGLISH) + '%');
         subQuery.where(criteriaBuilder.and(imageIdMatch, filenameMatch));
 
         return subQuery;

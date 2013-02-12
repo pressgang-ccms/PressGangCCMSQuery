@@ -237,8 +237,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR_DESC);
         endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR,
                 CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR_DESC);
-        propertyTags = new FilterFieldStringMapData(CommonFilterConstants.TOPIC_PROPERTY_TAG,
-                CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        propertyTags = new FilterFieldStringMapData(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
 
         setupSingleFilterVars();
 
@@ -293,11 +292,11 @@ public class TopicFieldFilter extends BaseFieldFilter {
 
     @Override
     public String getFieldValue(final String fieldName) {
-        if (fieldName.startsWith(CommonFilterConstants.TOPIC_PROPERTY_TAG)) {
-            final String index = fieldName.replace(CommonFilterConstants.TOPIC_PROPERTY_TAG, "");
+        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
+            final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
 
             /*
-             * index will be empty if the fieldName is just CommonFilterConstants.TOPIC_PROPERTY_TAG, which can happen when
+             * index will be empty if the fieldName is just CommonFilterConstants.PROPERTY_TAG, which can happen when
              * another object is looping over the getBaseFilterNames() keyset.
              */
             if (!index.isEmpty()) {
@@ -324,9 +323,9 @@ public class TopicFieldFilter extends BaseFieldFilter {
 
     @Override
     public void setFieldValue(final String fieldName, final String fieldValue) {
-        if (fieldName.startsWith(CommonFilterConstants.TOPIC_PROPERTY_TAG)) {
+        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
             try {
-                final String index = fieldName.replace(CommonFilterConstants.TOPIC_PROPERTY_TAG, "");
+                final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
                 final Integer indexInt = Integer.parseInt(index);
                 this.setPropertyTag(fieldValue, indexInt);
             } catch (final NumberFormatException ex) {
@@ -349,7 +348,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
         final Map<String, String> propertyTagValues = propertyTags.getData();
 
         for (final String propertyTagId : propertyTagValues.keySet()) {
-            retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG + " " + propertyTagId, propertyTagValues.get(propertyTagId));
+            retValue.put(CommonFilterConstants.PROPERTY_TAG + " " + propertyTagId, propertyTagValues.get(propertyTagId));
         }
 
         return retValue;
@@ -362,7 +361,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
     public Map<String, String> getFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(singleFilterNames);
-        retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG + "\\d+", CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG + "\\d+", CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }
@@ -373,7 +372,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
     @Override
     public Map<String, String> getBaseFieldNames() {
         final Map<String, String> retValue = new HashMap<String, String>(singleFilterNames);
-        retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG, CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }

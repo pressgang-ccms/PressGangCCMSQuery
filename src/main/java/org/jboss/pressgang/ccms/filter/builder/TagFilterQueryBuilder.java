@@ -33,7 +33,7 @@ public class TagFilterQueryBuilder extends BaseFilterQueryBuilder<Tag> {
             addLikeIgnoresCaseCondition("tagName", fieldValue);
         } else if (fieldName.equals(CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("tagDescription", fieldValue);
-        } else if (fieldName.startsWith(CommonFilterConstants.TOPIC_PROPERTY_TAG)) {
+        } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
             try {
                 final NamedPattern pattern = NamedPattern.compile(CommonConstants.PROPERTY_TAG_SEARCH_RE);
                 final NamedMatcher matcher = pattern.matcher(fieldName);

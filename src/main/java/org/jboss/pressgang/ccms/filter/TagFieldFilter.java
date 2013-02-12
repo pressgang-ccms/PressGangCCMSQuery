@@ -49,8 +49,7 @@ public class TagFieldFilter extends BaseFieldFilter {
         tagName = new FilterFieldStringData(CommonFilterConstants.TAG_NAME_FILTER_VAR, CommonFilterConstants.TAG_NAME_FILTER_VAR_DESC);
         tagDescription = new FilterFieldStringData(CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR,
                 CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR_DESC);
-        propertyTags = new FilterFieldStringListData(CommonFilterConstants.TOPIC_PROPERTY_TAG,
-                CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        propertyTags = new FilterFieldStringListData(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
 
         addFilterVar(tagIds);
         addFilterVar(tagName);
@@ -77,7 +76,7 @@ public class TagFieldFilter extends BaseFieldFilter {
     public Map<String, String> getFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(filterNames);
-        retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG + "\\d+", CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG + "\\d+", CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }
@@ -86,18 +85,18 @@ public class TagFieldFilter extends BaseFieldFilter {
     public Map<String, String> getBaseFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(filterNames);
-        retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG, CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }
 
     @Override
     public String getFieldValue(final String fieldName) {
-        if (fieldName.startsWith(CommonFilterConstants.TOPIC_PROPERTY_TAG)) {
-            final String index = fieldName.replace(CommonFilterConstants.TOPIC_PROPERTY_TAG, "");
+        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
+            final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
 
             /*
-             * index will be empty if the fieldName is just CommonFilterConstants.TOPIC_PROPERTY_TAG, which can happen when
+             * index will be empty if the fieldName is just CommonFilterConstants.PROPERTY_TAG, which can happen when
              * another object is looping over the getBaseFilterNames() keyset.
              */
             if (!index.isEmpty()) {
@@ -125,9 +124,9 @@ public class TagFieldFilter extends BaseFieldFilter {
 
     @Override
     public void setFieldValue(final String fieldName, final String fieldValue) {
-        if (fieldName.startsWith(CommonFilterConstants.TOPIC_PROPERTY_TAG)) {
+        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
             try {
-                final String index = fieldName.replace(CommonFilterConstants.TOPIC_PROPERTY_TAG, "");
+                final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
                 final Integer indexInt = Integer.parseInt(index);
                 this.setPropertyTag(fieldValue, indexInt);
             } catch (final NumberFormatException ex) {
