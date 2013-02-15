@@ -56,7 +56,7 @@ public class TagFieldFilter extends BaseFieldFilter {
         addFilterVar(tagDescription);
 
         multipleFilterVars.clear();
-        multipleFilterVars.add(this.propertyTags);
+        multipleFilterVars.add(propertyTags);
     }
 
     @Override
@@ -106,8 +106,8 @@ public class TagFieldFilter extends BaseFieldFilter {
                     /*
                      * propertyTags will be null unless one of the setPropertyTag() method is called
                      */
-                    if (this.propertyTags.getData() != null && this.propertyTags.getData().size() > indexInt)
-                        return this.propertyTags.getData().get(indexInt);
+                    if (propertyTags.getData() != null && propertyTags.getData().size() > indexInt)
+                        return propertyTags.getData().get(indexInt);
 
                 } catch (final NumberFormatException ex) {
                     // could not parse integer, so fail
@@ -128,7 +128,7 @@ public class TagFieldFilter extends BaseFieldFilter {
             try {
                 final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
                 final Integer indexInt = Integer.parseInt(index);
-                this.setPropertyTag(fieldValue, indexInt);
+                setPropertyTag(fieldValue, indexInt);
             } catch (final NumberFormatException ex) {
                 // could not parse integer, so fail
                 log.warn("Probably a malformed URL query parameter for the 'Property Tag' Tag ID", ex);
@@ -140,16 +140,16 @@ public class TagFieldFilter extends BaseFieldFilter {
     }
 
     protected void setPropertyTag(final String propertyTag, final int index) {
-        if (this.propertyTags.getData() == null) this.propertyTags.setData(new ArrayList<String>());
+        if (propertyTags.getData() == null) propertyTags.setData(new ArrayList<String>());
 
-        if (this.propertyTags.getData().size() < index) {
-            final int start = this.propertyTags.getData().size();
+        if (propertyTags.getData().size() < index) {
+            final int start = propertyTags.getData().size();
             for (int i = start; i < index; ++i) {
-                this.propertyTags.getData().add("");
+                propertyTags.getData().add("");
             }
         }
 
-        this.propertyTags.getData().set(index, propertyTag);
+        propertyTags.getData().set(index, propertyTag);
     }
 
 }

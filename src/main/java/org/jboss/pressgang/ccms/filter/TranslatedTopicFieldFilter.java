@@ -9,7 +9,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 /**
  * This class represents the options used by the objects that extend the
- * ExtendedTopicList class to filter a query to retrieve Topic entities.
+ * ExtendedTopicList class to filter a query to retrieve Topic org.jboss.pressgang.ccms.contentspec.entities.
  */
 public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     /**
@@ -49,8 +49,8 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     protected void setupSingleFilterVars() {
         super.setupSingleFilterVars();
 
-        addFilterVar(this.zanataIds);
-        addFilterVar(this.notZanataIds);
+        addFilterVar(zanataIds);
+        addFilterVar(notZanataIds);
     }
 
     /**
@@ -61,7 +61,7 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     public Map<String, String> getFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(singleFilterNames);
-        retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG + "\\d+", CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG + "\\d+", CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }
@@ -73,7 +73,7 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     @Override
     public Map<String, String> getBaseFieldNames() {
         final Map<String, String> retValue = new HashMap<String, String>(singleFilterNames);
-        retValue.put(CommonFilterConstants.TOPIC_PROPERTY_TAG, CommonFilterConstants.TOPIC_PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }

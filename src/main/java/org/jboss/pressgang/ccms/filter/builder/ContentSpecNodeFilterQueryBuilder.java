@@ -15,7 +15,7 @@ public class ContentSpecNodeFilterQueryBuilder extends BaseFilterQueryBuilder<CS
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("CSNodeId", fieldValue);
+                addIdInCommaSeparatedListCondition("CSNodeId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("CSNodeTitle", fieldValue);

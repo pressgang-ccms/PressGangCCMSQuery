@@ -22,7 +22,7 @@ public abstract class FilterFieldMapDataBase<T, U> extends FilterFieldDataBase<M
      */
     protected String description = "";
 
-    public FilterFieldMapDataBase(final String name, final String description) {
+    protected FilterFieldMapDataBase(final String name, final String description) {
         super(name, description);
     }
 

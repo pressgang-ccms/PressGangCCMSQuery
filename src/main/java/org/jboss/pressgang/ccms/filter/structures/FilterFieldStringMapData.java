@@ -17,7 +17,7 @@ public class FilterFieldStringMapData extends FilterFieldMapDataBase<String, Str
 
     @Override
     public Map<String, String> getData() {
-        return this.data;
+        return data;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class FilterFieldStringMapData extends FilterFieldMapDataBase<String, Str
         try {
             final List<String> vars = Arrays.asList(value.split(","));
 
-            this.data = new HashMap<String, String>();
+            data = new HashMap<String, String>();
 
             for (final String var : vars) {
                 String[] dataVars = var.split("=", 2);

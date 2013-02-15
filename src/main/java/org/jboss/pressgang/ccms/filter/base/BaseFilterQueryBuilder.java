@@ -31,7 +31,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
     private final Class<T> clazz;
     private final EntityManager entityManager;
 
-    public BaseFilterQueryBuilder(final Class<T> clazz, final EntityManager entityManager) {
+    protected BaseFilterQueryBuilder(final Class<T> clazz, final EntityManager entityManager) {
         criteriaBuilder = entityManager.getCriteriaBuilder();
         this.entityManager = entityManager;
         this.clazz = clazz;
@@ -238,7 +238,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param value        The comma separated list of ids.
      * @throws NumberFormatException Thrown if one of the Strings cannot be converted to an Integer.
      */
-    protected void addIdInCommaSeperatedListCondition(final String propertyName, final String value) throws NumberFormatException {
+    protected void addIdInCommaSeparatedListCondition(final String propertyName, final String value) throws NumberFormatException {
         addIdInArrayCondition(propertyName, value.split(","));
     }
 
@@ -279,7 +279,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param value        The comma separated list of ids.
      * @throws NumberFormatException Thrown if one of the Strings cannot be converted to an Integer.
      */
-    protected void addIdNotInCommaSeperatedListCondition(final String propertyName, final String value) throws NumberFormatException {
+    protected void addIdNotInCommaSeparatedListCondition(final String propertyName, final String value) throws NumberFormatException {
         addIdNotInArrayCondition(propertyName, value.split(","));
     }
 }

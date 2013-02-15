@@ -117,7 +117,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         // Generate the final Predicate condition
         if (fieldConditions.size() > 1) {
             final Predicate[] predicates = fieldConditions.toArray(new Predicate[fieldConditions.size()]);
-            if (this.filterFieldsLogic.equalsIgnoreCase(CommonFilterConstants.OR_LOGIC)) {
+            if (filterFieldsLogic.equalsIgnoreCase(CommonFilterConstants.OR_LOGIC)) {
                 return criteriaBuilder.or(predicates);
             } else {
                 return criteriaBuilder.and(predicates);
@@ -133,25 +133,25 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
                 final Subquery<Integer> lastestRevisionQuery = getLastestRevisionSubquery();
-                fieldConditions.add(this.getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), lastestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
                 final Subquery<Integer> lastestRevisionQuery = getLastestRevisionSubquery();
-                fieldConditions.add(this.getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), lastestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
                 final Subquery<Integer> lastestRevisionQuery = getLastestCompleteRevisionSubquery();
-                fieldConditions.add(this.getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), lastestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
                 final Subquery<Integer> lastestRevisionQuery = getLastestCompleteRevisionSubquery();
-                fieldConditions.add(this.getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), lastestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0) {
@@ -221,7 +221,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
     @Override
     public void reset() {
         super.reset();
-        this.fieldConditions.clear();
+        fieldConditions.clear();
     }
 
     /**
@@ -236,8 +236,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         subQuery.select(criteriaBuilder.max(root.get("translatedTopic").get("topicRevision").as(Integer.class)));
 
         final Predicate topicIdMatch = criteriaBuilder.equal(root.get("translatedTopic").get("topicId"), translatedTopic.get("topicId"));
-        final Predicate localeMatch = criteriaBuilder.equal(this.getOriginalRootPath().get("translationLocale"),
-                root.get("translationLocale"));
+        final Predicate localeMatch = criteriaBuilder.equal(getOriginalRootPath().get("translationLocale"), root.get("translationLocale"));
         subQuery.where(criteriaBuilder.and(topicIdMatch, localeMatch));
 
         subQuery.groupBy(root.get("translatedTopic").get("topicId"));
@@ -252,8 +251,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         subQuery.select(criteriaBuilder.max(root.get("translatedTopic").get("topicRevision").as(Integer.class)));
 
         final Predicate topicIdMatch = criteriaBuilder.equal(root.get("translatedTopic").get("topicId"), translatedTopic.get("topicId"));
-        final Predicate localeMatch = criteriaBuilder.equal(this.getOriginalRootPath().get("translationLocale"),
-                root.get("translationLocale"));
+        final Predicate localeMatch = criteriaBuilder.equal(getOriginalRootPath().get("translationLocale"), root.get("translationLocale"));
         final Predicate complete = criteriaBuilder.ge(root.get("translationPercentage").as(Integer.class), 100);
         subQuery.where(criteriaBuilder.and(topicIdMatch, localeMatch, complete));
 

@@ -27,7 +27,7 @@ public class TagFilterQueryBuilder extends BaseFilterQueryBuilder<Tag> {
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.TAG_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("tagId", fieldValue);
+                addIdInCommaSeparatedListCondition("tagId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TAG_NAME_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("tagName", fieldValue);

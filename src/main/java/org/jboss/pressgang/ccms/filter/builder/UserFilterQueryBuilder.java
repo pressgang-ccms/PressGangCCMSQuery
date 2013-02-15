@@ -16,7 +16,7 @@ public class UserFilterQueryBuilder extends BaseFilterQueryBuilder<User> {
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.USER_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("userId", fieldValue);
+                addIdInCommaSeparatedListCondition("userId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.USER_NAME_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("userName", fieldValue);

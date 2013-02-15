@@ -16,7 +16,7 @@ public class FilterFieldStringListData extends FilterFieldListDataBase<String> {
 
     @Override
     public List<String> getData() {
-        return this.data;
+        return data;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class FilterFieldStringListData extends FilterFieldListDataBase<String> {
     @Override
     public void setData(String value) {
         try {
-            this.data = Arrays.asList(value.split(","));
+            data = Arrays.asList(value.split(","));
         } catch (final Exception ex) {
             // could not parse, so silently fail
             log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", description, value);

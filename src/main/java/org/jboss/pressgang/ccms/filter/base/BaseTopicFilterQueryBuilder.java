@@ -117,11 +117,11 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
             filterFieldsLogic = fieldValue;
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("topicId", fieldValue);
+                addIdInCommaSeparatedListCondition("topicId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_IDS_NOT_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdNotInCommaSeperatedListCondition("topicId", fieldValue);
+                addIdNotInCommaSeparatedListCondition("topicId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_IS_INCLUDED_IN_SPEC)) {
             /* Split up the string into each topic */

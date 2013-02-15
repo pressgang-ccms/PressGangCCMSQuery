@@ -24,7 +24,7 @@ public class ImageFieldFilter extends BaseFieldFilter {
     });
 
     private FilterFieldStringData imageIds;
-    private FilterFieldStringData imageOriginialFilename;
+    private FilterFieldStringData imageOriginalFilename;
     private FilterFieldStringData imageDescription;
 
     public ImageFieldFilter() {
@@ -36,13 +36,13 @@ public class ImageFieldFilter extends BaseFieldFilter {
         super.resetAllValues();
 
         imageIds = new FilterFieldStringData(CommonFilterConstants.IMAGE_IDS_FILTER_VAR, CommonFilterConstants.IMAGE_IDS_FILTER_VAR_DESC);
-        imageOriginialFilename = new FilterFieldStringData(CommonFilterConstants.IMAGE_ORIGINAL_FILENAME_FILTER_VAR,
+        imageOriginalFilename = new FilterFieldStringData(CommonFilterConstants.IMAGE_ORIGINAL_FILENAME_FILTER_VAR,
                 CommonFilterConstants.IMAGE_ORIGINAL_FILENAME_FILTER_VAR_DESC);
         imageDescription = new FilterFieldStringData(CommonFilterConstants.IMAGE_DESCRIPTION_FILTER_VAR,
                 CommonFilterConstants.IMAGE_DESCRIPTION_FILTER_VAR_DESC);
 
         addFilterVar(imageIds);
-        addFilterVar(imageOriginialFilename);
+        addFilterVar(imageOriginalFilename);
         addFilterVar(imageDescription);
     }
 

@@ -245,49 +245,49 @@ public class TopicFieldFilter extends BaseFieldFilter {
     }
 
     protected void setupSingleFilterVars() {
-        addFilterVar(this.topicTextSearch);
-        addFilterVar(this.topicIds);
-        addFilterVar(this.topicIncludedInSpec);
-        addFilterVar(this.topicXML);
-        addFilterVar(this.topicTitle);
-        addFilterVar(this.topicDescription);
-        addFilterVar(this.startCreateDate);
-        addFilterVar(this.endCreateDate);
-        addFilterVar(this.startEditDate);
-        addFilterVar(this.endEditDate);
-        addFilterVar(this.hasRelationships);
-        addFilterVar(this.hasIncomingRelationships);
-        addFilterVar(this.topicRelatedTo);
-        addFilterVar(this.topicRelatedFrom);
-        addFilterVar(this.hasXMLErrors);
-        addFilterVar(this.editedInLastDays);
-        addFilterVar(this.hasBugzillaBugs);
-        addFilterVar(this.hasOpenBugzillaBugs);
-        addFilterVar(this.latestTranslations);
-        addFilterVar(this.latestCompletedTranslations);
-        addFilterVar(this.zanataIds);
+        addFilterVar(topicTextSearch);
+        addFilterVar(topicIds);
+        addFilterVar(topicIncludedInSpec);
+        addFilterVar(topicXML);
+        addFilterVar(topicTitle);
+        addFilterVar(topicDescription);
+        addFilterVar(startCreateDate);
+        addFilterVar(endCreateDate);
+        addFilterVar(startEditDate);
+        addFilterVar(endEditDate);
+        addFilterVar(hasRelationships);
+        addFilterVar(hasIncomingRelationships);
+        addFilterVar(topicRelatedTo);
+        addFilterVar(topicRelatedFrom);
+        addFilterVar(hasXMLErrors);
+        addFilterVar(editedInLastDays);
+        addFilterVar(hasBugzillaBugs);
+        addFilterVar(hasOpenBugzillaBugs);
+        addFilterVar(latestTranslations);
+        addFilterVar(latestCompletedTranslations);
+        addFilterVar(zanataIds);
 
-        addFilterVar(this.notTopicIds);
-        addFilterVar(this.notTopicIncludedInSpec);
-        addFilterVar(this.notTopicXML);
-        addFilterVar(this.notTopicTitle);
-        addFilterVar(this.notTopicDescription);
-        addFilterVar(this.notTopicRelatedTo);
-        addFilterVar(this.notTopicRelatedFrom);
-        addFilterVar(this.notZanataIds);
+        addFilterVar(notTopicIds);
+        addFilterVar(notTopicIncludedInSpec);
+        addFilterVar(notTopicXML);
+        addFilterVar(notTopicTitle);
+        addFilterVar(notTopicDescription);
+        addFilterVar(notTopicRelatedTo);
+        addFilterVar(notTopicRelatedFrom);
+        addFilterVar(notZanataIds);
 
-        addFilterVar(this.notHasXMLErrors);
-        addFilterVar(this.notHasRelationships);
-        addFilterVar(this.notHasIncomingRelationships);
-        addFilterVar(this.notHasBugzillaBugs);
-        addFilterVar(this.notHasOpenBugzillaBugs);
+        addFilterVar(notHasXMLErrors);
+        addFilterVar(notHasRelationships);
+        addFilterVar(notHasIncomingRelationships);
+        addFilterVar(notHasBugzillaBugs);
+        addFilterVar(notHasOpenBugzillaBugs);
 
-        addFilterVar(this.notLatestTranslations);
-        addFilterVar(this.notLatestCompletedTranslations);
+        addFilterVar(notLatestTranslations);
+        addFilterVar(notLatestCompletedTranslations);
     }
 
     protected void setupMultipleFilterVars() {
-        multipleFilterVars.add(this.propertyTags);
+        multipleFilterVars.add(propertyTags);
     }
 
     @Override
@@ -306,8 +306,8 @@ public class TopicFieldFilter extends BaseFieldFilter {
                     /*
                      * propertyTags will be null unless one of the setPropertyTag() method is called
                      */
-                    if (this.propertyTags.getData() != null && this.propertyTags.getData().size() > indexInt)
-                        return this.propertyTags.getData().get(indexInt);
+                    if (propertyTags.getData() != null && propertyTags.getData().size() > indexInt)
+                        return propertyTags.getData().get(indexInt);
                 } catch (final NumberFormatException ex) {
                     // could not parse integer, so fail
                     log.warn("Probably a malformed URL query parameter for the 'Property Tag' Topic ID", ex);
@@ -327,7 +327,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
             try {
                 final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
                 final Integer indexInt = Integer.parseInt(index);
-                this.setPropertyTag(fieldValue, indexInt);
+                setPropertyTag(fieldValue, indexInt);
             } catch (final NumberFormatException ex) {
                 // could not parse integer, so fail
                 log.warn("Probably a malformed URL query parameter for the 'Property Tag' Topic ID", ex);
@@ -408,14 +408,14 @@ public class TopicFieldFilter extends BaseFieldFilter {
             final String field = filterField.getField();
             final String value = filterField.getValue();
 
-            this.setFieldValue(field, value);
+            setFieldValue(field, value);
         }
     }
 
     public void setPropertyTag(final String propertyTag, final int index) {
-        if (this.propertyTags.getData() == null) this.propertyTags.setData(new HashMap<String, String>());
+        if (propertyTags.getData() == null) propertyTags.setData(new HashMap<String, String>());
 
-        this.propertyTags.getData().put(Integer.toString(index), propertyTag);
+        propertyTags.getData().put(Integer.toString(index), propertyTag);
     }
 
     public FilterFieldStringData getTopicIds() {
@@ -535,7 +535,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
     }
 
     public Date getStartCreateDatePlain() {
-        return this.startCreateDate.getDateData();
+        return startCreateDate.getDateData();
     }
 
     public void setStartEditDatePlain(final Date startEditDate) {
@@ -543,7 +543,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
     }
 
     public Date getStartEditDatePlain() {
-        return this.startEditDate.getDateData();
+        return startEditDate.getDateData();
     }
 
     public void setEndCreateDatePlain(final Date endCreateDate) {
@@ -551,7 +551,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
     }
 
     public Date getEndCreateDatePlain() {
-        return this.endCreateDate.getDateData();
+        return endCreateDate.getDateData();
     }
 
     public void setEndEditDatePlain(final Date endEditDate) {
@@ -559,7 +559,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
     }
 
     public Date getEndEditDatePlain() {
-        return this.endEditDate.getDateData();
+        return endEditDate.getDateData();
     }
 
     public FilterFieldBooleanData getNotHasXMLErrors() {

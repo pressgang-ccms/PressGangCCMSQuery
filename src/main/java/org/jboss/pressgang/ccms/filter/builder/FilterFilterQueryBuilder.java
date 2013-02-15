@@ -15,7 +15,7 @@ public class FilterFilterQueryBuilder extends BaseFilterQueryBuilder<Filter> {
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.FILTER_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("filterId", fieldValue);
+                addIdInCommaSeparatedListCondition("filterId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.FILTER_NAME_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("filterName", fieldValue);

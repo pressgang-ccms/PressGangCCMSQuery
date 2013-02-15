@@ -12,7 +12,7 @@ public class FilterFieldIntegerData extends FilterFieldDataBase<Integer> {
 
     @Override
     public Integer getData() {
-        return this.data;
+        return data;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class FilterFieldIntegerData extends FilterFieldDataBase<Integer> {
     @Override
     public void setData(final String value) {
         try {
-            this.data = (value == null ? null : Integer.parseInt(value));
+            data = (value == null ? null : Integer.parseInt(value));
         } catch (final NumberFormatException ex) {
             // could not parse integer, so silently fail
             log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", description, value);

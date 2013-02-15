@@ -15,7 +15,7 @@ public class RoleFilterQueryBuilder extends BaseFilterQueryBuilder<Role> {
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.ROLE_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("roleId", fieldValue);
+                addIdInCommaSeparatedListCondition("roleId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.ROLE_NAME_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("roleName", fieldValue);

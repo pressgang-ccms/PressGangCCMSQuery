@@ -86,7 +86,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<Conten
             filterFieldsLogic = fieldValue;
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("contentSpecId", fieldValue);
+                addIdInCommaSeparatedListCondition("contentSpecId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("contentSpecTitle", fieldValue);

@@ -120,7 +120,7 @@ public class FilterUtilities {
      */
     public static String buildRESTQueryString(final Filter filter) {
         final HashMap<String, String> vars = getUrlVariables(filter);
-        StringBuffer urlVars = new StringBuffer("query");
+        StringBuilder urlVars = new StringBuilder("query");
 
         for (final String urlVarKey : vars.keySet()) {
             if (urlVars.length() != 0) urlVars.append(";");

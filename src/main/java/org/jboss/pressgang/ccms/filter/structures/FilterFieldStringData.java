@@ -11,7 +11,7 @@ public class FilterFieldStringData extends FilterFieldDataBase<String> {
 
     @Override
     public String getData() {
-        return this.data;
+        return data;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class FilterFieldStringData extends FilterFieldDataBase<String> {
         this.data = data;
     }
 
-    public <T> void setData(final List<T> data) throws Exception {
+    public <T> void setData(final List<T> data) {
         this.data = CollectionUtilities.toSeperatedString(data, ",");
     }
 

@@ -14,7 +14,7 @@ public abstract class FilterFieldDataBase<T> {
      */
     protected String description = "";
 
-    public FilterFieldDataBase(final String name, final String description) {
+    protected FilterFieldDataBase(final String name, final String description) {
         this.name = name;
         this.description = description;
     }

@@ -16,11 +16,11 @@ public class FilterFieldDateTimeData extends FilterFieldDataBase<DateTime> {
 
     @Override
     public DateTime getData() {
-        return this.data == null ? null : data;
+        return data == null ? null : data;
     }
 
     public Date getDateData() {
-        return this.data == null ? null : data.toDate();
+        return data == null ? null : data.toDate();
     }
 
     @Override

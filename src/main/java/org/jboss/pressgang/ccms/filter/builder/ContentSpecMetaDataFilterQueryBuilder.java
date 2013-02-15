@@ -15,7 +15,7 @@ public class ContentSpecMetaDataFilterQueryBuilder extends BaseFilterQueryBuilde
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_META_DATA_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("CSMetaDataId", fieldValue);
+                addIdInCommaSeparatedListCondition("CSMetaDataId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("CSMetaDataTitle", fieldValue);

@@ -8,7 +8,7 @@ public class FilterFieldBooleanData extends FilterFieldDataBase<Boolean> {
 
     @Override
     public Boolean getData() {
-        return this.data;
+        return data;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class FilterFieldBooleanData extends FilterFieldDataBase<Boolean> {
 
     @Override
     public void setData(final String value) {
-        this.data = (value == null ? null : (Boolean.parseBoolean(value) ? true : null));
+        data = (value == null ? null : (Boolean.parseBoolean(value) ? true : null));
     }
 
     @Override

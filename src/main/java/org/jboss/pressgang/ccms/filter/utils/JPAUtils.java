@@ -49,7 +49,7 @@ public abstract class JPAUtils {
      *
      * @param em       entity manager
      * @param criteria source criteria
-     * @return row coutnt CriteriaQuery
+     * @return row count CriteriaQuery
      */
     public static <T> CriteriaQuery<Long> countCriteria(EntityManager em, CriteriaQuery<T> criteria) {
         CriteriaBuilder builder = em.getCriteriaBuilder();

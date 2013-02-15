@@ -15,7 +15,7 @@ public class PropertyTagFilterQueryBuilder extends BaseFilterQueryBuilder<Proper
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.PROP_TAG_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeperatedListCondition("propertyTagId", fieldValue);
+                addIdInCommaSeparatedListCondition("propertyTagId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.PROP_TAG_NAME_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("propertyTagName", fieldValue);

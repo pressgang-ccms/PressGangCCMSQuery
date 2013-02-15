@@ -22,7 +22,7 @@ public abstract class FilterFieldListDataBase<T> extends FilterFieldDataBase<Lis
      */
     protected String description = "";
 
-    public FilterFieldListDataBase(final String name, final String description) {
+    protected FilterFieldListDataBase(final String name, final String description) {
         super(name, description);
     }
 
