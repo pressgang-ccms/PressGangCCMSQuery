@@ -312,7 +312,7 @@ public class FilterUtilities {
                 if (notLocaleBlock.size() > 1) {
                     final Predicate[] predicateArray = notLocaleBlock.toArray(new Predicate[notLocaleBlock.size()]);
                     notLocaleBlockPredicate = queryBuilder.and(predicateArray);
-                } else if (andQueryBlock.size() == 1) {
+                } else if (notLocaleBlock.size() == 1) {
                     notLocaleBlockPredicate = notLocaleBlock.get(0);
                 }
 

@@ -5,7 +5,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-import java.util.Locale;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
@@ -27,8 +26,7 @@ public class ImageFilterQueryBuilder extends BaseFilterQueryBuilder<ImageFile> i
         } else if (fieldName.equals(CommonFilterConstants.IMAGE_DESCRIPTION_FILTER_VAR)) {
             addLikeIgnoresCaseCondition("description", fieldValue);
         } else if (fieldName.equals(CommonFilterConstants.IMAGE_ORIGINAL_FILENAME_FILTER_VAR)) {
-            final Subquery<ImageFile> subquery = getImagesWithFileNameSubquery(fieldValue);
-            addFieldCondition(getCriteriaBuilder().exists(subquery));
+            addExistsCondition(getImagesWithFileNameSubquery(fieldValue));
         } else {
             super.processFilterString(fieldName, fieldValue);
         }
@@ -73,7 +71,7 @@ public class ImageFilterQueryBuilder extends BaseFilterQueryBuilder<ImageFile> i
         // Create the Condition for the subquery
         final Predicate imageIdMatch = criteriaBuilder.equal(getRootPath().get("imageFileId"), root.get("imageFile").get("imageFileId"));
         final Predicate filenameMatch = criteriaBuilder.like(criteriaBuilder.lower(root.get("originalFileName").as(String.class)),
-                '%' + filename.toLowerCase(Locale.ENGLISH) + '%');
+                '%' + cleanLikeCondition(filename).toLowerCase() + '%');
         subQuery.where(criteriaBuilder.and(imageIdMatch, filenameMatch));
 
         return subQuery;

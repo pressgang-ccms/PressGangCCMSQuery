@@ -7,11 +7,11 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.jboss.pressgang.ccms.filter.constants.FilterConstants;
@@ -115,7 +115,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addLikeCondition(final String propertyName, final String value) {
         final Expression<String> propertyNameField = getRootPath().get(propertyName).as(String.class);
-        fieldConditions.add(getCriteriaBuilder().like(propertyNameField, "%" + value + "%"));
+        fieldConditions.add(getCriteriaBuilder().like(propertyNameField, "%" + cleanLikeCondition(value) + "%"));
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addNotLikeCondition(final String propertyName, final String value) {
         final Expression<String> propertyNameField = getRootPath().get(propertyName).as(String.class);
-        fieldConditions.add(getCriteriaBuilder().notLike(propertyNameField, "%" + value + "%"));
+        fieldConditions.add(getCriteriaBuilder().notLike(propertyNameField, "%" + cleanLikeCondition(value) + "%"));
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addLikeIgnoresCaseCondition(final String propertyName, final String value) {
         final Expression<String> propertyNameField = getCriteriaBuilder().lower(getRootPath().get(propertyName).as(String.class));
-        fieldConditions.add(getCriteriaBuilder().like(propertyNameField, "%" + value.toLowerCase(Locale.ENGLISH) + "%"));
+        fieldConditions.add(getCriteriaBuilder().like(propertyNameField, "%" + cleanLikeCondition(value).toLowerCase() + "%"));
     }
 
     /**
@@ -151,7 +151,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addNotLikeIgnoresCaseCondition(final String propertyName, final String value) {
         final Expression<String> propertyNameField = getCriteriaBuilder().lower(getRootPath().get(propertyName).as(String.class));
-        fieldConditions.add(getCriteriaBuilder().notLike(propertyNameField, "%" + value.toLowerCase(Locale.ENGLISH) + "%"));
+        fieldConditions.add(getCriteriaBuilder().notLike(propertyNameField, "%" + cleanLikeCondition(value).toLowerCase() + "%"));
     }
 
     /**
@@ -281,5 +281,24 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addIdNotInCommaSeparatedListCondition(final String propertyName, final String value) throws NumberFormatException {
         addIdNotInArrayCondition(propertyName, value.split(","));
+    }
+
+    /**
+     * Add a Field Search Condition that will check if the result of a subquery exists.
+     *
+     * @param subquery The subquery to check if it's result exists.
+     */
+    protected void addExistsCondition(final Subquery<?> subquery) {
+        addFieldCondition(getCriteriaBuilder().exists(subquery));
+    }
+
+    /**
+     * Cleans a Condition Value to escape any characters that could disrupt a like query. ie the percent character (%)
+     *
+     * @param value The value to be cleaned/escaped.
+     * @return The cleaned/escaped value.
+     */
+    protected String cleanLikeCondition(final String value) {
+        return value == null ? null : value.replaceAll("%", "\\%");
     }
 }
