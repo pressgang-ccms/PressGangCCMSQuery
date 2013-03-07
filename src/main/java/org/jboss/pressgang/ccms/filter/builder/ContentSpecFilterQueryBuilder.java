@@ -90,11 +90,11 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<Conten
                 addIdInCommaSeparatedListCondition("contentSpecId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR)) {
-            addExistsCondition(getMetaDataSubquery(CommonConstants.META_DATA_TITLE_ID, fieldValue));
+            addExistsCondition(getMetaDataSubquery("Title", fieldValue));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR)) {
-            addExistsCondition(getMetaDataSubquery(CommonConstants.META_DATA_PRODUCT_ID, fieldValue));
+            addExistsCondition(getMetaDataSubquery("Product", fieldValue));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR)) {
-            addExistsCondition(getMetaDataSubquery(CommonConstants.META_DATA_PRODUCT_ID, fieldValue));
+            addExistsCondition(getMetaDataSubquery("Version", fieldValue));
         } else {
             super.processFilterString(fieldName, fieldValue);
         }
@@ -103,11 +103,11 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<Conten
     /**
      * Create a Subquery to check if a Content Spec has a metadata field with the specified value.
      *
-     * @param metaDataId    The Id of the metadata to be checked.
+     * @param metaDataTitle The Title of the metadata to be checked.
      * @param metaDataValue The Value that the metadata should have.
      * @return A subquery that can be used in an exists statement to see if a Content Spec has a metadata field with the specified value.
      */
-    private Subquery<CSNode> getMetaDataSubquery(final Integer metaDataId, final String metaDataValue) {
+    private Subquery<CSNode> getMetaDataSubquery(final String metaDataTitle, final String metaDataValue) {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<CSNode> subQuery = getCriteriaQuery().subquery(CSNode.class);
         final Root<CSNode> root = subQuery.from(CSNode.class);
@@ -116,9 +116,9 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<Conten
         // Create the Condition for the subquery
         final Predicate contentSpecIdMatch = criteriaBuilder.equal(getRootPath(), root.get("contentSpec"));
         final Predicate isMetaData = criteriaBuilder.equal(root.get("CSNodeType").as(Integer.class), CommonConstants.CS_NODE_META_DATA);
-        final Predicate metaDataIdMatch = criteriaBuilder.equal((root.get("entityId").as(Integer.class)), metaDataId);
+        final Predicate metaDataTitleMatch = criteriaBuilder.equal((root.get("CSNodeTitle").as(String.class)), metaDataTitle);
         final Predicate metaDataValueMatch = criteriaBuilder.equal(root.get("value"), metaDataValue);
-        subQuery.where(criteriaBuilder.and(contentSpecIdMatch, isMetaData, metaDataIdMatch, metaDataValueMatch));
+        subQuery.where(criteriaBuilder.and(contentSpecIdMatch, isMetaData, metaDataTitleMatch, metaDataValueMatch));
 
         return subQuery;
     }

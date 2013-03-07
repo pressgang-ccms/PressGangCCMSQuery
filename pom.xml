@@ -4,13 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>pressgang-parent</artifactId>
-        <groupId>org.jboss.pressgang</groupId>
-        <version>1.5</version>
+        <artifactId>pressgang-ccms-parent</artifactId>
+        <groupId>org.jboss.pressgang.ccms</groupId>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-query</artifactId>
-    <version>1.1-SNAPSHOT</version>
     <name>PressGang CCMS Query</name>
 
     <properties>
@@ -37,7 +36,7 @@
                                             jacoco-maven-plugin
                                         </artifactId>
                                         <versionRange>
-                                            [0${jacoco.version},)
+                                            [${jacoco.version},)
                                         </versionRange>
                                         <goals>
                                             <goal>prepare-agent</goal>
@@ -60,12 +59,7 @@
         <dependency>
             <groupId>org.jboss.pressgang.ccms</groupId>
             <artifactId>pressgang-ccms-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.pressgang.ccms.contentspec</groupId>
-            <artifactId>csprocessor</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>${parent.version}</version>
         </dependency>
 
         <!-- Other Libraries -->
@@ -73,6 +67,13 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${jodatime.version}</version>
+        </dependency>
+
+        <!-- Logging Libraries -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <!-- We only need the jdal-core JAR itself so exclude all it's dependencies -->
