@@ -17,8 +17,6 @@ import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToBugzillaBug;
 import org.jboss.pressgang.ccms.model.TopicToPropertyTag;
-import org.jboss.pressgang.ccms.model.contentspec.CSNode;
-import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
@@ -344,25 +342,6 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
         final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
         final Predicate propertyTagValueMatch = criteriaBuilder.equal(root.get("value"), propertyTagValue);
         subQuery.where(criteriaBuilder.and(topicIdMatch, propertyTagIdMatch, propertyTagValueMatch));
-
-        return subQuery;
-    }
-
-    /**
-     * Create a Subquery to check if a topic has is in a content spec
-     *
-     * @param propertyTagId The ID of the property tag to be checked.
-     * @return A subquery that can be used in an exists statement to see if a topic has a property tag with the specified value.
-     */
-    private Subquery<ContentSpec> getTopicInContentSpecSubquery(final Integer topicId) {
-        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Subquery<ContentSpec> subQuery = getCriteriaQuery().subquery(ContentSpec.class);
-        final Root<CSNode> root = subQuery.from(CSNode.class);
-        subQuery.select(root.get("contentSpec").as(ContentSpec.class));
-
-        // Create the Condition for the subquery
-        final Predicate topicIdMatch = criteriaBuilder.equal(root.get("entityId"), getRootPath().get("topic").get("topicId"));
-        subQuery.where(criteriaBuilder.and(topicIdMatch));
 
         return subQuery;
     }
