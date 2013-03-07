@@ -305,8 +305,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
 
                     if (propertyTagIdString != null && fieldValue != null) {
                         final Integer propertyTagIdInt = Integer.parseInt(propertyTagIdString);
-                        final Subquery<TopicToPropertyTag> subquery = getPropertyTagSubquery(propertyTagIdInt, fieldValue);
-                        addFieldCondition(getCriteriaBuilder().exists(subquery));
+                        addExistsCondition(getPropertyTagSubquery(propertyTagIdInt, fieldValue));
                     }
 
                     /* should only match once */

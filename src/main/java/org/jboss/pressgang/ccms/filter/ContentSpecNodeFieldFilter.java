@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -19,11 +20,13 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
         {
             put(CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC);
         }
     });
 
     private FilterFieldStringData csNodeIds;
     private FilterFieldStringData csNodeTitle;
+    private FilterFieldIntegerData csNodeType;
 
     public ContentSpecNodeFieldFilter() {
         resetAllValues();
@@ -37,9 +40,12 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC);
         csNodeTitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC);
+        csNodeType = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC);
 
         addFilterVar(csNodeIds);
         addFilterVar(csNodeTitle);
+        addFilterVar(csNodeType);
     }
 
     @Override

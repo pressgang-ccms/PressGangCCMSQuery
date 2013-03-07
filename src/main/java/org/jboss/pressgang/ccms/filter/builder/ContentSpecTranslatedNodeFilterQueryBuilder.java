@@ -1,0 +1,92 @@
+package org.jboss.pressgang.ccms.filter.builder;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.model.contentspec.CSTranslatedNode;
+import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ContentSpecTranslatedNodeFilterQueryBuilder extends BaseFilterQueryBuilder<CSTranslatedNode> {
+    private static Logger log = LoggerFactory.getLogger(ContentSpecTranslatedNodeFilterQueryBuilder.class);
+
+    public ContentSpecTranslatedNodeFilterQueryBuilder(final EntityManager entityManager) {
+        super(CSTranslatedNode.class, entityManager);
+    }
+
+    @Override
+    public void processFilterString(final String fieldName, final String fieldValue) {
+        if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR)) {
+            if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
+                addIdInCommaSeparatedListCondition("CSTranslatedNodeId", fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_FILTER_VAR)) {
+            if (fieldValue.trim().length() != 0) {
+                final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+                final List<Predicate> conditions = new ArrayList<Predicate>();
+
+                final String[] zanataIds = fieldValue.split(",");
+                for (final String zanataId : zanataIds) {
+                    try {
+                        String[] zanataVars = zanataId.split("-");
+
+                        final Integer topicId = Integer.parseInt(zanataVars[0]);
+                        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
+
+                        final Predicate topicIdCondition = criteriaBuilder.equal(getRootPath().get("CSNodeId"), topicId);
+                        final Predicate topicRevisionCondition = criteriaBuilder.equal(getRootPath().get("CSNodeRevision"), topicRevision);
+
+                        conditions.add(criteriaBuilder.and(topicIdCondition, topicRevisionCondition));
+                    } catch (NumberFormatException ex) {
+                        log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                    }
+                }
+
+                /* Only add the query if we found valid zanata ids */
+                if (conditions.size() > 1) {
+                    final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
+                    addFieldCondition(criteriaBuilder.or(predicates));
+                } else if (conditions.size() == 1) {
+                    addFieldCondition(conditions.get(0));
+                }
+            }
+        } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR)) {
+            if (fieldValue.trim().length() != 0) {
+                final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+                final List<Predicate> conditions = new ArrayList<Predicate>();
+
+                final String[] zanataIds = fieldValue.split(",");
+                for (final String zanataId : zanataIds) {
+                    try {
+                        String[] zanataVars = zanataId.split("-");
+
+                        final Integer topicId = Integer.parseInt(zanataVars[0]);
+                        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
+
+                        final Predicate topicIdCondition = criteriaBuilder.equal(getRootPath().get("CSNodeId"), topicId);
+                        final Predicate topicRevisionCondition = criteriaBuilder.equal(getRootPath().get("CSNodeRevision"), topicRevision);
+
+                        conditions.add(criteriaBuilder.and(topicIdCondition, topicRevisionCondition));
+                    } catch (NumberFormatException ex) {
+                        log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                    }
+                }
+
+                /* Only add the query if we found valid zanata ids */
+                if (conditions.size() > 1) {
+                    final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
+                    addFieldCondition(criteriaBuilder.not(criteriaBuilder.or(predicates)));
+                } else if (conditions.size() == 1) {
+                    addFieldCondition(conditions.get(0));
+                }
+            }
+        } else {
+            super.processFilterString(fieldName, fieldValue);
+        }
+    }
+}

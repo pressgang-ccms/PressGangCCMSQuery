@@ -3,9 +3,12 @@ package org.jboss.pressgang.ccms.filter.utils;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jboss.pressgang.ccms.filter.base.IFilterQueryBuilder;
@@ -87,7 +90,11 @@ public class FilterUtilities {
         boolean foundFilterField = false;
         boolean foundFilterFieldLogic = false;
         for (final FilterField filterField : filter.getFilterFields()) {
-            vars.put(filterField.getField(), filterField.getValue());
+            try {
+                vars.put(filterField.getField(), URLEncoder.encode(filterField.getValue(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
             if (!filterField.getField().equals(CommonFilterConstants.LOGIC_FILTER_VAR)) foundFilterField = true;
             else foundFilterFieldLogic = true;
         }
@@ -106,9 +113,9 @@ public class FilterUtilities {
         final HashMap<String, String> vars = getUrlVariables(filter);
         String urlVars = "";
 
-        for (final String urlVarKey : vars.keySet()) {
+        for (final Map.Entry<String, String> entry : vars.entrySet()) {
             if (urlVars.length() != 0) urlVars += "&";
-            urlVars += urlVarKey + "=" + vars.get(urlVarKey);
+            urlVars += entry.getKey() + "=" + entry.getValue();
         }
 
         return urlVars;

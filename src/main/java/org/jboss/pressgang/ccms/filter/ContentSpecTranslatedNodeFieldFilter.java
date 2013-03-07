@@ -8,7 +8,7 @@ import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
-public class ContentSpecMetaDataFieldFilter extends BaseFieldFilter {
+public class ContentSpecTranslatedNodeFieldFilter extends BaseFieldFilter {
     /**
      * A map of the base filter field names that can not have multiple
      * mappings
@@ -17,17 +17,14 @@ public class ContentSpecMetaDataFieldFilter extends BaseFieldFilter {
         private static final long serialVersionUID = 4454656533723964663L;
 
         {
-            put(CommonFilterConstants.CONTENT_SPEC_META_DATA_IDS_FILTER_VAR,
-                    CommonFilterConstants.CONTENT_SPEC_META_DATA_IDS_FILTER_VAR_DESC);
-            put(CommonFilterConstants.CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR,
-                    CommonFilterConstants.CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR,
+                    CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC);
         }
     });
 
-    private FilterFieldStringData csMetaDataIds;
-    private FilterFieldStringData csMetaDataTitle;
+    private FilterFieldStringData csTranslatedNodeIds;
 
-    public ContentSpecMetaDataFieldFilter() {
+    public ContentSpecTranslatedNodeFieldFilter() {
         resetAllValues();
     }
 
@@ -35,13 +32,10 @@ public class ContentSpecMetaDataFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        csMetaDataIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_META_DATA_IDS_FILTER_VAR,
-                CommonFilterConstants.CONTENT_SPEC_META_DATA_IDS_FILTER_VAR_DESC);
-        csMetaDataTitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR,
-                CommonFilterConstants.CONTENT_SPEC_META_DATA_TITLE_FILTER_VAR_DESC);
+        csTranslatedNodeIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC);
 
-        addFilterVar(csMetaDataIds);
-        addFilterVar(csMetaDataTitle);
+        addFilterVar(csTranslatedNodeIds);
     }
 
     @Override
