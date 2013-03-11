@@ -4,17 +4,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>pressgang-ccms-parent</artifactId>
-        <groupId>org.jboss.pressgang.ccms</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <groupId>org.jboss.pressgang</groupId>
+        <artifactId>pressgang-parent</artifactId>
+        <version>1.5</version>
     </parent>
+
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-query</artifactId>
+    <version>1.1-SNAPSHOT</version>
     <name>PressGang CCMS Query</name>
 
+    <scm>
+        <url>https://github.com/pressgang-ccms/PressGangCCMSQuery</url>
+        <connection>scm:git@github.com:pressgang-ccms/PressGangCCMSQuery.git</connection>
+        <developerConnection>scm:git@github.com:pressgang-ccms/PressGangCCMSQuery.git</developerConnection>
+    </scm>
+
     <properties>
+        <pressgang.ccms.version>1.1-SNAPSHOT</pressgang.ccms.version>
         <jodatime.version>2.1</jodatime.version>
         <jdal.core.version>1.2.0</jdal.core.version>
+        <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
     <build>
@@ -59,7 +69,7 @@
         <dependency>
             <groupId>org.jboss.pressgang.ccms</groupId>
             <artifactId>pressgang-ccms-model</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${pressgang.ccms.version}</version>
         </dependency>
 
         <!-- Other Libraries -->
