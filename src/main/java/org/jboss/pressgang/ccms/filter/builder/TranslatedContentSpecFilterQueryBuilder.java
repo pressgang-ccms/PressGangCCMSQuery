@@ -7,23 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
-import org.jboss.pressgang.ccms.model.contentspec.CSTranslatedNode;
+import org.jboss.pressgang.ccms.model.contentspec.TranslatedContentSpec;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ContentSpecTranslatedNodeFilterQueryBuilder extends BaseFilterQueryBuilder<CSTranslatedNode> {
-    private static Logger log = LoggerFactory.getLogger(ContentSpecTranslatedNodeFilterQueryBuilder.class);
+public class TranslatedContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<TranslatedContentSpec> {
+    private static Logger log = LoggerFactory.getLogger(TranslatedContentSpecFilterQueryBuilder.class);
 
-    public ContentSpecTranslatedNodeFilterQueryBuilder(final EntityManager entityManager) {
-        super(CSTranslatedNode.class, entityManager);
+    public TranslatedContentSpecFilterQueryBuilder(final EntityManager entityManager) {
+        super(TranslatedContentSpec.class, entityManager);
     }
 
     @Override
     public void processFilterString(final String fieldName, final String fieldValue) {
-        if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR)) {
+        if (fieldName.equals(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
-                addIdInCommaSeparatedListCondition("CSTranslatedNodeId", fieldValue);
+                addIdInCommaSeparatedListCondition("translatedContentSpecId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0) {
@@ -35,13 +35,14 @@ public class ContentSpecTranslatedNodeFilterQueryBuilder extends BaseFilterQuery
                     try {
                         String[] zanataVars = zanataId.split("-");
 
-                        final Integer topicId = Integer.parseInt(zanataVars[0]);
-                        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
+                        final Integer contentSpecId = Integer.parseInt(zanataVars[0].replaceAll("^CS", ""));
+                        final Integer contentSpecRevision = Integer.parseInt(zanataVars[1]);
 
-                        final Predicate topicIdCondition = criteriaBuilder.equal(getRootPath().get("CSNodeId"), topicId);
-                        final Predicate topicRevisionCondition = criteriaBuilder.equal(getRootPath().get("CSNodeRevision"), topicRevision);
+                        final Predicate contentSpecIdCondition = criteriaBuilder.equal(getRootPath().get("contentSpecId"), contentSpecId);
+                        final Predicate contentSpecRevisionCondition = criteriaBuilder.equal(getRootPath().get("contentSpecRevision"),
+                                contentSpecRevision);
 
-                        conditions.add(criteriaBuilder.and(topicIdCondition, topicRevisionCondition));
+                        conditions.add(criteriaBuilder.and(contentSpecIdCondition, contentSpecRevisionCondition));
                     } catch (NumberFormatException ex) {
                         log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                     }
@@ -65,13 +66,14 @@ public class ContentSpecTranslatedNodeFilterQueryBuilder extends BaseFilterQuery
                     try {
                         String[] zanataVars = zanataId.split("-");
 
-                        final Integer topicId = Integer.parseInt(zanataVars[0]);
-                        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
+                        final Integer contentSpecId = Integer.parseInt(zanataVars[0].replaceAll("^CS", ""));
+                        final Integer contentSpecRevision = Integer.parseInt(zanataVars[1]);
 
-                        final Predicate topicIdCondition = criteriaBuilder.equal(getRootPath().get("CSNodeId"), topicId);
-                        final Predicate topicRevisionCondition = criteriaBuilder.equal(getRootPath().get("CSNodeRevision"), topicRevision);
+                        final Predicate contentSpecIdCondition = criteriaBuilder.equal(getRootPath().get("contentSpecId"), contentSpecId);
+                        final Predicate contentSpecRevisionCondition = criteriaBuilder.equal(getRootPath().get("contentSpecRevision"),
+                                contentSpecRevision);
 
-                        conditions.add(criteriaBuilder.and(topicIdCondition, topicRevisionCondition));
+                        conditions.add(criteriaBuilder.and(contentSpecIdCondition, contentSpecRevisionCondition));
                     } catch (NumberFormatException ex) {
                         log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                     }

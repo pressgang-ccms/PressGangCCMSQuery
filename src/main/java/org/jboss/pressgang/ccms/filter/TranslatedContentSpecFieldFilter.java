@@ -8,7 +8,7 @@ import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
-public class ContentSpecTranslatedNodeFieldFilter extends BaseFieldFilter {
+public class TranslatedContentSpecFieldFilter extends BaseFieldFilter {
     /**
      * A map of the base filter field names that can not have multiple
      * mappings
@@ -17,14 +17,14 @@ public class ContentSpecTranslatedNodeFieldFilter extends BaseFieldFilter {
         private static final long serialVersionUID = 4454656533723964663L;
 
         {
-            put(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR,
-                    CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR,
+                    CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR_DESC);
         }
     });
 
-    private FilterFieldStringData csTranslatedNodeIds;
+    private FilterFieldStringData translatedContentSpecIds;
 
-    public ContentSpecTranslatedNodeFieldFilter() {
+    public TranslatedContentSpecFieldFilter() {
         resetAllValues();
     }
 
@@ -32,10 +32,10 @@ public class ContentSpecTranslatedNodeFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        csTranslatedNodeIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR,
-                CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC);
+        translatedContentSpecIds = new FilterFieldStringData(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR,
+                CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR_DESC);
 
-        addFilterVar(csTranslatedNodeIds);
+        addFilterVar(translatedContentSpecIds);
     }
 
     @Override
