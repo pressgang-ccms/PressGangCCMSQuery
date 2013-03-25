@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T> {
     private static final Logger log = LoggerFactory.getLogger(BaseFilterQueryBuilder.class);
+    protected static final String ID_REGEX = "^((\\s)*(\\-)?\\d+(\\s)*,?)*((\\s)*(\\-)?\\d+(\\s)*)$";
 
     protected String filterFieldsLogic = FilterConstants.LOGIC_FILTER_VAR_DEFAULT_VALUE;
     private final List<Predicate> fieldConditions = new ArrayList<Predicate>();

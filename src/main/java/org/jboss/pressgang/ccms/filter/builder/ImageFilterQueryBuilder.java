@@ -20,7 +20,7 @@ public class ImageFilterQueryBuilder extends BaseFilterQueryBuilder<ImageFile> i
     @Override
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.IMAGE_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
+            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
                 addIdInCommaSeparatedListCondition("imageFileId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.IMAGE_DESCRIPTION_FILTER_VAR)) {

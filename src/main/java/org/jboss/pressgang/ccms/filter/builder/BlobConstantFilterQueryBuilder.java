@@ -15,7 +15,7 @@ public class BlobConstantFilterQueryBuilder extends BaseFilterQueryBuilder<BlobC
     @Override
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.BLOB_CONSTANT_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
+            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
                 addIdInCommaSeparatedListCondition("blobConstantsId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.BLOB_CONSTANT_NAME_FILTER_VAR)) {

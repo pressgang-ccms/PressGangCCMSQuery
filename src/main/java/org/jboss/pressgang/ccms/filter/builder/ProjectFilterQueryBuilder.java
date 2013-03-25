@@ -14,7 +14,7 @@ public class ProjectFilterQueryBuilder extends BaseFilterQueryBuilder<Project> {
     @Override
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.PROJECT_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches("^((\\s)*\\d+(\\s)*,?)*((\\s)*\\d+(\\s)*)$")) {
+            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
                 addIdInCommaSeparatedListCondition("projectId", fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.PROJECT_NAME_FILTER_VAR)) {
