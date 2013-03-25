@@ -33,22 +33,13 @@ public class TranslatedContentSpecFilterQueryBuilder extends BaseFilterQueryBuil
                 final String[] zanataIds = fieldValue.split(",");
                 for (final String zanataId : zanataIds) {
                     try {
-                        String[] zanataVars = zanataId.split("-");
-
-                        final Integer contentSpecId = Integer.parseInt(zanataVars[0].replaceAll("^CS", ""));
-                        final Integer contentSpecRevision = Integer.parseInt(zanataVars[1]);
-
-                        final Predicate contentSpecIdCondition = criteriaBuilder.equal(getRootPath().get("contentSpecId"), contentSpecId);
-                        final Predicate contentSpecRevisionCondition = criteriaBuilder.equal(getRootPath().get("contentSpecRevision"),
-                                contentSpecRevision);
-
-                        conditions.add(criteriaBuilder.and(contentSpecIdCondition, contentSpecRevisionCondition));
+                        conditions.add(getZanataIdCondition(zanataId));
                     } catch (NumberFormatException ex) {
                         log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                     }
                 }
 
-                /* Only add the query if we found valid zanata ids */
+                // Only add the query if we found valid zanata ids
                 if (conditions.size() > 1) {
                     final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
                     addFieldCondition(criteriaBuilder.or(predicates));
@@ -64,22 +55,13 @@ public class TranslatedContentSpecFilterQueryBuilder extends BaseFilterQueryBuil
                 final String[] zanataIds = fieldValue.split(",");
                 for (final String zanataId : zanataIds) {
                     try {
-                        String[] zanataVars = zanataId.split("-");
-
-                        final Integer contentSpecId = Integer.parseInt(zanataVars[0].replaceAll("^CS", ""));
-                        final Integer contentSpecRevision = Integer.parseInt(zanataVars[1]);
-
-                        final Predicate contentSpecIdCondition = criteriaBuilder.equal(getRootPath().get("contentSpecId"), contentSpecId);
-                        final Predicate contentSpecRevisionCondition = criteriaBuilder.equal(getRootPath().get("contentSpecRevision"),
-                                contentSpecRevision);
-
-                        conditions.add(criteriaBuilder.and(contentSpecIdCondition, contentSpecRevisionCondition));
+                        conditions.add(getZanataIdCondition(zanataId));
                     } catch (NumberFormatException ex) {
                         log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                     }
                 }
 
-                /* Only add the query if we found valid zanata ids */
+                // Only add the query if we found valid zanata ids
                 if (conditions.size() > 1) {
                     final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
                     addFieldCondition(criteriaBuilder.not(criteriaBuilder.or(predicates)));
@@ -90,5 +72,28 @@ public class TranslatedContentSpecFilterQueryBuilder extends BaseFilterQueryBuil
         } else {
             super.processFilterString(fieldName, fieldValue);
         }
+    }
+
+    /**
+     * Gets a JPA Predicate condition, to find TranslatedContentSpecs that match a Zanata Document ID in the form of
+     * {@code "CS<ID>-<REVISION>"}.
+     *
+     * @param zanataId The Zanata Document ID.
+     * @return A Predicate object that contains the SQL WHERE logic to find TranslatedContentSpecs that match the Zanata ID.
+     * @throws NumberFormatException Thrown if the ZanataID, when broken down can't be transformed into an Integer.
+     */
+    protected Predicate getZanataIdCondition(final String zanataId) throws NumberFormatException {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+
+        String[] zanataVars = zanataId.split("-");
+
+        final Integer contentSpecId = Integer.parseInt(zanataVars[0].replaceAll("^CS", ""));
+        final Integer contentSpecRevision = Integer.parseInt(zanataVars[1]);
+
+        final Predicate contentSpecIdCondition = criteriaBuilder.equal(getRootPath().get("contentSpecId"), contentSpecId);
+        final Predicate contentSpecRevisionCondition = criteriaBuilder.equal(getRootPath().get("contentSpecRevision"),
+                contentSpecRevision);
+
+        return criteriaBuilder.and(contentSpecIdCondition, contentSpecRevisionCondition);
     }
 }

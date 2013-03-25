@@ -132,26 +132,26 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         if (fieldName.equals(CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> lastestRevisionQuery = getLastestRevisionSubquery();
-                fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                final Subquery<Integer> latestRevisionQuery = getLastestRevisionSubquery();
+                fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> lastestRevisionQuery = getLastestRevisionSubquery();
-                fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                final Subquery<Integer> latestRevisionQuery = getLastestRevisionSubquery();
+                fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> lastestRevisionQuery = getLastestCompleteRevisionSubquery();
-                fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                final Subquery<Integer> latestRevisionQuery = getLastestCompleteRevisionSubquery();
+                fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> lastestRevisionQuery = getLastestCompleteRevisionSubquery();
-                fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), lastestRevisionQuery));
+                final Subquery<Integer> latestRevisionQuery = getLastestCompleteRevisionSubquery();
+                fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_FILTER_VAR)) {
             if (fieldValue.trim().length() != 0) {
@@ -161,21 +161,13 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
                 final String[] zanataIds = fieldValue.split(",");
                 for (final String zanataId : zanataIds) {
                     try {
-                        String[] zanataVars = zanataId.split("-");
-
-                        final Integer topicId = Integer.parseInt(zanataVars[0]);
-                        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
-
-                        final Predicate topicIdCondition = criteriaBuilder.equal(translatedTopic.get("topicId"), topicId);
-                        final Predicate topicRevisionCondition = criteriaBuilder.equal(translatedTopic.get("topicRevision"), topicRevision);
-
-                        conditions.add(criteriaBuilder.and(topicIdCondition, topicRevisionCondition));
+                        conditions.add(getZanataIdCondition(zanataId));
                     } catch (NumberFormatException ex) {
                         log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                     }
                 }
 
-                /* Only add the query if we found valid zanata ids */
+                // Only add the query if we found valid zanata ids
                 if (conditions.size() > 1) {
                     final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
                     fieldConditions.add(criteriaBuilder.or(predicates));
@@ -191,21 +183,13 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
                 final String[] zanataIds = fieldValue.split(",");
                 for (final String zanataId : zanataIds) {
                     try {
-                        String[] zanataVars = zanataId.split("-");
-
-                        final Integer topicId = Integer.parseInt(zanataVars[0]);
-                        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
-
-                        final Predicate topicIdCondition = criteriaBuilder.equal(translatedTopic.get("topicId"), topicId);
-                        final Predicate topicRevisionCondition = criteriaBuilder.equal(translatedTopic.get("topicRevision"), topicRevision);
-
-                        conditions.add(criteriaBuilder.and(topicIdCondition, topicRevisionCondition));
+                        conditions.add(getZanataIdCondition(zanataId));
                     } catch (NumberFormatException ex) {
                         log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                     }
                 }
 
-                /* Only add the query if we found valid zanata ids */
+                // Only add the query if we found valid zanata ids
                 if (conditions.size() > 1) {
                     final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
                     fieldConditions.add(criteriaBuilder.not(criteriaBuilder.or(predicates)));
@@ -258,5 +242,37 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         subQuery.groupBy(root.get("translatedTopic").get("topicId"));
 
         return subQuery;
+    }
+
+    /**
+     * Gets a JPA Predicate condition, to find TranslatedTopics that match a Zanata Document ID in the form of
+     * {@code "<TOPIC_ID>-<TOPIC_REVISION>"} or {@code "<TOPIC_ID>-<TOPIC_REVISION>-<TRANSLATED_CS_NODE_ID>"}.
+     *
+     * @param zanataId The Zanata Document ID.
+     * @return A Predicate object that contains the SQL WHERE logic to find TranslatedTopics that match the Zanata ID.
+     * @throws NumberFormatException Thrown if the ZanataID, when broken down can't be transformed into an Integer.
+     */
+    protected Predicate getZanataIdCondition(final String zanataId) throws NumberFormatException {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+
+        String[] zanataVars = zanataId.split("-");
+
+        final Integer topicId = Integer.parseInt(zanataVars[0]);
+        final Integer topicRevision = Integer.parseInt(zanataVars[1]);
+
+        final Predicate topicIdCondition = criteriaBuilder.equal(translatedTopic.get("topicId"), topicId);
+        final Predicate topicRevisionCondition = criteriaBuilder.equal(translatedTopic.get("topicRevision"), topicRevision);
+
+        // Determine the TranslatedCSNodeID condition depending on the Zanata ID
+        final Predicate translatedCSNodeIdCondition;
+        if (zanataVars.length >= 3) {
+            final Integer translatedCSNodeId = Integer.parseInt(zanataVars[2]);
+            translatedCSNodeIdCondition = criteriaBuilder.equal(
+                    getOriginalRootPath().get("translatedCSNode").get("translatedCSNodeId"), translatedCSNodeId);
+        } else {
+            translatedCSNodeIdCondition = criteriaBuilder.isNull(getOriginalRootPath().get("translatedCSNode"));
+        }
+
+        return criteriaBuilder.and(topicIdCondition, topicRevisionCondition, translatedCSNodeIdCondition);
     }
 }
