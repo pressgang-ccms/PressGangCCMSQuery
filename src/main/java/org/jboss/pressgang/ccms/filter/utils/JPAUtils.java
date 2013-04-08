@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Utility class for dealing with JPA API.
  * <p/>
- * Edited to fix an issue with copying CriteriaQuery's where no where clause exists. And for using the wring method in the
+ * Edited to fix an issue with copying CriteriaQuery's where no where clause exists. And for using the wrong method in the
  * getJoinedType() method.
  *
  * @author Jose Luis Martin

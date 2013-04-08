@@ -25,6 +25,7 @@
         <jodatime.version>2.1</jodatime.version>
         <jdal.core.version>1.2.0</jdal.core.version>
         <slf4j.version>1.6.4</slf4j.version>
+        <csprocessor.version>0.0.5-SNAPSHOT</csprocessor.version>
     </properties>
 
     <build>
@@ -70,6 +71,11 @@
             <groupId>org.jboss.pressgang.ccms</groupId>
             <artifactId>pressgang-ccms-model</artifactId>
             <version>${pressgang.ccms.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.pressgang.ccms.contentspec</groupId>
+            <artifactId>csprocessor</artifactId>
+            <version>${csprocessor.version}</version>
         </dependency>
 
         <!-- Other Libraries -->
