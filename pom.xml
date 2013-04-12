@@ -74,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.pressgang.ccms.contentspec</groupId>
-            <artifactId>csprocessor</artifactId>
+            <artifactId>processor</artifactId>
             <version>${csprocessor.version}</version>
         </dependency>
 
