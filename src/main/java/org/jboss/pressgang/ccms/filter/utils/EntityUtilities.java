@@ -2,11 +2,9 @@ package org.jboss.pressgang.ccms.filter.utils;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.redhat.contentspec.processor.ContentSpecParser;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
@@ -27,6 +25,9 @@ import org.jboss.pressgang.ccms.model.FilterTag;
 import org.jboss.pressgang.ccms.model.Project;
 import org.jboss.pressgang.ccms.model.Tag;
 import org.jboss.pressgang.ccms.model.Topic;
+import org.jboss.pressgang.ccms.model.contentspec.CSNode;
+import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -108,7 +109,7 @@ public class EntityUtilities {
                     }
 
                     // at this point we have found a url variable that
-                    // contains a category and project id
+                    // contains a catgeory and project id
 
                     final Category category = entityManager.find(Category.class, catID);
                     final Project project = projID != null ? entityManager.find(Project.class, projID) : null;
@@ -223,17 +224,19 @@ public class EntityUtilities {
      * @return A comma separated list of topic ids that have been included in a content spec
      * @throws Exception
      */
-    public static List<Integer> getTopicsInContentSpec(final EntityManager entityManager, final Integer contentSpecTopicID) {
+    public static List<Integer> getTopicsInContentSpec(final EntityManager entityManager, final Integer contentSpecId) {
         try {
-            final Topic contentSpec = entityManager.find(Topic.class, contentSpecTopicID);
+            final ContentSpec contentSpec = entityManager.find(ContentSpec.class, contentSpecId);
+
             if (contentSpec == null) return null;
 
-            final ContentSpecParser csp = new ContentSpecParser("http://localhost:8080/TopicIndex/");
-            if (csp.parse(contentSpec.getTopicXML())) {
-                final List<Integer> topicIds = csp.getReferencedTopicIds();
-                if (topicIds.size() == 0) return Arrays.asList(-1);
-
-                return topicIds;
+            final List<Integer> topicIds = new ArrayList<Integer>();
+            for (final CSNode node : contentSpec.getCSNodes()) {
+                if (node.getCSNodeType() != CommonConstants.CS_NODE_TOPIC) {
+                    continue;
+                } else if (node.getEntityId() != null) {
+                    topicIds.add(node.getEntityId());
+                }
             }
         } catch (final Exception ex) {
             log.warn("An invalid Topic ID was stored for a Content Spec in the database, or the topic was not a valid content spec", ex);
