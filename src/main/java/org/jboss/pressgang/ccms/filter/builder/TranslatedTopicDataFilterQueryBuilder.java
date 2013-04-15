@@ -263,6 +263,16 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         final Predicate topicIdCondition = criteriaBuilder.equal(translatedTopic.get("topicId"), topicId);
         final Predicate topicRevisionCondition = criteriaBuilder.equal(translatedTopic.get("topicRevision"), topicRevision);
 
-        return criteriaBuilder.and(topicIdCondition, topicRevisionCondition);
+        // Determine the TranslatedCSNodeID condition depending on the Zanata ID
+        final Predicate translatedCSNodeIdCondition;
+        if (zanataVars.length >= 3) {
+            final Integer translatedCSNodeId = Integer.parseInt(zanataVars[2]);
+            translatedCSNodeIdCondition = criteriaBuilder.equal(
+                    getOriginalRootPath().get("translatedCSNode").get("translatedCSNodeId"), translatedCSNodeId);
+        } else {
+            translatedCSNodeIdCondition = criteriaBuilder.isNull(getOriginalRootPath().get("translatedCSNode"));
+        }
+
+        return criteriaBuilder.and(topicIdCondition, topicRevisionCondition, translatedCSNodeIdCondition);
     }
 }
