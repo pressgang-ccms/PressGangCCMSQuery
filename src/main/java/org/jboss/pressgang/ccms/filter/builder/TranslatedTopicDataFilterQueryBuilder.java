@@ -132,25 +132,25 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         if (fieldName.equals(CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> latestRevisionQuery = getLastestRevisionSubquery();
+                final Subquery<Integer> latestRevisionQuery = getLatestRevisionSubquery();
                 fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> latestRevisionQuery = getLastestRevisionSubquery();
+                final Subquery<Integer> latestRevisionQuery = getLatestRevisionSubquery();
                 fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> latestRevisionQuery = getLastestCompleteRevisionSubquery();
+                final Subquery<Integer> latestRevisionQuery = getLatestCompleteRevisionSubquery();
                 fieldConditions.add(getCriteriaBuilder().equal(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (fieldValueBoolean) {
-                final Subquery<Integer> latestRevisionQuery = getLastestCompleteRevisionSubquery();
+                final Subquery<Integer> latestRevisionQuery = getLatestCompleteRevisionSubquery();
                 fieldConditions.add(getCriteriaBuilder().notEqual(translatedTopic.get("topicRevision"), latestRevisionQuery));
             }
         } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_FILTER_VAR)) {
@@ -213,7 +213,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
      *
      * @return A subquery that will return the maximum revision for a translated topic and locale.
      */
-    protected Subquery<Integer> getLastestRevisionSubquery() {
+    protected Subquery<Integer> getLatestRevisionSubquery() {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<Integer> subQuery = getCriteriaQuery().subquery(Integer.class);
         final Root<TranslatedTopicData> root = subQuery.from(TranslatedTopicData.class);
@@ -228,7 +228,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         return subQuery;
     }
 
-    protected Subquery<Integer> getLastestCompleteRevisionSubquery() {
+    protected Subquery<Integer> getLatestCompleteRevisionSubquery() {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<Integer> subQuery = getCriteriaQuery().subquery(Integer.class);
         final Root<TranslatedTopicData> root = subQuery.from(TranslatedTopicData.class);
@@ -263,16 +263,6 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         final Predicate topicIdCondition = criteriaBuilder.equal(translatedTopic.get("topicId"), topicId);
         final Predicate topicRevisionCondition = criteriaBuilder.equal(translatedTopic.get("topicRevision"), topicRevision);
 
-        // Determine the TranslatedCSNodeID condition depending on the Zanata ID
-        final Predicate translatedCSNodeIdCondition;
-        if (zanataVars.length >= 3) {
-            final Integer translatedCSNodeId = Integer.parseInt(zanataVars[2]);
-            translatedCSNodeIdCondition = criteriaBuilder.equal(
-                    getOriginalRootPath().get("translatedCSNode").get("translatedCSNodeId"), translatedCSNodeId);
-        } else {
-            translatedCSNodeIdCondition = criteriaBuilder.isNull(getOriginalRootPath().get("translatedCSNode"));
-        }
-
-        return criteriaBuilder.and(topicIdCondition, topicRevisionCondition, translatedCSNodeIdCondition);
+        return criteriaBuilder.and(topicIdCondition, topicRevisionCondition);
     }
 }
