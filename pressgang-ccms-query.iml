@@ -12,8 +12,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="pressgang-ccms-model" />
-    <orderEntry type="module" module-name="pressgang-ccms-utils" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-model:1.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-utils:1.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.7" level="project" />
     <orderEntry type="library" name="Maven: xalan:xalan:2.7.1" level="project" />
