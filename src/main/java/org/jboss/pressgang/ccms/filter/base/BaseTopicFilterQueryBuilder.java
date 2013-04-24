@@ -251,6 +251,26 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
             } catch (final NumberFormatException ex) {
                 log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
+        } else if (fieldName.equals(CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES)) {
+            try {
+                final Integer minutes = Integer.parseInt(fieldValue);
+                final DateTime date = new DateTime().minusMinutes(minutes);
+                final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date,
+                        null);
+                addIdInCollectionCondition("topicId", editedTopicIds);
+            } catch (final Exception ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES)) {
+            try {
+                final Integer minutes = Integer.parseInt(fieldValue);
+                final DateTime date = new DateTime().minusMinutes(minutes);
+                final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date,
+                        null);
+                addIdNotInCollectionCondition("topicId", editedTopicIds);
+            } catch (final NumberFormatException ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_STARTDATE_FILTER_VAR)) {
             try {
                 startCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
