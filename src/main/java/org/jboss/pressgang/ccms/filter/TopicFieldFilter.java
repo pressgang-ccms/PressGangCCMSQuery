@@ -50,6 +50,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
             put(CommonFilterConstants.TOPIC_RELATED_FROM, CommonFilterConstants.TOPIC_RELATED_FROM_DESC);
             put(CommonFilterConstants.TOPIC_HAS_XML_ERRORS, CommonFilterConstants.TOPIC_HAS_XML_ERRORS_DESC);
             put(CommonFilterConstants.TOPIC_EDITED_IN_LAST_DAYS, CommonFilterConstants.TOPIC_EDITED_IN_LAST_DAYS_DESC);
+            put(CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES, CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES_DESC);
             put(CommonFilterConstants.TOPIC_HAS_OPEN_BUGZILLA_BUGS, CommonFilterConstants.TOPIC_HAS_OPEN_BUGZILLA_BUGS_DESC);
             put(CommonFilterConstants.TOPIC_HAS_BUGZILLA_BUGS, CommonFilterConstants.TOPIC_HAS_BUGZILLA_BUGS_DESC);
             put(CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR,
@@ -65,6 +66,7 @@ public class TopicFieldFilter extends BaseFieldFilter {
             put(CommonFilterConstants.TOPIC_NOT_RELATED_TO, CommonFilterConstants.TOPIC_NOT_RELATED_TO_DESC);
             put(CommonFilterConstants.TOPIC_NOT_RELATED_FROM, CommonFilterConstants.TOPIC_NOT_RELATED_FROM_DESC);
             put(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_DAYS, CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_DAYS_DESC);
+            put(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES, CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES_DESC);
 
             put(CommonFilterConstants.TOPIC_HAS_NOT_XML_ERRORS, CommonFilterConstants.TOPIC_HAS_NOT_XML_ERRORS_DESC);
             put(CommonFilterConstants.TOPIC_HAS_NOT_OPEN_BUGZILLA_BUGS, CommonFilterConstants.TOPIC_HAS_NOT_OPEN_BUGZILLA_BUGS_DESC);
@@ -105,6 +107,8 @@ public class TopicFieldFilter extends BaseFieldFilter {
     private FilterFieldDateTimeData endEditDate;
     private FilterFieldIntegerData editedInLastDays;
     private FilterFieldIntegerData notEditedInLastDays;
+    private FilterFieldIntegerData editedInLastMins;
+    private FilterFieldIntegerData notEditedInLastMins;
     private FilterFieldBooleanData hasOpenBugzillaBugs;
     private FilterFieldBooleanData hasBugzillaBugs;
     private FilterFieldStringMapData propertyTags;
@@ -183,6 +187,12 @@ public class TopicFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.TOPIC_EDITED_IN_LAST_DAYS_DESC);
         notEditedInLastDays = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_DAYS,
                 CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_DAYS_DESC);
+
+        /* Topic Edited in last minutes */
+        editedInLastMins = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES,
+                CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES_DESC);
+        notEditedInLastMins = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES,
+                CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES_DESC);
 
         /* Has XML Errors */
         hasXMLErrors = new FilterFieldBooleanData(CommonFilterConstants.TOPIC_HAS_XML_ERRORS,

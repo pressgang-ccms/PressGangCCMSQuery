@@ -13,7 +13,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-model:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="pressgang-ccms-utils" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-model:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-utils:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.7" level="project" />
     <orderEntry type="library" name="Maven: xalan:xalan:2.7.1" level="project" />
@@ -89,8 +90,8 @@
     <orderEntry type="library" name="Maven: org.jdom:jdom:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.7.0" level="project" />
-    <orderEntry type="module" module-name="processor" />
-    <orderEntry type="module" module-name="pressgang-ccms-restv1" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms.contentspec:processor:0.0.5-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-restv1:1.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="pressgang-ccms-zanata" />
     <orderEntry type="library" name="Maven: org.zanata:zanata-rest-client:2.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.zanata:zanata-common-api:2.0.0" level="project" />
@@ -119,7 +120,7 @@
     <orderEntry type="library" name="Maven: org.jboss.resteasy:resteasy-jackson-provider:2.3.4.Final" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-jaxrs:1.8.5" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.1" level="project" />
-    <orderEntry type="module" module-name="pressgang-ccms-contentspec" />
+    <orderEntry type="library" name="Maven: org.jboss.pressgang.ccms:pressgang-ccms-contentspec:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.jdal:jdal-core:1.2.0" level="project" />
   </component>
 </module>
