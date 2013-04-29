@@ -37,7 +37,7 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-		/* Zanata ID's */
+        /* Zanata ID's */
         zanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_FILTER_VAR,
                 CommonFilterConstants.ZANATA_IDS_FILTER_VAR_DESC);
         notZanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR,
@@ -46,9 +46,7 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
         setupSingleFilterVars();
     }
 
-    protected void setupSingleFilterVars() {
-        super.setupSingleFilterVars();
-
+    private void setupSingleFilterVars() {
         addFilterVar(zanataIds);
         addFilterVar(notZanataIds);
     }
@@ -61,7 +59,6 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     public Map<String, String> getFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(singleFilterNames);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG + "\\d+", CommonFilterConstants.PROPERTY_TAG_DESC);
 
         return retValue;
     }
@@ -72,9 +69,8 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
      */
     @Override
     public Map<String, String> getBaseFieldNames() {
-        final Map<String, String> retValue = new HashMap<String, String>(singleFilterNames);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
-
+        final Map<String, String> retValue = super.getBaseFieldNames();
+        retValue.putAll(singleFilterNames);
         return retValue;
     }
 

@@ -70,7 +70,7 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         setupSingleFilterVars();
     }
 
-    protected void setupSingleFilterVars() {
+    private void setupSingleFilterVars() {
         addFilterVar(contentSpecIds);
         addFilterVar(contentSpecTitle);
         addFilterVar(contentSpecProduct);
@@ -90,7 +90,7 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
 
     @Override
     public Map<String, String> getBaseFieldNames() {
-        final Map<String, String> retValue = super.getFieldNames();
+        final Map<String, String> retValue = super.getBaseFieldNames();
         retValue.putAll(filterNames);
         return retValue;
     }

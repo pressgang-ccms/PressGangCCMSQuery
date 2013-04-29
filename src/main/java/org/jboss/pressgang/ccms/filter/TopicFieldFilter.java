@@ -246,7 +246,7 @@ public class TopicFieldFilter extends BaseFieldFilterWithProperties {
         setupSingleFilterVars();
     }
 
-    protected void setupSingleFilterVars() {
+    private void setupSingleFilterVars() {
         addFilterVar(topicTextSearch);
         addFilterVar(topicIds);
         addFilterVar(topicIncludedInSpec);

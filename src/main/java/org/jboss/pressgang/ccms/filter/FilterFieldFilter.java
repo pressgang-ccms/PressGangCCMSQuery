@@ -56,7 +56,7 @@ public class FilterFieldFilter extends BaseFieldFilter {
 
     @Override
     public Map<String, String> getBaseFieldNames() {
-        final Map<String, String> retValue = super.getFieldNames();
+        final Map<String, String> retValue = super.getBaseFieldNames();
         retValue.putAll(filterNames);
         return retValue;
     }
