@@ -61,7 +61,8 @@ public abstract class BaseFieldFilter implements IFieldFilter {
 
     @Override
     public String getFieldDesc(final String fieldName) {
-        return getFieldNames().get(fieldName);
+        String retValue = getFieldNames().get(fieldName);
+        return retValue == null ? "" : retValue;
     }
 
     protected void addFilterVar(final FilterFieldDataBase<?> filterVar) {

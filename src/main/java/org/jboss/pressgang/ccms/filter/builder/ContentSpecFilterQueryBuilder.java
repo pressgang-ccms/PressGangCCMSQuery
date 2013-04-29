@@ -5,21 +5,28 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import java.util.List;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ITagFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
+import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides the query elements required by Filter.buildQuery() to get a list of Topic elements
  */
 public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<ContentSpec> implements ITagFilterQueryBuilder,
         ILocaleFilterQueryBuilder {
+    private static final Logger log = LoggerFactory.getLogger(ContentSpecFilterQueryBuilder.class);
 
     public ContentSpecFilterQueryBuilder(final EntityManager entityManager) {
         super(ContentSpec.class, entityManager);
@@ -95,6 +102,46 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<Conten
             addExistsCondition(getMetaDataSubquery("Product", fieldValue));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR)) {
             addExistsCondition(getMetaDataSubquery("Version", fieldValue));
+        } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_DAYS)) {
+            try {
+                final Integer days = Integer.parseInt(fieldValue);
+                final DateTime date = new DateTime().minusDays(days);
+                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class,
+                        "contentSpecId", date, null);
+                addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
+            } catch (final Exception ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS)) {
+            try {
+                final Integer days = Integer.parseInt(fieldValue);
+                final DateTime date = new DateTime().minusDays(days);
+                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
+                        "contentSpecId", date, null);
+                addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
+            } catch (final NumberFormatException ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_MINUTES)) {
+            try {
+                final Integer minutes = Integer.parseInt(fieldValue);
+                final DateTime date = new DateTime().minusMinutes(minutes);
+                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
+                        "contentSpecId", date, null);
+                addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
+            } catch (final Exception ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES)) {
+            try {
+                final Integer minutes = Integer.parseInt(fieldValue);
+                final DateTime date = new DateTime().minusMinutes(minutes);
+                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
+                        "contentSpecId", date, null);
+                addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
+            } catch (final NumberFormatException ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
         } else {
             super.processFilterString(fieldName, fieldValue);
         }

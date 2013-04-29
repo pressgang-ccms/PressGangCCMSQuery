@@ -19,10 +19,14 @@ public class TranslatedContentSpecFieldFilter extends BaseFieldFilter {
         {
             put(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR,
                     CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.ZANATA_IDS_FILTER_VAR, CommonFilterConstants.ZANATA_IDS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR, CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR_DESC);
         }
     });
 
     private FilterFieldStringData translatedContentSpecIds;
+    private FilterFieldStringData zanataIds;
+    private FilterFieldStringData notZanataIds;
 
     public TranslatedContentSpecFieldFilter() {
         resetAllValues();
@@ -35,7 +39,15 @@ public class TranslatedContentSpecFieldFilter extends BaseFieldFilter {
         translatedContentSpecIds = new FilterFieldStringData(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR,
                 CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR_DESC);
 
+        /* Zanata ID's */
+        zanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_FILTER_VAR,
+                CommonFilterConstants.ZANATA_IDS_FILTER_VAR_DESC);
+        notZanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR,
+                CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR_DESC);
+
         addFilterVar(translatedContentSpecIds);
+        addFilterVar(zanataIds);
+        addFilterVar(notZanataIds);
     }
 
     @Override
