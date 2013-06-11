@@ -1,32 +1,29 @@
 package org.jboss.pressgang.ccms.filter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.base.BaseMultiFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanMapData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDateTimeData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldMapDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringMapData;
 import org.jboss.pressgang.ccms.model.Filter;
 import org.jboss.pressgang.ccms.model.FilterField;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class provides a mechanism to temporarily store and easily convert a set of fields for a filter until it needs to be
  * saved to a database entity. This is also used by the Seam GUI to store the data temporarily.
  */
-public class TopicFieldFilter extends BaseFieldFilter {
-    private static final Logger log = LoggerFactory.getLogger(TopicFieldFilter.class);
-
+public class TopicFieldFilter extends BaseMultiFieldFilter {
     /**
      * A map of the base filter field names that can not have multiple mappings
      */
@@ -112,6 +109,8 @@ public class TopicFieldFilter extends BaseFieldFilter {
     private FilterFieldBooleanData hasOpenBugzillaBugs;
     private FilterFieldBooleanData hasBugzillaBugs;
     private FilterFieldStringMapData propertyTags;
+    private FilterFieldBooleanMapData propertyTagExists;
+    private FilterFieldBooleanMapData propertyTagNotExists;
     private FilterFieldStringData topicIncludedInSpec;
     private FilterFieldStringData notTopicIncludedInSpec;
     private FilterFieldBooleanData latestTranslations;
@@ -126,8 +125,6 @@ public class TopicFieldFilter extends BaseFieldFilter {
     private FilterFieldBooleanData notHasBugzillaBugs;
     private FilterFieldBooleanData notLatestTranslations;
     private FilterFieldBooleanData notLatestCompletedTranslations;
-
-    private List<FilterFieldDataBase<?>> multipleFilterVars = new ArrayList<FilterFieldDataBase<?>>();
 
     public TopicFieldFilter() {
         resetAllValues();
@@ -248,6 +245,10 @@ public class TopicFieldFilter extends BaseFieldFilter {
         endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR,
                 CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR_DESC);
         propertyTags = new FilterFieldStringMapData(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
+        propertyTagExists = new FilterFieldBooleanMapData(CommonFilterConstants.PROPERTY_TAG_EXISTS,
+                CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
+        propertyTagNotExists = new FilterFieldBooleanMapData(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS,
+                CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);
 
         setupSingleFilterVars();
 
@@ -297,68 +298,26 @@ public class TopicFieldFilter extends BaseFieldFilter {
     }
 
     protected void setupMultipleFilterVars() {
-        multipleFilterVars.add(propertyTags);
-    }
-
-    @Override
-    public String getFieldValue(final String fieldName) {
-        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
-            final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
-
-            /*
-             * index will be empty if the fieldName is just CommonFilterConstants.PROPERTY_TAG, which can happen when
-             * another object is looping over the getBaseFilterNames() keyset.
-             */
-            if (!index.isEmpty()) {
-                try {
-                    final Integer indexInt = Integer.parseInt(index);
-
-                    /*
-                     * propertyTags will be null unless one of the setPropertyTag() method is called
-                     */
-                    if (propertyTags.getData() != null && propertyTags.getData().size() > indexInt)
-                        return propertyTags.getData().get(indexInt);
-                } catch (final NumberFormatException ex) {
-                    // could not parse integer, so fail
-                    log.warn("Probably a malformed URL query parameter for the 'Property Tag' Topic ID", ex);
-                    return null;
-                }
-            }
-
-            return null;
-        } else {
-            return super.getFieldValue(fieldName);
-        }
-    }
-
-    @Override
-    public void setFieldValue(final String fieldName, final String fieldValue) {
-        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
-            try {
-                final String index = fieldName.replace(CommonFilterConstants.PROPERTY_TAG, "");
-                final Integer indexInt = Integer.parseInt(index);
-                setPropertyTag(fieldValue, indexInt);
-            } catch (final NumberFormatException ex) {
-                // could not parse integer, so fail
-                log.warn("Probably a malformed URL query parameter for the 'Property Tag' Topic ID", ex);
-            }
-
-        } else {
-            super.setFieldValue(fieldName, fieldValue);
-        }
+        addMultiFilterVar(propertyTags);
+        addMultiFilterVar(propertyTagExists);
+        addMultiFilterVar(propertyTagNotExists);
     }
 
     public Map<String, String> getFilterValues() {
         final Map<String, String> retValue = new HashMap<String, String>();
+
+        // Add the single filters
         final List<FilterFieldDataBase<?>> filterVars = getFilterVars();
         for (final FilterFieldDataBase<?> uiField : filterVars) {
             retValue.put(uiField.getName(), uiField.getData().toString());
         }
 
-        final Map<String, String> propertyTagValues = propertyTags.getData();
-
-        for (final String propertyTagId : propertyTagValues.keySet()) {
-            retValue.put(CommonFilterConstants.PROPERTY_TAG + " " + propertyTagId, propertyTagValues.get(propertyTagId));
+        // Add the multi filters
+        final List<FilterFieldMapDataBase<?>> multiFilterVars = getMultiFilterVars();
+        for (final FilterFieldMapDataBase<?> uiField : multiFilterVars) {
+            for (final Map.Entry<Integer, ?> entry : uiField.getData().entrySet()) {
+                retValue.put(uiField.getName() + " " + entry.getKey(), entry.getValue().toString());
+            }
         }
 
         return retValue;
@@ -372,6 +331,8 @@ public class TopicFieldFilter extends BaseFieldFilter {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(singleFilterNames);
         retValue.put(CommonFilterConstants.PROPERTY_TAG + "\\d+", CommonFilterConstants.PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG_EXISTS + "\\d+", CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS + "\\d+", CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);
 
         return retValue;
     }
@@ -383,32 +344,10 @@ public class TopicFieldFilter extends BaseFieldFilter {
     public Map<String, String> getBaseFieldNames() {
         final Map<String, String> retValue = new HashMap<String, String>(singleFilterNames);
         retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG_EXISTS, CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
+        retValue.put(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS, CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);
 
         return retValue;
-    }
-
-    @Override
-    public boolean hasFieldName(final String input) {
-        boolean retValue = false;
-        for (final String name : getFieldNames().keySet()) {
-            if (input.matches("^" + name + "$")) {
-                retValue = true;
-                break;
-            }
-        }
-
-        return retValue;
-    }
-
-    @Override
-    public String getFieldDesc(final String input) {
-        for (final String name : getFieldNames().keySet()) {
-            if (input.matches("^" + name + "$")) {
-                return getFieldNames().get(name);
-            }
-        }
-
-        return "";
     }
 
     public void loadFilterFields(final Filter filter) {
@@ -420,12 +359,6 @@ public class TopicFieldFilter extends BaseFieldFilter {
 
             setFieldValue(field, value);
         }
-    }
-
-    public void setPropertyTag(final String propertyTag, final int index) {
-        if (propertyTags.getData() == null) propertyTags.setData(new HashMap<String, String>());
-
-        propertyTags.getData().put(Integer.toString(index), propertyTag);
     }
 
     public FilterFieldStringData getTopicIds() {

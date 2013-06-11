@@ -11,13 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToBugzillaBug;
 import org.jboss.pressgang.ccms.model.TopicToPropertyTag;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
@@ -29,8 +26,8 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> The Type of topic that should be returned by the query builder.
  */
-public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuilder<T> implements ITagFilterQueryBuilder,
-        ILocaleFilterQueryBuilder {
+public abstract class BaseTopicFilterQueryBuilder<T> extends BaseEntityWithPropertiesFilterQueryBuilder<T, TopicToPropertyTag> implements
+        ITagFilterQueryBuilder, ILocaleFilterQueryBuilder {
     private static final Logger log = LoggerFactory.getLogger(BaseTopicFilterQueryBuilder.class);
 
     private final Subquery<Topic> topicQuery;
@@ -315,43 +312,13 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
             if (fieldValueBoolean) {
                 addSizeLessThanCondition("topicToBugzillaBugs", 1);
             }
-        } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
-            try {
-                final NamedPattern pattern = NamedPattern.compile(CommonConstants.PROPERTY_TAG_SEARCH_RE);
-                final NamedMatcher matcher = pattern.matcher(fieldName);
-
-                while (matcher.find()) {
-                    final String propertyTagIdString = matcher.group("PropertyTagID");
-
-                    if (propertyTagIdString != null && fieldValue != null) {
-                        final Integer propertyTagIdInt = Integer.parseInt(propertyTagIdString);
-                        addExistsCondition(getPropertyTagSubquery(propertyTagIdInt, fieldValue));
-                    }
-
-                    /* should only match once */
-                    break;
-                }
-
-            } catch (final NumberFormatException ex) {
-                /*
-                 * could not parse integer, so fail. this shouldn't happen though, as the string is matched by a regex that will
-                 * only allow numbers
-                 */
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
         } else {
             super.processFilterString(fieldName, fieldValue);
         }
     }
 
-    /**
-     * Create a Subquery to check if a topic has a property tag with a specific value.
-     *
-     * @param propertyTagId    The ID of the property tag to be checked.
-     * @param propertyTagValue The Value that the property tag should have.
-     * @return A subquery that can be used in an exists statement to see if a topic has a property tag with the specified value.
-     */
-    private Subquery<TopicToPropertyTag> getPropertyTagSubquery(final Integer propertyTagId, final String propertyTagValue) {
+    @Override
+    protected Subquery<TopicToPropertyTag> getPropertyTagSubquery(final Integer propertyTagId, final String propertyTagValue) {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<TopicToPropertyTag> subQuery = getCriteriaQuery().subquery(TopicToPropertyTag.class);
         final Root<TopicToPropertyTag> root = subQuery.from(TopicToPropertyTag.class);
@@ -362,6 +329,21 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
         final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
         final Predicate propertyTagValueMatch = criteriaBuilder.equal(root.get("value"), propertyTagValue);
         subQuery.where(criteriaBuilder.and(topicIdMatch, propertyTagIdMatch, propertyTagValueMatch));
+
+        return subQuery;
+    }
+
+    @Override
+    protected Subquery<TopicToPropertyTag> getPropertyTagExistsSubquery(final Integer propertyTagId) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<TopicToPropertyTag> subQuery = getCriteriaQuery().subquery(TopicToPropertyTag.class);
+        final Root<TopicToPropertyTag> root = subQuery.from(TopicToPropertyTag.class);
+        subQuery.select(root);
+
+        // Create the Condition for the subquery
+        final Predicate topicIdMatch = criteriaBuilder.equal(getRootPath(), root.get("topic"));
+        final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
+        subQuery.where(criteriaBuilder.and(topicIdMatch, propertyTagIdMatch));
 
         return subQuery;
     }
