@@ -46,4 +46,19 @@ public class TagFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<
 
         return subQuery;
     }
+
+    @Override
+    protected Subquery<TagToPropertyTag> getPropertyTagExistsSubquery(final Integer propertyTagId) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<TagToPropertyTag> subQuery = getCriteriaQuery().subquery(TagToPropertyTag.class);
+        final Root<TagToPropertyTag> root = subQuery.from(TagToPropertyTag.class);
+        subQuery.select(root);
+
+        // Create the Condition for the subquery
+        final Predicate tagIdMatch = criteriaBuilder.equal(getRootPath(), root.get("tag"));
+        final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
+        subQuery.where(criteriaBuilder.and(tagIdMatch, propertyTagIdMatch));
+
+        return subQuery;
+    }
 }

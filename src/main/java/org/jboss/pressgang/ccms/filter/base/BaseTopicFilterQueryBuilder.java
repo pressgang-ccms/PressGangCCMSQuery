@@ -333,6 +333,21 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
         return subQuery;
     }
 
+    @Override
+    protected Subquery<TopicToPropertyTag> getPropertyTagExistsSubquery(final Integer propertyTagId) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<TopicToPropertyTag> subQuery = getCriteriaQuery().subquery(TopicToPropertyTag.class);
+        final Root<TopicToPropertyTag> root = subQuery.from(TopicToPropertyTag.class);
+        subQuery.select(root);
+
+        // Create the Condition for the subquery
+        final Predicate topicIdMatch = criteriaBuilder.equal(getRootPath(), root.get("topic"));
+        final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
+        subQuery.where(criteriaBuilder.and(topicIdMatch, propertyTagIdMatch));
+
+        return subQuery;
+    }
+
     /**
      * Create a Subquery to check if a topic has open bugs.
      *
