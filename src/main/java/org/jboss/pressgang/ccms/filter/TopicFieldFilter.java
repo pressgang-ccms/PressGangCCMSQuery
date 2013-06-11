@@ -1,21 +1,18 @@
 package org.jboss.pressgang.ccms.filter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgang.ccms.filter.base.BaseMultiFieldFilter;
+import org.jboss.pressgang.ccms.filter.base.BaseFieldFilterWithProperties;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanMapData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDateTimeData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldMapDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringMapData;
 import org.jboss.pressgang.ccms.model.Filter;
 import org.jboss.pressgang.ccms.model.FilterField;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
@@ -24,7 +21,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
  * This class provides a mechanism to temporarily store and easily convert a set of fields for a filter until it needs to be
  * saved to a database entity. This is also used by the Seam GUI to store the data temporarily.
  */
-public class TopicFieldFilter extends BaseMultiFieldFilter {
+public class TopicFieldFilter extends BaseFieldFilterWithProperties {
     /**
      * A map of the base filter field names that can not have multiple mappings
      */
@@ -109,9 +106,6 @@ public class TopicFieldFilter extends BaseMultiFieldFilter {
     private FilterFieldIntegerData notEditedInLastMins;
     private FilterFieldBooleanData hasOpenBugzillaBugs;
     private FilterFieldBooleanData hasBugzillaBugs;
-    private FilterFieldStringMapData propertyTags;
-    private FilterFieldBooleanMapData propertyTagExists;
-    private FilterFieldBooleanMapData propertyTagNotExists;
     private FilterFieldStringData topicIncludedInSpec;
     private FilterFieldStringData notTopicIncludedInSpec;
     private FilterFieldBooleanData latestTranslations;
@@ -245,15 +239,8 @@ public class TopicFieldFilter extends BaseMultiFieldFilter {
                 CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR_DESC);
         endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR,
                 CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR_DESC);
-        propertyTags = new FilterFieldStringMapData(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
-        propertyTagExists = new FilterFieldBooleanMapData(CommonFilterConstants.PROPERTY_TAG_EXISTS,
-                CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
-        propertyTagNotExists = new FilterFieldBooleanMapData(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS,
-                CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);
 
         setupSingleFilterVars();
-
-        setupMultipleFilterVars();
     }
 
     private void setupSingleFilterVars() {
@@ -298,12 +285,6 @@ public class TopicFieldFilter extends BaseMultiFieldFilter {
         addFilterVar(notLatestCompletedTranslations);
     }
 
-    private void setupMultipleFilterVars() {
-        addMultiFilterVar(propertyTags);
-        addMultiFilterVar(propertyTagExists);
-        addMultiFilterVar(propertyTagNotExists);
-    }
-
     public Map<String, String> getFilterValues() {
         final Map<String, String> retValue = new HashMap<String, String>();
 
@@ -331,9 +312,6 @@ public class TopicFieldFilter extends BaseMultiFieldFilter {
     public Map<String, String> getFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(singleFilterNames);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG + "\\d+", CommonFilterConstants.PROPERTY_TAG_DESC);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG_EXISTS + "\\d+", CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS + "\\d+", CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);
 
         return retValue;
     }
@@ -343,10 +321,8 @@ public class TopicFieldFilter extends BaseMultiFieldFilter {
      */
     @Override
     public Map<String, String> getBaseFieldNames() {
-        final Map<String, String> retValue = new HashMap<String, String>(singleFilterNames);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG_EXISTS, CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
-        retValue.put(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS, CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);
+        final Map<String, String> retValue = super.getBaseFieldNames();
+        retValue.putAll(singleFilterNames);
 
         return retValue;
     }

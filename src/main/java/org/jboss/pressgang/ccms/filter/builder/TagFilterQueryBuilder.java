@@ -11,7 +11,7 @@ import org.jboss.pressgang.ccms.model.Tag;
 import org.jboss.pressgang.ccms.model.TagToPropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
-public class TagFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<Tag> {
+public class TagFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<Tag, TagToPropertyTag> {
     public TagFilterQueryBuilder(final EntityManager entityManager) {
         super(Tag.class, entityManager);
     }

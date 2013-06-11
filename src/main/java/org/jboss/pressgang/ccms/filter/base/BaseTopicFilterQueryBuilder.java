@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> The Type of topic that should be returned by the query builder.
  */
-public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuilderWithProperties<T> implements ITagFilterQueryBuilder,
+public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuilderWithProperties<T,
+        TopicToPropertyTag> implements ITagFilterQueryBuilder,
         ILocaleFilterQueryBuilder {
     private static final Logger log = LoggerFactory.getLogger(BaseTopicFilterQueryBuilder.class);
 

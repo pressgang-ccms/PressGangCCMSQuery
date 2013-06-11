@@ -7,7 +7,6 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilderWithProperties;
 import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ITagFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
