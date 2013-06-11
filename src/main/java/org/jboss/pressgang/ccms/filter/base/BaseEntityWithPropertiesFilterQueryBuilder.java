@@ -25,23 +25,23 @@ public abstract class BaseEntityWithPropertiesFilterQueryBuilder<T, U extends To
 
     @Override
     public void processFilterString(final String fieldName, final String fieldValue) {
-        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
-            final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG, fieldName);
-
-            if (propertyTagId != null && fieldValue != null) {
-                addExistsCondition(getPropertyTagSubquery(propertyTagId, fieldValue));
-            }
-        } else if (fieldName.equals(CommonFilterConstants.PROPERTY_TAG_EXISTS)) {
+        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG_EXISTS)) {
             final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG_EXISTS, fieldName);
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (propertyTagId != null && fieldValueBoolean) {
                 addFieldCondition(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId)));
             }
-        } else if (fieldName.equals(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS)) {
+        } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS)) {
             final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS, fieldName);
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
             if (propertyTagId != null && fieldValueBoolean) {
                 addFieldCondition(getCriteriaBuilder().not(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId))));
+            }
+        } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
+            final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG, fieldName);
+
+            if (propertyTagId != null && fieldValue != null) {
+                addExistsCondition(getPropertyTagSubquery(propertyTagId, fieldValue));
             }
         } else {
             super.processFilterString(fieldName, fieldValue);
