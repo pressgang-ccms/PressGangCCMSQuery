@@ -342,7 +342,8 @@ public class TopicFieldFilter extends BaseMultiFieldFilter {
      */
     @Override
     public Map<String, String> getBaseFieldNames() {
-        final Map<String, String> retValue = new HashMap<String, String>(singleFilterNames);
+        final Map<String, String> retValue = super.getFieldNames();
+        retValue.putAll(singleFilterNames);
         retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
         retValue.put(CommonFilterConstants.PROPERTY_TAG_EXISTS, CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
         retValue.put(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS, CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS_DESC);

@@ -75,7 +75,7 @@ public class TagFieldFilter extends BaseMultiFieldFilter {
 
     @Override
     public Map<String, String> getBaseFieldNames() {
-        final Map<String, String> retValue = super.getFieldNames();
+        final Map<String, String> retValue = super.getBaseFieldNames();
         retValue.putAll(filterNames);
         retValue.put(CommonFilterConstants.PROPERTY_TAG, CommonFilterConstants.PROPERTY_TAG_DESC);
         retValue.put(CommonFilterConstants.PROPERTY_TAG_EXISTS, CommonFilterConstants.PROPERTY_TAG_EXISTS_DESC);
