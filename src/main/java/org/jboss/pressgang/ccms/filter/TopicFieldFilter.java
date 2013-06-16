@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilterWithProperties;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanMapData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDateTimeData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
@@ -243,7 +244,7 @@ public class TopicFieldFilter extends BaseFieldFilterWithProperties {
         setupSingleFilterVars();
     }
 
-    private void setupSingleFilterVars() {
+    protected void setupSingleFilterVars() {
         addFilterVar(topicTextSearch);
         addFilterVar(topicIds);
         addFilterVar(topicIncludedInSpec);
