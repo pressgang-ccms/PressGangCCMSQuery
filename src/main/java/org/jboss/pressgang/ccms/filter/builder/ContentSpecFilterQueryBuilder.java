@@ -7,6 +7,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilderWithProperties;
 import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ITagFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
@@ -24,8 +25,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Provides the query elements required by Filter.buildQuery() to get a list of Topic elements
  */
-public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<ContentSpec> implements ITagFilterQueryBuilder,
-        ILocaleFilterQueryBuilder {
+public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<ContentSpec,
+        ContentSpecToPropertyTag> implements ITagFilterQueryBuilder, ILocaleFilterQueryBuilder {
     private static final Logger log = LoggerFactory.getLogger(ContentSpecFilterQueryBuilder.class);
 
     public ContentSpecFilterQueryBuilder(final EntityManager entityManager) {
@@ -148,7 +149,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     }
 
     @Override
-    protected Subquery<?> getPropertyTagSubquery(Integer propertyTagId, String propertyTagValue) {
+    protected Subquery<ContentSpecToPropertyTag> getPropertyTagSubquery(Integer propertyTagId, String propertyTagValue) {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<ContentSpecToPropertyTag> subQuery = getCriteriaQuery().subquery(ContentSpecToPropertyTag.class);
         final Root<ContentSpecToPropertyTag> root = subQuery.from(ContentSpecToPropertyTag.class);
@@ -159,6 +160,21 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
         final Predicate propertyTagValueMatch = criteriaBuilder.equal(root.get("value"), propertyTagValue);
         subQuery.where(criteriaBuilder.and(contentSpecIdMatch, propertyTagIdMatch, propertyTagValueMatch));
+
+        return subQuery;
+    }
+
+    @Override
+    protected Subquery<ContentSpecToPropertyTag> getPropertyTagExistsSubquery(Integer propertyTagId) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<ContentSpecToPropertyTag> subQuery = getCriteriaQuery().subquery(ContentSpecToPropertyTag.class);
+        final Root<ContentSpecToPropertyTag> root = subQuery.from(ContentSpecToPropertyTag.class);
+        subQuery.select(root);
+
+        // Create the Condition for the subquery
+        final Predicate contentSpecIdMatch = criteriaBuilder.equal(getRootPath(), root.get("contentSpec"));
+        final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
+        subQuery.where(criteriaBuilder.and(contentSpecIdMatch, propertyTagIdMatch));
 
         return subQuery;
     }
