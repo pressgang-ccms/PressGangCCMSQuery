@@ -25,7 +25,7 @@
         <jodatime.version>2.1</jodatime.version>
         <jdal.core.version>1.2.0</jdal.core.version>
         <slf4j.version>1.6.4</slf4j.version>
-        <csprocessor.version>0.0.5-SNAPSHOT</csprocessor.version>
+        <csprocessor.version>0.0.7-SNAPSHOT</csprocessor.version>
     </properties>
 
     <build>
