@@ -46,7 +46,8 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
         setupSingleFilterVars();
     }
 
-    private void setupSingleFilterVars() {
+    @Override
+    protected void setupSingleFilterVars() {
         addFilterVar(zanataIds);
         addFilterVar(notZanataIds);
     }
@@ -59,7 +60,6 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
     public Map<String, String> getFieldNames() {
         final Map<String, String> retValue = super.getFieldNames();
         retValue.putAll(singleFilterNames);
-
         return retValue;
     }
 
