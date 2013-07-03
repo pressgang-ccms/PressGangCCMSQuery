@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilterWithProperties;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanMapData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDateTimeData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
@@ -36,10 +35,10 @@ public class TopicFieldFilter extends BaseFieldFilterWithProperties {
             put(CommonFilterConstants.TOPIC_XML_FILTER_VAR, CommonFilterConstants.TOPIC_XML_FILTER_VAR_DESC);
             put(CommonFilterConstants.TOPIC_TITLE_FILTER_VAR, CommonFilterConstants.TOPIC_TITLE_FILTER_VAR_DESC);
             put(CommonFilterConstants.TOPIC_DESCRIPTION_FILTER_VAR, CommonFilterConstants.TOPIC_DESCRIPTION_FILTER_VAR_DESC);
-            put(CommonFilterConstants.TOPIC_STARTDATE_FILTER_VAR, CommonFilterConstants.TOPIC_STARTDATE_FILTER_VAR_DESC);
-            put(CommonFilterConstants.TOPIC_ENDDATE_FILTER_VAR, CommonFilterConstants.TOPIC_ENDDATE_FILTER_VAR_DESC);
-            put(CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR, CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR_DESC);
-            put(CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR, CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.STARTDATE_FILTER_VAR, CommonFilterConstants.STARTDATE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.ENDDATE_FILTER_VAR, CommonFilterConstants.ENDDATE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.STARTEDITDATE_FILTER_VAR, CommonFilterConstants.STARTEDITDATE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.ENDEDITDATE_FILTER_VAR, CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
             put(CommonFilterConstants.TOPIC_HAS_RELATIONSHIPS, CommonFilterConstants.TOPIC_HAS_RELATIONSHIPS_DESC);
             put(CommonFilterConstants.TOPIC_HAS_INCOMING_RELATIONSHIPS, CommonFilterConstants.TOPIC_HAS_INCOMING_RELATIONSHIPS_DESC);
             put(CommonFilterConstants.TOPIC_RELATED_TO, CommonFilterConstants.TOPIC_RELATED_TO_DESC);
@@ -232,14 +231,14 @@ public class TopicFieldFilter extends BaseFieldFilterWithProperties {
 
         topicTextSearch = new FilterFieldStringData(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR,
                 CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR_DESC);
-        startCreateDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_STARTDATE_FILTER_VAR,
-                CommonFilterConstants.TOPIC_STARTDATE_FILTER_VAR_DESC);
-        endCreateDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_ENDDATE_FILTER_VAR,
-                CommonFilterConstants.TOPIC_ENDDATE_FILTER_VAR_DESC);
-        startEditDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR,
-                CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR_DESC);
-        endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR,
-                CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR_DESC);
+        startCreateDate = new FilterFieldDateTimeData(CommonFilterConstants.STARTDATE_FILTER_VAR,
+                CommonFilterConstants.STARTDATE_FILTER_VAR_DESC);
+        endCreateDate = new FilterFieldDateTimeData(CommonFilterConstants.ENDDATE_FILTER_VAR,
+                CommonFilterConstants.ENDDATE_FILTER_VAR_DESC);
+        startEditDate = new FilterFieldDateTimeData(CommonFilterConstants.STARTEDITDATE_FILTER_VAR,
+                CommonFilterConstants.STARTEDITDATE_FILTER_VAR_DESC);
+        endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.ENDEDITDATE_FILTER_VAR,
+                CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
 
         setupSingleFilterVars();
     }

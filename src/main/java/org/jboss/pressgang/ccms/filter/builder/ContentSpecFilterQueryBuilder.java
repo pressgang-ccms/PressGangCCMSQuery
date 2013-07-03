@@ -19,6 +19,7 @@ import org.jboss.pressgang.ccms.model.contentspec.ContentSpecToPropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +30,18 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         ContentSpecToPropertyTag> implements ITagFilterQueryBuilder, ILocaleFilterQueryBuilder {
     private static final Logger log = LoggerFactory.getLogger(ContentSpecFilterQueryBuilder.class);
 
+    private DateTime startEditDate;
+    private DateTime endEditDate;
+
     public ContentSpecFilterQueryBuilder(final EntityManager entityManager) {
         super(ContentSpec.class, entityManager);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        startEditDate = null;
+        endEditDate = null;
     }
 
     @Override
@@ -90,6 +101,17 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     }
 
     @Override
+    public Predicate getFilterConditions() {
+        if (startEditDate != null || endEditDate != null) {
+            final List<Integer> ids = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class, "contentSpecId",
+                    startEditDate, endEditDate);
+            addIdInCollectionCondition("contentSpecId", ids);
+        }
+
+        return super.getFilterConditions();
+    }
+
+    @Override
     public void processFilterString(final String fieldName, final String fieldValue) {
         if (fieldName.equals(CommonFilterConstants.LOGIC_FILTER_VAR)) {
             filterFieldsLogic = fieldValue;
@@ -141,6 +163,18 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                         "contentSpecId", date, null);
                 addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
             } catch (final NumberFormatException ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.STARTEDITDATE_FILTER_VAR)) {
+            try {
+                startEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
+            } catch (final Exception ex) {
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.ENDEDITDATE_FILTER_VAR)) {
+            try {
+                endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
+            } catch (final Exception ex) {
                 log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else {

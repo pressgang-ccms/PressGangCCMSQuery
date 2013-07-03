@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilterWithProperties;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDateTimeData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
@@ -26,6 +27,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
             put(CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS, CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS_DESC);
             put(CommonFilterConstants.EDITED_IN_LAST_MINUTES, CommonFilterConstants.EDITED_IN_LAST_MINUTES_DESC);
             put(CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES, CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES_DESC);
+            put(CommonFilterConstants.STARTEDITDATE_FILTER_VAR, CommonFilterConstants.STARTEDITDATE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.ENDEDITDATE_FILTER_VAR, CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
         }
     });
 
@@ -37,6 +40,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
     private FilterFieldIntegerData notEditedInLastDays;
     private FilterFieldIntegerData editedInLastMins;
     private FilterFieldIntegerData notEditedInLastMins;
+    private FilterFieldDateTimeData startEditDate;
+    private FilterFieldDateTimeData endEditDate;
 
     public ContentSpecFieldFilter() {
         resetAllValues();
@@ -67,6 +72,11 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         notEditedInLastMins = new FilterFieldIntegerData(CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES,
                 CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES_DESC);
 
+        startEditDate = new FilterFieldDateTimeData(CommonFilterConstants.STARTEDITDATE_FILTER_VAR,
+                CommonFilterConstants.STARTEDITDATE_FILTER_VAR_DESC);
+        endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.ENDEDITDATE_FILTER_VAR,
+                CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
+
         setupSingleFilterVars();
     }
 
@@ -79,6 +89,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         addFilterVar(notEditedInLastDays);
         addFilterVar(editedInLastMins);
         addFilterVar(notEditedInLastMins);
+        addFilterVar(startEditDate);
+        addFilterVar(endEditDate);
     }
 
     @Override

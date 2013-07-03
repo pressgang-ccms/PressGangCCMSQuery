@@ -75,6 +75,15 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
     }
 
     @Override
+    public void reset() {
+        super.reset();
+        startCreateDate = null;
+        endCreateDate = null;
+        startEditDate = null;
+        endEditDate = null;
+    }
+
+    @Override
     public Predicate getFilterConditions() {
         if (startCreateDate != null || endCreateDate != null) {
             final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
@@ -269,25 +278,25 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
             } catch (final NumberFormatException ex) {
                 log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
-        } else if (fieldName.equals(CommonFilterConstants.TOPIC_STARTDATE_FILTER_VAR)) {
+        } else if (fieldName.equals(CommonFilterConstants.STARTDATE_FILTER_VAR)) {
             try {
                 startCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
             } catch (final Exception ex) {
                 log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
-        } else if (fieldName.equals(CommonFilterConstants.TOPIC_ENDDATE_FILTER_VAR)) {
+        } else if (fieldName.equals(CommonFilterConstants.ENDDATE_FILTER_VAR)) {
             try {
                 endCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
             } catch (final Exception ex) {
                 log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
-        } else if (fieldName.equals(CommonFilterConstants.TOPIC_STARTEDITDATE_FILTER_VAR)) {
+        } else if (fieldName.equals(CommonFilterConstants.STARTEDITDATE_FILTER_VAR)) {
             try {
                 startEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
                 log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
-        } else if (fieldName.equals(CommonFilterConstants.TOPIC_ENDEDITDATE_FILTER_VAR)) {
+        } else if (fieldName.equals(CommonFilterConstants.ENDEDITDATE_FILTER_VAR)) {
             try {
                 endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
