@@ -12,10 +12,10 @@ import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ITagFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
-import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpecToPropertyTag;
+import org.jboss.pressgang.ccms.model.contentspec.ContentSpecToTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
@@ -47,12 +47,12 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     @Override
     public Predicate getMatchTagString(final Integer tagId) {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Subquery<TopicToTag> subquery = getCriteriaQuery().subquery(TopicToTag.class);
-        final Root<TopicToTag> from = subquery.from(TopicToTag.class);
-        final Predicate topic = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
+        final Subquery<ContentSpecToTag> subquery = getCriteriaQuery().subquery(ContentSpecToTag.class);
+        final Root<ContentSpecToTag> from = subquery.from(ContentSpecToTag.class);
+        final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
         final Predicate tag = criteriaBuilder.equal(from.get("tag").get("tagId"), tagId);
         subquery.select(from);
-        subquery.where(criteriaBuilder.and(topic, tag));
+        subquery.where(criteriaBuilder.and(contentSpec, tag));
 
         return criteriaBuilder.exists(subquery);
     }
@@ -60,12 +60,12 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     @Override
     public Predicate getNotMatchTagString(final Integer tagId) {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Subquery<TopicToTag> subquery = getCriteriaQuery().subquery(TopicToTag.class);
-        final Root<TopicToTag> from = subquery.from(TopicToTag.class);
-        final Predicate topic = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
+        final Subquery<ContentSpecToTag> subquery = getCriteriaQuery().subquery(ContentSpecToTag.class);
+        final Root<ContentSpecToTag> from = subquery.from(ContentSpecToTag.class);
+        final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
         final Predicate tag = criteriaBuilder.equal(from.get("tag").get("tagId"), tagId);
         subquery.select(from);
-        subquery.where(criteriaBuilder.and(topic, tag));
+        subquery.where(criteriaBuilder.and(contentSpec, tag));
 
         return criteriaBuilder.not(criteriaBuilder.exists(subquery));
     }
@@ -230,7 +230,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final Predicate contentSpecIdMatch = criteriaBuilder.equal(getRootPath(), root.get("contentSpec"));
         final Predicate isMetaData = criteriaBuilder.equal(root.get("CSNodeType").as(Integer.class), CommonConstants.CS_NODE_META_DATA);
         final Predicate metaDataTitleMatch = criteriaBuilder.equal((root.get("CSNodeTitle").as(String.class)), metaDataTitle);
-        final Predicate metaDataValueMatch = criteriaBuilder.equal(root.get("value"), metaDataValue);
+        final Predicate metaDataValueMatch = criteriaBuilder.like(root.get("additionalText").as(String.class), "%" + metaDataValue + "%");
         subQuery.where(criteriaBuilder.and(contentSpecIdMatch, isMetaData, metaDataTitleMatch, metaDataValueMatch));
 
         return subQuery;
