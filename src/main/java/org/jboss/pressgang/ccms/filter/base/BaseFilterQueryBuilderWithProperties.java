@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * @param <U> The Type of the entity to PropertyTag mapping.
  */
 public abstract class BaseFilterQueryBuilderWithProperties<T, U extends ToPropertyTag<U>> extends BaseFilterQueryBuilder<T> {
-    private static final Logger log = LoggerFactory.getLogger(BaseFilterQueryBuilderWithProperties.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseFilterQueryBuilderWithProperties.class);
 
     protected BaseFilterQueryBuilderWithProperties(Class<T> clazz, EntityManager entityManager) {
         super(clazz, entityManager);
@@ -76,7 +76,7 @@ public abstract class BaseFilterQueryBuilderWithProperties<T, U extends ToProper
              * could not parse integer, so fail. this shouldn't happen though, as the string is matched by a regex that will
              * only allow numbers
              */
-            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldName);
+            LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldName);
         }
 
         return null;

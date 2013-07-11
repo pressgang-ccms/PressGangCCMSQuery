@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<ContentSpec,
         ContentSpecToPropertyTag> implements ITagFilterQueryBuilder, ILocaleFilterQueryBuilder {
-    private static final Logger log = LoggerFactory.getLogger(ContentSpecFilterQueryBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContentSpecFilterQueryBuilder.class);
 
     private DateTime startEditDate;
     private DateTime endEditDate;
@@ -133,7 +133,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                         "contentSpecId", date, null);
                 addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS)) {
             try {
@@ -143,7 +143,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                         "contentSpecId", date, null);
                 addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_MINUTES)) {
             try {
@@ -153,7 +153,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                         "contentSpecId", date, null);
                 addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES)) {
             try {
@@ -163,19 +163,19 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                         "contentSpecId", date, null);
                 addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.STARTEDITDATE_FILTER_VAR)) {
             try {
                 startEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.ENDEDITDATE_FILTER_VAR)) {
             try {
                 endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else {
             super.processFilterString(fieldName, fieldValue);

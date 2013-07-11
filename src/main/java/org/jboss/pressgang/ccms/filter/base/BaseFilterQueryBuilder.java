@@ -294,6 +294,28 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
     }
 
     /**
+     * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
+     * {@code field = '%value'}
+     *
+     * @param propertyName The name of the field as defined in the Entity mapping class.
+     * @param value        The value to search against.
+     */
+    protected void addEqualsCondition(final String propertyName, final String value) {
+        fieldConditions.add(getCriteriaBuilder().equal(getRootPath().get(propertyName).as(String.class), value));
+    }
+
+    /**
+     * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
+     * {@code field = '%value'}
+     *
+     * @param propertyName The name of the field as defined in the Entity mapping class.
+     * @param value        The value to search against.
+     */
+    protected void addEqualsCondition(final String propertyName, final Integer value) {
+        fieldConditions.add(getCriteriaBuilder().equal(getRootPath().get(propertyName).as(Integer.class), value));
+    }
+
+    /**
      * Cleans a Condition Value to escape any characters that could disrupt a like query. ie the percent character (%)
      *
      * @param value The value to be cleaned/escaped.

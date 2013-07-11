@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuilderWithProperties<T,
         TopicToPropertyTag> implements ITagFilterQueryBuilder,
         ILocaleFilterQueryBuilder {
-    private static final Logger log = LoggerFactory.getLogger(BaseTopicFilterQueryBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseTopicFilterQueryBuilder.class);
 
     private final Subquery<Topic> topicQuery;
     private final Root<Topic> from;
@@ -142,7 +142,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                         relatedTopicIds.addAll(csTopicIds);
                     }
                 } catch (final NumberFormatException ex) {
-                    log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                    LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                 }
             }
 
@@ -159,7 +159,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                         relatedTopicIds.addAll(csTopicIds);
                     }
                 } catch (final NumberFormatException ex) {
-                    log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                    LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
                 }
             }
 
@@ -190,7 +190,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                 final List<Integer> relatedTopicIds = EntityUtilities.getIncomingRelatedTopicIDs(getEntityManager(), topicId);
                 addIdInCollectionCondition("topicId", relatedTopicIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_RELATED_TO)) {
             try {
@@ -198,7 +198,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                 final List<Integer> relatedTopicIds = EntityUtilities.getIncomingRelatedTopicIDs(getEntityManager(), topicId);
                 addIdNotInCollectionCondition("topicId", relatedTopicIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_RELATED_FROM)) {
             try {
@@ -206,7 +206,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                 final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), topicId);
                 addIdInCollectionCondition("topicId", relatedTopicIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_RELATED_FROM)) {
             try {
@@ -214,7 +214,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                 final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), topicId);
                 addIdNotInCollectionCondition("topicId", relatedTopicIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR)) {
             final List<Integer> matchingTopicIds = EntityUtilities.getTextSearchTopicMatch(getEntityManager(), fieldValue);
@@ -246,7 +246,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                         null);
                 addIdInCollectionCondition("topicId", editedTopicIds);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_DAYS)) {
             try {
@@ -256,7 +256,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                         null);
                 addIdNotInCollectionCondition("topicId", editedTopicIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES)) {
             try {
@@ -266,7 +266,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                         null);
                 addIdInCollectionCondition("topicId", editedTopicIds);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES)) {
             try {
@@ -276,31 +276,31 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                         null);
                 addIdNotInCollectionCondition("topicId", editedTopicIds);
             } catch (final NumberFormatException ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.STARTDATE_FILTER_VAR)) {
             try {
                 startCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.ENDDATE_FILTER_VAR)) {
             try {
                 endCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.STARTEDITDATE_FILTER_VAR)) {
             try {
                 startEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.ENDEDITDATE_FILTER_VAR)) {
             try {
                 endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
-                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_OPEN_BUGZILLA_BUGS)) {
             final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
