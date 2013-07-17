@@ -232,7 +232,8 @@ public class EntityUtilities {
 
             final List<Integer> topicIds = new ArrayList<Integer>();
             for (final CSNode node : contentSpec.getCSNodes()) {
-                if (node.getCSNodeType() != CommonConstants.CS_NODE_TOPIC) {
+                if (!node.getCSNodeType().equals(CommonConstants.CS_NODE_TOPIC) && !node.getCSNodeType().equals(
+                        CommonConstants.CS_NODE_INNER_TOPIC)) {
                     continue;
                 } else if (node.getEntityId() != null) {
                     topicIds.add(node.getEntityId());
