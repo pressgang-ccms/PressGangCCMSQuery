@@ -51,8 +51,9 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final Root<ContentSpecToTag> from = subquery.from(ContentSpecToTag.class);
         final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
         final Predicate tag = criteriaBuilder.equal(from.get("tag").get("tagId"), tagId);
+        final Predicate notBookTag = criteriaBuilder.equal(from.get("bookTag"), false);
         subquery.select(from);
-        subquery.where(criteriaBuilder.and(contentSpec, tag));
+        subquery.where(criteriaBuilder.and(contentSpec, tag, notBookTag));
 
         return criteriaBuilder.exists(subquery);
     }
@@ -64,8 +65,9 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final Root<ContentSpecToTag> from = subquery.from(ContentSpecToTag.class);
         final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
         final Predicate tag = criteriaBuilder.equal(from.get("tag").get("tagId"), tagId);
+        final Predicate notBookTag = criteriaBuilder.equal(from.get("bookTag"), false);
         subquery.select(from);
-        subquery.where(criteriaBuilder.and(contentSpec, tag));
+        subquery.where(criteriaBuilder.and(contentSpec, tag, notBookTag));
 
         return criteriaBuilder.not(criteriaBuilder.exists(subquery));
     }
