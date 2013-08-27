@@ -21,12 +21,18 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
             put(CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR,
+                    CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR,
+                    CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR_DESC);
         }
     });
 
     private FilterFieldStringData csNodeIds;
     private FilterFieldStringData csNodeTitle;
     private FilterFieldIntegerData csNodeType;
+    private FilterFieldIntegerData csNodeEntityId;
+    private FilterFieldIntegerData csNodeEntityRev;
 
     public ContentSpecNodeFieldFilter() {
         resetAllValues();
@@ -42,10 +48,16 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC);
         csNodeType = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC);
+        csNodeEntityId = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR_DESC);
+        csNodeEntityRev = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR_DESC);
 
         addFilterVar(csNodeIds);
         addFilterVar(csNodeTitle);
         addFilterVar(csNodeType);
+        addFilterVar(csNodeEntityId);
+        addFilterVar(csNodeEntityRev);
     }
 
     @Override

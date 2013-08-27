@@ -21,6 +21,11 @@ public class ContentSpecNodeFilterQueryBuilder extends BaseFilterQueryBuilder<CS
             addLikeIgnoresCaseCondition("CSNodeTitle", fieldValue);
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR)) {
             addFieldCondition(getCriteriaBuilder().equal(getRootPath().get("CSNodeType").as(Integer.class), Integer.parseInt(fieldValue)));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR)) {
+            addFieldCondition(getCriteriaBuilder().equal(getRootPath().get("entityId").as(Integer.class), Integer.parseInt(fieldValue)));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR)) {
+            addFieldCondition(getCriteriaBuilder().equal(getRootPath().get("entityRevision").as(Integer.class),
+                    Integer.parseInt(fieldValue)));
         } else {
             super.processFilterString(fieldName, fieldValue);
         }
