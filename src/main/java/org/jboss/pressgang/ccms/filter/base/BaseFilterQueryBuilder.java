@@ -208,10 +208,20 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param values       The List of Ids to be compared to.
      */
     protected void addIdInCollectionCondition(final String propertyName, final Collection<Integer> values) {
+        addIdInCollectionCondition(getRootPath().get(propertyName), values);
+    }
+
+    /**
+     * Add a Field Search Condition that will check if the id field exists in an array of values. eg. {@code field IN (values)}
+     *
+     * @param property The field id as defined in the Entity mapping class.
+     * @param values   The List of Ids to be compared to.
+     */
+    protected void addIdInCollectionCondition(final Expression<?> property, final Collection<Integer> values) {
         if (values == null || values.isEmpty()) {
-            fieldConditions.add(getCriteriaBuilder().equal(getRootPath().get(propertyName), -1));
+            fieldConditions.add(getCriteriaBuilder().equal(property, -1));
         } else {
-            fieldConditions.add(getRootPath().get(propertyName).in(values));
+            fieldConditions.add(property.in(values));
         }
     }
 
@@ -223,12 +233,25 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param values       The array of Ids to be compared to.
      * @throws NumberFormatException Thrown if one of the Strings cannot be converted to an Integer.
      */
+
     protected void addIdInArrayCondition(final String propertyName, final String[] values) throws NumberFormatException {
+        addIdInArrayCondition(getRootPath().get(propertyName).as(Integer.class), values);
+    }
+
+    /**
+     * Add a Field Search Condition that will check if the id field exists in an array of id values that are represented as a
+     * String. eg. {@code field IN (values)}
+     *
+     * @param property The field id as defined in the Entity mapping class.
+     * @param values   The array of Ids to be compared to.
+     * @throws NumberFormatException Thrown if one of the Strings cannot be converted to an Integer.
+     */
+    protected void addIdInArrayCondition(final Expression<?> property, final String[] values) throws NumberFormatException {
         final Set<Integer> idValues = new HashSet<Integer>();
         for (final String value : values) {
             idValues.add(Integer.parseInt(value.trim()));
         }
-        addIdInCollectionCondition(propertyName, idValues);
+        addIdInCollectionCondition(property, idValues);
     }
 
     /**
@@ -241,6 +264,18 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addIdInCommaSeparatedListCondition(final String propertyName, final String value) throws NumberFormatException {
         addIdInArrayCondition(propertyName, value.split(","));
+    }
+
+    /**
+     * Add a Field Search Condition that will check if the id field exists in a comma separated list of ids. eg.
+     * {@code field IN (value)}
+     *
+     * @param propertyName The name of the field id as defined in the Entity mapping class.
+     * @param value        The comma separated list of ids.
+     * @throws NumberFormatException Thrown if one of the Strings cannot be converted to an Integer.
+     */
+    protected void addIdInCommaSeparatedListCondition(final Expression<?> property, final String value) throws NumberFormatException {
+        addIdInArrayCondition(property, value.split(","));
     }
 
     /**

@@ -25,6 +25,7 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                     CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR,
                     CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
         }
     });
 
@@ -33,6 +34,7 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
     private FilterFieldIntegerData csNodeType;
     private FilterFieldIntegerData csNodeEntityId;
     private FilterFieldIntegerData csNodeEntityRev;
+    private FilterFieldStringData contentSpecIds;
 
     public ContentSpecNodeFieldFilter() {
         resetAllValues();
@@ -52,12 +54,15 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR_DESC);
         csNodeEntityRev = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR_DESC);
+        contentSpecIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
 
         addFilterVar(csNodeIds);
         addFilterVar(csNodeTitle);
         addFilterVar(csNodeType);
         addFilterVar(csNodeEntityId);
         addFilterVar(csNodeEntityRev);
+        addFilterVar(contentSpecIds);
     }
 
     @Override
