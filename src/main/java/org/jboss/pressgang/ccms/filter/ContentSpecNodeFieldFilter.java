@@ -31,7 +31,7 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
 
     private FilterFieldStringData csNodeIds;
     private FilterFieldStringData csNodeTitle;
-    private FilterFieldIntegerData csNodeType;
+    private FilterFieldStringData csNodeType;
     private FilterFieldIntegerData csNodeEntityId;
     private FilterFieldIntegerData csNodeEntityRev;
     private FilterFieldStringData contentSpecIds;
@@ -48,7 +48,7 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC);
         csNodeTitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC);
-        csNodeType = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR,
+        csNodeType = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC);
         csNodeEntityId = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR_DESC);
