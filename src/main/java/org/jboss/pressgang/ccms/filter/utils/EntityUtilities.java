@@ -2,8 +2,10 @@ package org.jboss.pressgang.ccms.filter.utils;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
@@ -27,7 +29,6 @@ import org.jboss.pressgang.ccms.model.Tag;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -230,15 +231,16 @@ public class EntityUtilities {
 
             if (contentSpec == null) return null;
 
-            final List<Integer> topicIds = new ArrayList<Integer>();
+            final Set<Integer> topicIds = new HashSet<Integer>();
             for (final CSNode node : contentSpec.getCSNodes()) {
-                if (!node.getCSNodeType().equals(CommonConstants.CS_NODE_TOPIC) && !node.getCSNodeType().equals(
-                        CommonConstants.CS_NODE_INNER_TOPIC)) {
+                if (!node.isTopicNode()) {
                     continue;
                 } else if (node.getEntityId() != null) {
                     topicIds.add(node.getEntityId());
                 }
             }
+
+            return new ArrayList<Integer>(topicIds);
         } catch (final Exception ex) {
             log.warn("An invalid Topic ID was stored for a Content Spec in the database, or the topic was not a valid content spec", ex);
         }
