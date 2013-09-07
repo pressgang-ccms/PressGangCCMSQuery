@@ -49,7 +49,8 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<ContentSpecToTag> subquery = getCriteriaQuery().subquery(ContentSpecToTag.class);
         final Root<ContentSpecToTag> from = subquery.from(ContentSpecToTag.class);
-        final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
+        final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"),
+                getRootPath().get("contentSpecId"));
         final Predicate tag = criteriaBuilder.equal(from.get("tag").get("tagId"), tagId);
         final Predicate notBookTag = criteriaBuilder.equal(from.get("bookTag"), false);
         subquery.select(from);
@@ -63,7 +64,8 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<ContentSpecToTag> subquery = getCriteriaQuery().subquery(ContentSpecToTag.class);
         final Root<ContentSpecToTag> from = subquery.from(ContentSpecToTag.class);
-        final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"), getRootPath().get("contentSpecId"));
+        final Predicate contentSpec = criteriaBuilder.equal(from.get("contentSpec").get("contentSpecId"),
+                getRootPath().get("contentSpecId"));
         final Predicate tag = criteriaBuilder.equal(from.get("tag").get("tagId"), tagId);
         final Predicate notBookTag = criteriaBuilder.equal(from.get("bookTag"), false);
         subquery.select(from);
@@ -178,6 +180,13 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                 endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
             } catch (final Exception ex) {
                 LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.HAS_ERRORS_FILTER_VAR)) {
+            final Boolean hasErrors = Boolean.valueOf(fieldValue);
+            if (hasErrors) {
+                final Predicate notEmptyPredicate = getCriteriaBuilder().notEqual(getRootPath().get("failedContentSpec"), "");
+                final Predicate notNullPredicate = getCriteriaBuilder().isNotNull(getRootPath().get("failedContentSpec"));
+                addFieldCondition(getCriteriaBuilder().and(notEmptyPredicate, notNullPredicate));
             }
         } else {
             super.processFilterString(fieldName, fieldValue);
