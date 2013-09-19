@@ -6,28 +6,33 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.TagFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilderWithProperties;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.Tag;
 import org.jboss.pressgang.ccms.model.TagToPropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class TagFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<Tag, TagToPropertyTag> {
     public TagFilterQueryBuilder(final EntityManager entityManager) {
-        super(Tag.class, entityManager);
+        super(Tag.class, new TagFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.TAG_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("tagId", fieldValue);
-            }
+            addIdInCollectionCondition("tagId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.TAG_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("tagName", fieldValue);
+            processStringField((FilterFieldStringData) field, "tagName");
         } else if (fieldName.equals(CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("tagDescription", fieldValue);
+            processStringField((FilterFieldStringData) field, "tagDescription");
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 

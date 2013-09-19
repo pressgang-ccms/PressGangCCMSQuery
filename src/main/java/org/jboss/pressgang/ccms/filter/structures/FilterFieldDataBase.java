@@ -19,6 +19,10 @@ public abstract class FilterFieldDataBase<T> {
         this.description = description;
     }
 
+    public String getBaseName() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }
@@ -36,6 +40,10 @@ public abstract class FilterFieldDataBase<T> {
     }
 
     public abstract T getData();
+
+    public String getDataString() {
+        return data.toString();
+    }
 
     public abstract void setData(T data);
 

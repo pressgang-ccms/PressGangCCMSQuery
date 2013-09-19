@@ -1,7 +1,9 @@
 package org.jboss.pressgang.ccms.filter.base;
 
+import java.util.List;
 import java.util.Map;
 
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.model.Filter;
 
 /**
@@ -15,6 +17,8 @@ public interface IFieldFilter {
      * @return True if the field filter contains the field name, otherwise false.
      */
     boolean hasFieldName(String fieldName);
+
+    List<FilterFieldDataBase<?>> getFields();
 
     /**
      * Get the Regex value of the Field Names that exist for the filter.

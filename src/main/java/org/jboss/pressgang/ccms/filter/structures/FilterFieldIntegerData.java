@@ -26,7 +26,7 @@ public class FilterFieldIntegerData extends FilterFieldDataBase<Integer> {
             data = (value == null ? null : Integer.parseInt(value));
         } catch (final NumberFormatException ex) {
             // could not parse integer, so silently fail
-            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", description, value);
+            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
         }
     }
 

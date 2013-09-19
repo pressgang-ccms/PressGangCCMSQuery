@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -23,9 +25,9 @@ public class IntegerConstantFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData integerConstantIds;
+    private FilterFieldIntegerListData integerConstantIds;
     private FilterFieldStringData integerConstantName;
-    private FilterFieldStringData integerConstantValue;
+    private FilterFieldIntegerData integerConstantValue;
 
     public IntegerConstantFieldFilter() {
         resetAllValues();
@@ -33,11 +35,11 @@ public class IntegerConstantFieldFilter extends BaseFieldFilter {
 
     @Override
     protected void resetAllValues() {
-        integerConstantIds = new FilterFieldStringData(CommonFilterConstants.INTEGER_CONSTANT_IDS_FILTER_VAR,
+        integerConstantIds = new FilterFieldIntegerListData(CommonFilterConstants.INTEGER_CONSTANT_IDS_FILTER_VAR,
                 CommonFilterConstants.INTEGER_CONSTANT_IDS_FILTER_VAR_DESC);
         integerConstantName = new FilterFieldStringData(CommonFilterConstants.INTEGER_CONSTANT_NAME_FILTER_VAR,
                 CommonFilterConstants.INTEGER_CONSTANT_NAME_FILTER_VAR_DESC);
-        integerConstantValue = new FilterFieldStringData(CommonFilterConstants.INTEGER_CONSTANT_VALUE_FILTER_VAR,
+        integerConstantValue = new FilterFieldIntegerData(CommonFilterConstants.INTEGER_CONSTANT_VALUE_FILTER_VAR,
                 CommonFilterConstants.INTEGER_CONSTANT_VALUE_FILTER_VAR_DESC);
 
         addFilterVar(integerConstantIds);

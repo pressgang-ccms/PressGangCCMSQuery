@@ -6,71 +6,69 @@ import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.filter.TranslatedContentSpecFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.model.contentspec.TranslatedContentSpec;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TranslatedContentSpecFilterQueryBuilder extends BaseFilterQueryBuilder<TranslatedContentSpec> {
-    private static Logger log = LoggerFactory.getLogger(TranslatedContentSpecFilterQueryBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TranslatedContentSpecFilterQueryBuilder.class);
 
     public TranslatedContentSpecFilterQueryBuilder(final EntityManager entityManager) {
-        super(TranslatedContentSpec.class, entityManager);
+        super(TranslatedContentSpec.class, new TranslatedContentSpecFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("translatedContentSpecId", fieldValue);
-            }
+            addIdInCollectionCondition("translatedContentSpecId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0) {
-                final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-                final List<Predicate> conditions = new ArrayList<Predicate>();
+            final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+            final List<Predicate> conditions = new ArrayList<Predicate>();
 
-                final String[] zanataIds = fieldValue.split(",");
-                for (final String zanataId : zanataIds) {
-                    try {
-                        conditions.add(getZanataIdCondition(zanataId));
-                    } catch (NumberFormatException ex) {
-                        log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-                    }
+            final List<String> zanataIds = (List<String>) field.getData();
+            for (final String zanataId : zanataIds) {
+                try {
+                    conditions.add(getZanataIdCondition(zanataId));
+                } catch (NumberFormatException ex) {
+                    LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, zanataId);
                 }
+            }
 
-                // Only add the query if we found valid zanata ids
-                if (conditions.size() > 1) {
-                    final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
-                    addFieldCondition(criteriaBuilder.or(predicates));
-                } else if (conditions.size() == 1) {
-                    addFieldCondition(conditions.get(0));
-                }
+            // Only add the query if we found valid zanata ids
+            if (conditions.size() > 1) {
+                final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
+                addFieldCondition(criteriaBuilder.or(predicates));
+            } else if (conditions.size() == 1) {
+                addFieldCondition(conditions.get(0));
             }
         } else if (fieldName.equals(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0) {
-                final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-                final List<Predicate> conditions = new ArrayList<Predicate>();
+            final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+            final List<Predicate> conditions = new ArrayList<Predicate>();
 
-                final String[] zanataIds = fieldValue.split(",");
-                for (final String zanataId : zanataIds) {
-                    try {
-                        conditions.add(getZanataIdCondition(zanataId));
-                    } catch (NumberFormatException ex) {
-                        log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-                    }
-                }
-
-                // Only add the query if we found valid zanata ids
-                if (conditions.size() > 1) {
-                    final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
-                    addFieldCondition(criteriaBuilder.not(criteriaBuilder.or(predicates)));
-                } else if (conditions.size() == 1) {
-                    addFieldCondition(conditions.get(0));
+            final List<String> zanataIds = (List<String>) field.getData();
+            for (final String zanataId : zanataIds) {
+                try {
+                    conditions.add(getZanataIdCondition(zanataId));
+                } catch (NumberFormatException ex) {
+                    LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, zanataId);
                 }
             }
+
+            // Only add the query if we found valid zanata ids
+            if (conditions.size() > 1) {
+                final Predicate[] predicates = conditions.toArray(new Predicate[conditions.size()]);
+                addFieldCondition(criteriaBuilder.not(criteriaBuilder.or(predicates)));
+            } else if (conditions.size() == 1) {
+                addFieldCondition(conditions.get(0));
+            }
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 

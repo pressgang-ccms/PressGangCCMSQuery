@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -27,7 +28,7 @@ public class CategoryFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData categoryIds;
+    private FilterFieldIntegerListData categoryIds;
     private FilterFieldStringData categoryName;
     private FilterFieldStringData categoryDescription;
     private FilterFieldBooleanData categoryIsMutuallyExclusive;
@@ -39,7 +40,7 @@ public class CategoryFieldFilter extends BaseFieldFilter {
 
     @Override
     protected void resetAllValues() {
-        categoryIds = new FilterFieldStringData(CommonFilterConstants.CATEGORY_IDS_FILTER_VAR,
+        categoryIds = new FilterFieldIntegerListData(CommonFilterConstants.CATEGORY_IDS_FILTER_VAR,
                 CommonFilterConstants.CATEGORY_IDS_FILTER_VAR_DESC);
         categoryName = new FilterFieldStringData(CommonFilterConstants.CATEGORY_NAME_FILTER_VAR,
                 CommonFilterConstants.CATEGORY_NAME_FILTER_VAR_DESC);

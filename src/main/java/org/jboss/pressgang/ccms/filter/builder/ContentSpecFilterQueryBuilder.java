@@ -2,14 +2,19 @@ package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.filter.ContentSpecFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilderWithProperties;
 import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ITagFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.filter.structures.FilterStringLogic;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
@@ -19,7 +24,6 @@ import org.jboss.pressgang.ccms.model.contentspec.ContentSpecToTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +38,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     private DateTime endEditDate;
 
     public ContentSpecFilterQueryBuilder(final EntityManager entityManager) {
-        super(ContentSpec.class, entityManager);
+        super(ContentSpec.class, new ContentSpecFieldFilter(), entityManager);
     }
 
     @Override
@@ -116,80 +120,56 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
-        if (fieldName.equals(CommonFilterConstants.LOGIC_FILTER_VAR)) {
-            filterFieldsLogic = fieldValue;
-        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("contentSpecId", fieldValue);
-            }
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
+        if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR)) {
+            addIdInCollectionCondition("contentSpecId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR)) {
-            addExistsCondition(getMetaDataSubquery("Title", fieldValue));
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_TITLE_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR)) {
-            addExistsCondition(getMetaDataSubquery("Product", fieldValue));
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_PRODUCT_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR)) {
-            addExistsCondition(getMetaDataSubquery("Version", fieldValue));
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_VERSION_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_DAYS)) {
-            try {
-                final Integer days = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusDays(days);
-                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class,
-                        "contentSpecId", date, null);
-                addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final DateTime date = new DateTime().minusDays((Integer) field.getData());
+            final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class,
+                    "contentSpecId", date, null);
+            addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
         } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS)) {
-            try {
-                final Integer days = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusDays(days);
-                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
-                        "contentSpecId", date, null);
-                addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+                final Integer days = (Integer) field.getData();
+            final DateTime date = new DateTime().minusDays((Integer) field.getData());
+            final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
+                    "contentSpecId", date, null);
+            addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
         } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_MINUTES)) {
-            try {
-                final Integer minutes = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusMinutes(minutes);
-                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
-                        "contentSpecId", date, null);
-                addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final Integer minutes = (Integer) field.getData();
+            final DateTime date = new DateTime().minusMinutes(minutes);
+            final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
+                    "contentSpecId", date, null);
+            addIdInCollectionCondition("contentSpecId", editedContentSpecIds);
         } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES)) {
-            try {
-                final Integer minutes = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusMinutes(minutes);
-                final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
-                        "contentSpecId", date, null);
-                addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final Integer minutes = (Integer) field.getData();
+            final DateTime date = new DateTime().minusMinutes(minutes);
+            final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class,
+                    "contentSpecId", date, null);
+            addIdNotInCollectionCondition("contentSpecId", editedContentSpecIds);
         } else if (fieldName.equals(CommonFilterConstants.STARTEDITDATE_FILTER_VAR)) {
-            try {
-                startEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            startEditDate = (DateTime) field.getData();
         } else if (fieldName.equals(CommonFilterConstants.ENDEDITDATE_FILTER_VAR)) {
-            try {
-                endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            endEditDate = (DateTime) field.getData();
         } else if (fieldName.equals(CommonFilterConstants.HAS_ERRORS_FILTER_VAR)) {
-            final Boolean hasErrors = Boolean.valueOf(fieldValue);
+            final Boolean hasErrors = (Boolean) field.getData();
             if (hasErrors) {
                 final Predicate notEmptyPredicate = getCriteriaBuilder().notEqual(getRootPath().get("failedContentSpec"), "");
                 final Predicate notNullPredicate = getCriteriaBuilder().isNotNull(getRootPath().get("failedContentSpec"));
                 addFieldCondition(getCriteriaBuilder().and(notEmptyPredicate, notNullPredicate));
             }
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 
@@ -231,7 +211,8 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
      * @param metaDataValue The Value that the metadata should have.
      * @return A subquery that can be used in an exists statement to see if a Content Spec has a metadata field with the specified value.
      */
-    private Subquery<CSNode> getMetaDataSubquery(final String metaDataTitle, final String metaDataValue) {
+    private Subquery<CSNode> getMetaDataSubquery(final String metaDataTitle, final String metaDataValue,
+            final FilterStringLogic searchLogic) {
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Subquery<CSNode> subQuery = getCriteriaQuery().subquery(CSNode.class);
         final Root<CSNode> root = subQuery.from(CSNode.class);
@@ -241,7 +222,13 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final Predicate contentSpecIdMatch = criteriaBuilder.equal(getRootPath(), root.get("contentSpec"));
         final Predicate isMetaData = criteriaBuilder.equal(root.get("CSNodeType").as(Integer.class), CommonConstants.CS_NODE_META_DATA);
         final Predicate metaDataTitleMatch = criteriaBuilder.equal((root.get("CSNodeTitle").as(String.class)), metaDataTitle);
-        final Predicate metaDataValueMatch = criteriaBuilder.like(root.get("additionalText").as(String.class), "%" + metaDataValue + "%");
+        final Predicate metaDataValueMatch;
+        if (searchLogic == FilterStringLogic.MATCHES) {
+            metaDataValueMatch = criteriaBuilder.equal(root.get("additionalText").as(String.class), metaDataValue);
+        } else {
+            final Expression<String> field = criteriaBuilder.lower(root.get("additionalText").as(String.class));
+            metaDataValueMatch = criteriaBuilder.like(field, "%" + cleanLikeCondition(metaDataValue.toLowerCase()) + "%");
+        }
         subQuery.where(criteriaBuilder.and(contentSpecIdMatch, isMetaData, metaDataTitleMatch, metaDataValueMatch));
 
         return subQuery;

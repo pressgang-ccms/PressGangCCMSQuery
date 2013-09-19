@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -24,7 +25,7 @@ public class PropertyTagCategoryFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData propCategoryIds;
+    private FilterFieldIntegerListData propCategoryIds;
     private FilterFieldStringData propCategoryName;
     private FilterFieldStringData propCategoryDescription;
 
@@ -36,7 +37,7 @@ public class PropertyTagCategoryFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        propCategoryIds = new FilterFieldStringData(CommonFilterConstants.PROP_CATEGORY_IDS_FILTER_VAR,
+        propCategoryIds = new FilterFieldIntegerListData(CommonFilterConstants.PROP_CATEGORY_IDS_FILTER_VAR,
                 CommonFilterConstants.PROP_CATEGORY_IDS_FILTER_VAR_DESC);
         propCategoryName = new FilterFieldStringData(CommonFilterConstants.PROP_CATEGORY_NAME_FILTER_VAR,
                 CommonFilterConstants.PROP_CATEGORY_NAME_FILTER_VAR_DESC);

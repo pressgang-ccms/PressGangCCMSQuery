@@ -8,6 +8,7 @@ import org.jboss.pressgang.ccms.filter.base.BaseFieldFilterWithProperties;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDateTimeData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -34,7 +35,7 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         }
     });
 
-    private FilterFieldStringData contentSpecIds;
+    private FilterFieldIntegerListData contentSpecIds;
     private FilterFieldStringData contentSpecTitle;
     private FilterFieldStringData contentSpecProduct;
     private FilterFieldStringData contentSpecVersion;
@@ -54,7 +55,7 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        contentSpecIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
+        contentSpecIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
         contentSpecTitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR_DESC);

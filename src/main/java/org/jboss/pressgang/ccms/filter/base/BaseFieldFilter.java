@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.filter.structures.FilterStringLogic;
 import org.jboss.pressgang.ccms.model.Filter;
 import org.jboss.pressgang.ccms.model.FilterField;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
@@ -45,6 +46,11 @@ public abstract class BaseFieldFilter implements IFieldFilter {
     }
 
     @Override
+    public List<FilterFieldDataBase<?>> getFields() {
+        return new ArrayList<FilterFieldDataBase<?>>(filterVars);
+    }
+
+    @Override
     public Map<String, String> getFieldNames() {
         return new HashMap<String, String>(filterNames);
     }
@@ -56,12 +62,14 @@ public abstract class BaseFieldFilter implements IFieldFilter {
 
     @Override
     public boolean hasFieldName(final String fieldName) {
-        return getFieldNames().containsKey(fieldName);
+        final String fixedFieldName = cleanFieldName(fieldName);
+        return getFieldNames().containsKey(fixedFieldName);
     }
 
     @Override
     public String getFieldDesc(final String fieldName) {
-        String retValue = getFieldNames().get(fieldName);
+        final String fixedFieldName = cleanFieldName(fieldName);
+        final String retValue = getFieldNames().get(fixedFieldName);
         return retValue == null ? "" : retValue;
     }
 
@@ -78,7 +86,7 @@ public abstract class BaseFieldFilter implements IFieldFilter {
         final List<FilterFieldDataBase<?>> filterVars = getFilterVars();
         for (final FilterFieldDataBase<?> uiField : filterVars) {
             if (fieldName.equals(uiField.getName())) {
-                return uiField.toString();
+                return uiField.getDataString();
             }
         }
 
@@ -87,12 +95,42 @@ public abstract class BaseFieldFilter implements IFieldFilter {
 
     @Override
     public void setFieldValue(final String fieldName, final String fieldValue) {
+        final String fixedFieldName = cleanFieldName(fieldName);
+
         final List<FilterFieldDataBase<?>> filterVars = getFilterVars();
         for (final FilterFieldDataBase<?> uiField : filterVars) {
-            if (fieldName.equals(uiField.getName())) {
+            if (fixedFieldName.equals(uiField.getBaseName())) {
                 uiField.setData(fieldValue);
+
+                // Set the search logic for string data
+                if (uiField instanceof FilterFieldStringData) {
+                    final FilterStringLogic logic = getStringSearchLogic(fieldName);
+                    if (logic != null) {
+                        ((FilterFieldStringData) uiField).setSearchLogic(logic);
+                    }
+                }
             }
         }
+    }
+
+    protected String cleanFieldName(final String fieldName) {
+        String retValue = fieldName;
+
+        for (final FilterStringLogic logic : FilterStringLogic.values()) {
+            retValue = retValue.replace(logic.toString(), "");
+        }
+
+        return retValue;
+    }
+
+    protected FilterStringLogic getStringSearchLogic(final String fieldName) {
+        for (final FilterStringLogic logic : FilterStringLogic.values()) {
+            if (fieldName.endsWith(logic.toString())) {
+                return logic;
+            }
+        }
+
+        return null;
     }
 
     @Override

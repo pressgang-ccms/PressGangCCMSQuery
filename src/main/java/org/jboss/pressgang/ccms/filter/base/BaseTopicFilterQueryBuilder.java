@@ -11,15 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToBugzillaBug;
 import org.jboss.pressgang.ccms.model.TopicToPropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides the query elements required by Filter.buildQuery() to get a list of Topic elements
@@ -27,20 +26,18 @@ import org.slf4j.LoggerFactory;
  * @param <T> The Type of topic that should be returned by the query builder.
  */
 public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuilderWithProperties<T,
-        TopicToPropertyTag> implements ITagFilterQueryBuilder,
-        ILocaleFilterQueryBuilder {
-    private static final Logger LOG = LoggerFactory.getLogger(BaseTopicFilterQueryBuilder.class);
-
+        TopicToPropertyTag> implements ITagFilterQueryBuilder, ILocaleFilterQueryBuilder {
     private final Subquery<Topic> topicQuery;
     private final Root<Topic> from;
     private final boolean useTopicSubquery;
 
-    protected BaseTopicFilterQueryBuilder(final Class<T> clazz, final EntityManager entityManager) {
-        this(clazz, entityManager, false);
+    protected BaseTopicFilterQueryBuilder(final Class<T> clazz, final BaseFieldFilter fieldFilter, final EntityManager entityManager) {
+        this(clazz, fieldFilter, entityManager, false);
     }
 
-    protected BaseTopicFilterQueryBuilder(final Class<T> clazz, final EntityManager entityManager, final boolean useTopicSubquery) {
-        super(clazz, entityManager);
+    protected BaseTopicFilterQueryBuilder(final Class<T> clazz, final BaseFieldFilter fieldFilter, final EntityManager entityManager,
+            final boolean useTopicSubquery) {
+        super(clazz, fieldFilter, entityManager);
         this.useTopicSubquery = useTopicSubquery;
 
         if (useTopicSubquery) {
@@ -119,63 +116,47 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
-        if (fieldName.equals(CommonFilterConstants.LOGIC_FILTER_VAR)) {
-            filterFieldsLogic = fieldValue;
-        } else if (fieldName.equals(CommonFilterConstants.TOPIC_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("topicId", fieldValue);
-            }
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
+        if (fieldName.equals(CommonFilterConstants.TOPIC_IDS_FILTER_VAR)) {
+            addIdInCollectionCondition("topicId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_IDS_NOT_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdNotInCommaSeparatedListCondition("topicId", fieldValue);
-            }
+            addIdNotInCollectionCondition("topicId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_IS_INCLUDED_IN_SPEC)) {
-            /* Split up the string into each topic */
-            final String[] topicIds = fieldValue.split(",");
+            final List<Integer> contentSpecIds = (List<Integer>) field.getData();
             final Set<Integer> relatedTopicIds = new HashSet<Integer>();
-            for (final String topicIdString : topicIds) {
-                try {
-                    final Integer topicId = Integer.parseInt(topicIdString);
-                    final List<Integer> csTopicIds = EntityUtilities.getTopicsInContentSpec(getEntityManager(), topicId);
-                    if (csTopicIds != null) {
-                        relatedTopicIds.addAll(csTopicIds);
-                    }
-                } catch (final NumberFormatException ex) {
-                    LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            for (final Integer contentSpecId : contentSpecIds) {
+                final List<Integer> topicIds = EntityUtilities.getTopicsInContentSpec(getEntityManager(), contentSpecId);
+                if (topicIds != null) {
+                    relatedTopicIds.addAll(topicIds);
                 }
             }
 
             addIdInCollectionCondition("topicId", relatedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_IS_NOT_INCLUDED_IN_SPEC)) {
-            /* Split up the string into each topic */
-            final String[] topicIds = fieldValue.split(",");
+            final List<Integer> contentSpecIds = (List<Integer>) field.getData();
             final Set<Integer> relatedTopicIds = new HashSet<Integer>();
-            for (final String topicIdString : topicIds) {
-                try {
-                    final Integer topicId = Integer.parseInt(topicIdString);
-                    final List<Integer> csTopicIds = EntityUtilities.getTopicsInContentSpec(getEntityManager(), topicId);
-                    if (csTopicIds != null) {
-                        relatedTopicIds.addAll(csTopicIds);
-                    }
-                } catch (final NumberFormatException ex) {
-                    LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
+            for (final Integer contentSpecId : contentSpecIds) {
+                final List<Integer> topicIds = EntityUtilities.getTopicsInContentSpec(getEntityManager(), contentSpecId);
+                if (topicIds != null) {
+                    relatedTopicIds.addAll(topicIds);
                 }
             }
 
             addIdNotInCollectionCondition("topicId", relatedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_TITLE_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("topicTitle", fieldValue);
+            processStringField((FilterFieldStringData) field, "topicTitle");
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_TITLE_NOT_FILTER_VAR)) {
-            addNotLikeIgnoresCaseCondition("topicTitle", fieldValue);
+            processNotStringField((FilterFieldStringData) field, "topicTitle");
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_XML_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("topicXML", fieldValue);
+            processStringField((FilterFieldStringData) field, "topicXML");
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_XML_NOT_FILTER_VAR)) {
-            addNotLikeIgnoresCaseCondition("topicXML", fieldValue);
+            processNotStringField((FilterFieldStringData) field, "topicXML");
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("topicText", fieldValue);
+            processStringField((FilterFieldStringData) field, "topicText");
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_DESCRIPTION_NOT_FILTER_VAR)) {
-            addNotLikeIgnoresCaseCondition("topicText", fieldValue);
+            processNotStringField((FilterFieldStringData) field, "topicText");
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_RELATIONSHIPS)) {
             addSizeGreaterThanOrEqualToCondition("parentTopicToTopics", 1);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_INCOMING_RELATIONSHIPS)) {
@@ -185,42 +166,22 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_NOT_INCOMING_RELATIONSHIPS)) {
             addSizeLessThanCondition("childTopicToTopics", 1);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_RELATED_TO)) {
-            try {
-                final Integer topicId = Integer.parseInt(fieldValue);
-                final List<Integer> relatedTopicIds = EntityUtilities.getIncomingRelatedTopicIDs(getEntityManager(), topicId);
-                addIdInCollectionCondition("topicId", relatedTopicIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final List<Integer> relatedTopicIds = EntityUtilities.getIncomingRelatedTopicIDs(getEntityManager(), (Integer) field.getData());
+            addIdInCollectionCondition("topicId", relatedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_RELATED_TO)) {
-            try {
-                final Integer topicId = Integer.parseInt(fieldValue);
-                final List<Integer> relatedTopicIds = EntityUtilities.getIncomingRelatedTopicIDs(getEntityManager(), topicId);
-                addIdNotInCollectionCondition("topicId", relatedTopicIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final List<Integer> relatedTopicIds = EntityUtilities.getIncomingRelatedTopicIDs(getEntityManager(), (Integer) field.getData());
+            addIdNotInCollectionCondition("topicId", relatedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_RELATED_FROM)) {
-            try {
-                final Integer topicId = Integer.parseInt(fieldValue);
-                final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), topicId);
-                addIdInCollectionCondition("topicId", relatedTopicIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), (Integer) field.getData());
+            addIdInCollectionCondition("topicId", relatedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_RELATED_FROM)) {
-            try {
-                final Integer topicId = Integer.parseInt(fieldValue);
-                final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), topicId);
-                addIdNotInCollectionCondition("topicId", relatedTopicIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), (Integer) field.getData());
+            addIdNotInCollectionCondition("topicId", relatedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR)) {
-            final List<Integer> matchingTopicIds = EntityUtilities.getTextSearchTopicMatch(getEntityManager(), fieldValue);
+            final List<Integer> matchingTopicIds = EntityUtilities.getTextSearchTopicMatch(getEntityManager(), (String) field.getData());
             addIdInCollectionCondition("topicId", matchingTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_XML_ERRORS)) {
-            final Boolean hasXMLErrors = Boolean.valueOf(fieldValue);
+            final Boolean hasXMLErrors = (Boolean) field.getData();
             if (hasXMLErrors) {
                 final Predicate notEmptyPredicate = getCriteriaBuilder().notEqual(
                         getRootPath().get("topicSecondOrderData").get("topicXMLErrors"), "");
@@ -230,7 +191,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
             }
 
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_NOT_XML_ERRORS)) {
-            final Boolean hasNotXMLErrors = Boolean.valueOf(fieldValue);
+            final Boolean hasNotXMLErrors = (Boolean) field.getData();
             if (hasNotXMLErrors) {
                 final Predicate emptyPredicate = getCriteriaBuilder().equal(getRootPath().get("topicSecondOrderData").get("topicXMLErrors"),
                         "");
@@ -239,91 +200,55 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
                 addFieldCondition(getCriteriaBuilder().or(emptyPredicate, nullPredicate));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_EDITED_IN_LAST_DAYS)) {
-            try {
-                final Integer days = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusDays(days);
-                final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date,
-                        null);
-                addIdInCollectionCondition("topicId", editedTopicIds);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final Integer days = (Integer) field.getData();
+            final DateTime date = new DateTime().minusDays(days);
+            final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date, null);
+            addIdInCollectionCondition("topicId", editedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_DAYS)) {
-            try {
-                final Integer days = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusDays(days);
-                final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date,
-                        null);
-                addIdNotInCollectionCondition("topicId", editedTopicIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final Integer days = (Integer) field.getData();
+            final DateTime date = new DateTime().minusDays(days);
+            final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date, null);
+            addIdNotInCollectionCondition("topicId", editedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_EDITED_IN_LAST_MINUTES)) {
-            try {
-                final Integer minutes = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusMinutes(minutes);
-                final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date,
-                        null);
-                addIdInCollectionCondition("topicId", editedTopicIds);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final Integer minutes = (Integer) field.getData();
+            final DateTime date = new DateTime().minusMinutes(minutes);
+            final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date, null);
+            addIdInCollectionCondition("topicId", editedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_EDITED_IN_LAST_MINUTES)) {
-            try {
-                final Integer minutes = Integer.parseInt(fieldValue);
-                final DateTime date = new DateTime().minusMinutes(minutes);
-                final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date,
-                        null);
-                addIdNotInCollectionCondition("topicId", editedTopicIds);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            final Integer minutes = (Integer) field.getData();
+            final DateTime date = new DateTime().minusMinutes(minutes);
+            final List<Integer> editedTopicIds = EntityUtilities.getEditedEntities(getEntityManager(), Topic.class, "topicId", date, null);
+            addIdNotInCollectionCondition("topicId", editedTopicIds);
         } else if (fieldName.equals(CommonFilterConstants.STARTDATE_FILTER_VAR)) {
-            try {
-                startCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            startCreateDate = ((DateTime) field.getData()).toDate();
         } else if (fieldName.equals(CommonFilterConstants.ENDDATE_FILTER_VAR)) {
-            try {
-                endCreateDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue).toDate();
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            endCreateDate = ((DateTime) field.getData()).toDate();
         } else if (fieldName.equals(CommonFilterConstants.STARTEDITDATE_FILTER_VAR)) {
-            try {
-                startEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            startEditDate = (DateTime) field.getData();
         } else if (fieldName.equals(CommonFilterConstants.ENDEDITDATE_FILTER_VAR)) {
-            try {
-                endEditDate = ISODateTimeFormat.dateTime().parseDateTime(fieldValue);
-            } catch (final Exception ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            endEditDate = (DateTime) field.getData();
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_OPEN_BUGZILLA_BUGS)) {
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
             if (fieldValueBoolean) {
                 addFieldCondition(getCriteriaBuilder().exists(getOpenBugzillaSubquery()));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_NOT_OPEN_BUGZILLA_BUGS)) {
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
             if (fieldValueBoolean) {
                 addFieldCondition(getCriteriaBuilder().not(getCriteriaBuilder().exists(getOpenBugzillaSubquery())));
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_BUGZILLA_BUGS)) {
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
             if (fieldValueBoolean) {
                 addSizeGreaterThanOrEqualToCondition("topicToBugzillaBugs", 1);
             }
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_NOT_BUGZILLA_BUGS)) {
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
             if (fieldValueBoolean) {
                 addSizeLessThanCondition("topicToBugzillaBugs", 1);
             }
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 

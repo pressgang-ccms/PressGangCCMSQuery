@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -29,12 +30,12 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData csNodeIds;
+    private FilterFieldIntegerListData csNodeIds;
     private FilterFieldStringData csNodeTitle;
-    private FilterFieldStringData csNodeType;
+    private FilterFieldIntegerListData csNodeType;
     private FilterFieldIntegerData csNodeEntityId;
     private FilterFieldIntegerData csNodeEntityRev;
-    private FilterFieldStringData contentSpecIds;
+    private FilterFieldIntegerListData contentSpecIds;
 
     public ContentSpecNodeFieldFilter() {
         resetAllValues();
@@ -44,17 +45,17 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        csNodeIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR,
+        csNodeIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_IDS_FILTER_VAR_DESC);
         csNodeTitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_TITLE_FILTER_VAR_DESC);
-        csNodeType = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR,
+        csNodeType = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_TYPE_FILTER_VAR_DESC);
         csNodeEntityId = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_ID_FILTER_VAR_DESC);
         csNodeEntityRev = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR_DESC);
-        contentSpecIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
+        contentSpecIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
 
         addFilterVar(csNodeIds);

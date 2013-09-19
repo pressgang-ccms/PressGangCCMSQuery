@@ -1,7 +1,6 @@
 package org.jboss.pressgang.ccms.filter.structures;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,19 +13,11 @@ public abstract class FilterFieldMapDataBase<U> extends FilterFieldDataBase<Map<
     /**
      * The data stored within this UIField
      */
-    protected Map<Integer, U> data = new HashMap<Integer, U>();
+    protected Map<Integer, U> data = null;
     /**
      * Whether or not this object has been "negated"
      */
     protected boolean negated = false;
-    /**
-     * The name of the data field
-     */
-    protected String name = "";
-    /**
-     * The description
-     */
-    protected String description = "";
 
     protected FilterFieldMapDataBase(final String name, final String description) {
         super(name, description);
@@ -38,22 +29,6 @@ public abstract class FilterFieldMapDataBase<U> extends FilterFieldDataBase<Map<
 
     public void setNegated(final boolean negated) {
         this.negated = negated;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
     }
 
     public abstract void put(Integer key, String value);
@@ -75,7 +50,7 @@ public abstract class FilterFieldMapDataBase<U> extends FilterFieldDataBase<Map<
     }
 
     @Override
-    public String toString() {
+    public String getDataString() {
         if (data == null) return null;
 
         final StringBuilder retValue = new StringBuilder();

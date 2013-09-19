@@ -4,14 +4,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.filter.base.BaseTopicFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringListData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 /**
  * This class represents the options used by the objects that extend the
  * ExtendedTopicList class to filter a query to retrieve Topic org.jboss.pressgang.ccms.contentspec.entities.
  */
-public class TranslatedTopicFieldFilter extends TopicFieldFilter {
+public class TranslatedTopicFieldFilter extends BaseTopicFieldFilter {
     /**
      * A map of the base filter field names that can not have multiple
      * mappings
@@ -20,14 +22,26 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
         private static final long serialVersionUID = -6343139695468503659L;
 
         {
-            putAll(TopicFieldFilter.singleFilterNames);
             put(CommonFilterConstants.ZANATA_IDS_FILTER_VAR, CommonFilterConstants.ZANATA_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR, CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR_DESC);
+
+            put(CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR,
+                    CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR,
+                    CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR,
+                    CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR,
+                    CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR_DESC);
         }
     });
 
-    private FilterFieldStringData zanataIds;
-    private FilterFieldStringData notZanataIds;
+    private FilterFieldStringListData zanataIds;
+    private FilterFieldStringListData notZanataIds;
+    private FilterFieldBooleanData latestTranslations;
+    private FilterFieldBooleanData latestCompletedTranslations;
+    private FilterFieldBooleanData notLatestTranslations;
+    private FilterFieldBooleanData notLatestCompletedTranslations;
 
     public TranslatedTopicFieldFilter() {
         resetAllValues();
@@ -38,18 +52,30 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
         super.resetAllValues();
 
         /* Zanata ID's */
-        zanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_FILTER_VAR,
+        zanataIds = new FilterFieldStringListData(CommonFilterConstants.ZANATA_IDS_FILTER_VAR,
                 CommonFilterConstants.ZANATA_IDS_FILTER_VAR_DESC);
-        notZanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR,
+        notZanataIds = new FilterFieldStringListData(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR,
                 CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR_DESC);
 
-        setupSingleFilterVars();
-    }
+                /* Latest Translations */
+        latestTranslations = new FilterFieldBooleanData(CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR,
+                CommonFilterConstants.TOPIC_LATEST_TRANSLATIONS_FILTER_VAR_DESC);
+        notLatestTranslations = new FilterFieldBooleanData(CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR,
+                CommonFilterConstants.TOPIC_NOT_LATEST_TRANSLATIONS_FILTER_VAR_DESC);
 
-    @Override
-    protected void setupSingleFilterVars() {
+        /* Latest Completed Translations */
+        latestCompletedTranslations = new FilterFieldBooleanData(CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR,
+                CommonFilterConstants.TOPIC_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR_DESC);
+        notLatestCompletedTranslations = new FilterFieldBooleanData(
+                CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR,
+                CommonFilterConstants.TOPIC_NOT_LATEST_COMPLETED_TRANSLATIONS_FILTER_VAR_DESC);
+
         addFilterVar(zanataIds);
         addFilterVar(notZanataIds);
+        addFilterVar(latestTranslations);
+        addFilterVar(latestCompletedTranslations);
+        addFilterVar(notLatestTranslations);
+        addFilterVar(notLatestCompletedTranslations);
     }
 
     /**
@@ -74,11 +100,27 @@ public class TranslatedTopicFieldFilter extends TopicFieldFilter {
         return retValue;
     }
 
-    public FilterFieldStringData getZanataIds() {
+    public FilterFieldStringListData getZanataIds() {
         return zanataIds;
     }
 
-    public FilterFieldStringData getNotZanataIds() {
+    public FilterFieldStringListData getNotZanataIds() {
         return notZanataIds;
+    }
+
+    public FilterFieldBooleanData getLatestTranslations() {
+        return latestTranslations;
+    }
+
+    public FilterFieldBooleanData getLatestCompletedTranslations() {
+        return latestCompletedTranslations;
+    }
+
+    public FilterFieldBooleanData getNotLatestTranslations() {
+        return notLatestTranslations;
+    }
+
+    public FilterFieldBooleanData getNotLatestCompletedTranslations() {
+        return notLatestCompletedTranslations;
     }
 }

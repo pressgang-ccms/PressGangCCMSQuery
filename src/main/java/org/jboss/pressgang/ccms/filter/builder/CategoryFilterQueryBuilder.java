@@ -2,38 +2,43 @@ package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.CategoryFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.Category;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class CategoryFilterQueryBuilder extends BaseFilterQueryBuilder<Category> {
 
     public CategoryFilterQueryBuilder(final EntityManager entityManager) {
-        super(Category.class, entityManager);
+        super(Category.class, new CategoryFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.CATEGORY_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("categoryId", fieldValue);
-            }
+            addIdInCollectionCondition("categoryId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.CATEGORY_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("categoryName", fieldValue);
+            processStringField((FilterFieldStringData) field, "categoryName");
         } else if (fieldName.equals(CommonFilterConstants.CATEGORY_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("categoryDescription", fieldValue);
+            processStringField((FilterFieldStringData) field, "categoryDescription");
         } else if (fieldName.equals(CommonFilterConstants.CATEGORY_IS_MUTUALLY_EXCLUSIVE_VAR)) {
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
             if (fieldValueBoolean) {
                 addFieldCondition(getCriteriaBuilder().isTrue(getRootPath().get("mutuallyExclusive").as(Boolean.class)));
             }
         } else if (fieldName.equals(CommonFilterConstants.CATEGORY_IS_NOT_MUTUALLY_EXCLUSIVE_VAR)) {
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
             if (fieldValueBoolean) {
                 addFieldCondition(getCriteriaBuilder().isFalse(getRootPath().get("mutuallyExclusive").as(Boolean.class)));
             }
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 

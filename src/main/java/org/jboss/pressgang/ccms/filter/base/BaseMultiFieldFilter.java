@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldMapDataBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,13 @@ public abstract class BaseMultiFieldFilter extends BaseFieldFilter {
     private static final Logger log = LoggerFactory.getLogger(BaseMultiFieldFilter.class);
 
     private List<FilterFieldMapDataBase<?>> multipleFilterVars = new ArrayList<FilterFieldMapDataBase<?>>();
+
+    @Override
+    public List<FilterFieldDataBase<?>> getFields() {
+        final List<FilterFieldDataBase<?>> fields = super.getFields();
+        fields.addAll(multipleFilterVars);
+        return fields;
+    }
 
     @Override
     protected void resetAllValues() {
@@ -31,7 +39,7 @@ public abstract class BaseMultiFieldFilter extends BaseFieldFilter {
     public String getFieldValue(final String fieldName) {
         // Check the multiple filters
         for (final FilterFieldMapDataBase<?> field : multipleFilterVars) {
-            if (fieldName.startsWith(field.getName())) {
+            if (fieldName.matches("^" + field.getName() + "\\d+$")) {
                 final String index = fieldName.replace(field.getName(), "");
 
                 /*
@@ -56,7 +64,7 @@ public abstract class BaseMultiFieldFilter extends BaseFieldFilter {
     public void setFieldValue(final String fieldName, final String fieldValue) {
         // Check the multiple filters
         for (final FilterFieldMapDataBase<?> field : multipleFilterVars) {
-            if (fieldName.startsWith(field.getName())) {
+            if (fieldName.matches("^" + field.getName() + "\\d+$")) {
                 try {
                     final String index = fieldName.replace(field.getName(), "");
 
@@ -81,22 +89,21 @@ public abstract class BaseMultiFieldFilter extends BaseFieldFilter {
         boolean retValue = false;
         for (final String name : getFieldNames().keySet()) {
             if (fieldName.matches("^" + name + "$")) {
-                retValue = true;
-                break;
+                return true;
             }
         }
 
-        return retValue;
+        return super.hasFieldName(fieldName);
     }
 
     @Override
-    public String getFieldDesc(final String input) {
+    public String getFieldDesc(final String fieldName) {
         for (final String name : getFieldNames().keySet()) {
-            if (input.matches("^" + name + "$")) {
+            if (fieldName.matches("^" + name + "$")) {
                 return getFieldNames().get(name);
             }
         }
 
-        return "";
+        return super.getFieldDesc(fieldName);
     }
 }

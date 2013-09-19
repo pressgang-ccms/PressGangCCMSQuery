@@ -363,8 +363,9 @@ public class FilterUtilities {
          * value
          */
         for (final FilterField filterField : filter.getFilterFields())
-            filterQueryBuilder.processFilterString(filterField.getField(), filterField.getValue());
+            filterQueryBuilder.addFilterField(filterField.getField(), filterField.getValue());
 
+        filterQueryBuilder.process();
         final Predicate fieldQuery = filterQueryBuilder.getFilterConditions();
         if (fieldQuery != null) {
             whereQuery.add(fieldQuery);

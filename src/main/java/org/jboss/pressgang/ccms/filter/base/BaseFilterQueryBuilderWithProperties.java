@@ -2,9 +2,11 @@ package org.jboss.pressgang.ccms.filter.base;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Subquery;
+import java.util.Map;
 
-import com.google.code.regexp.Matcher;
-import com.google.code.regexp.Pattern;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanMapData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringMapData;
 import org.jboss.pressgang.ccms.model.base.ToPropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.slf4j.Logger;
@@ -19,67 +21,44 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseFilterQueryBuilderWithProperties<T, U extends ToPropertyTag<U>> extends BaseFilterQueryBuilder<T> {
     private static final Logger LOG = LoggerFactory.getLogger(BaseFilterQueryBuilderWithProperties.class);
 
-    protected BaseFilterQueryBuilderWithProperties(Class<T> clazz, EntityManager entityManager) {
-        super(clazz, entityManager);
+    protected BaseFilterQueryBuilderWithProperties(final Class<T> clazz, final BaseFieldFilter fieldFilter, final EntityManager entityManager) {
+        super(clazz, fieldFilter, entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
-        if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG_EXISTS)) {
-            final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG_EXISTS, fieldName);
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
-            if (propertyTagId != null && fieldValueBoolean) {
-                addFieldCondition(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId)));
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
+        if (fieldName.equals(CommonFilterConstants.PROPERTY_TAG_EXISTS)) {
+            final FilterFieldBooleanMapData mapField = (FilterFieldBooleanMapData) field;
+                for (final Map.Entry<Integer, Boolean> entry : mapField.getData().entrySet()) {
+                final Integer propertyTagId = entry.getKey();
+                final Boolean fieldValueBoolean = entry.getValue();
+                if (propertyTagId != null && fieldValueBoolean) {
+                    addFieldCondition(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId)));
+                }
             }
         } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS)) {
-            final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS, fieldName);
-            final Boolean fieldValueBoolean = Boolean.parseBoolean(fieldValue);
-            if (propertyTagId != null && fieldValueBoolean) {
-                addFieldCondition(getCriteriaBuilder().not(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId))));
+            final FilterFieldBooleanMapData mapField = (FilterFieldBooleanMapData) field;
+            for (final Map.Entry<Integer, Boolean> entry : mapField.getData().entrySet()) {
+                final Integer propertyTagId = entry.getKey();
+                final Boolean fieldValueBoolean = entry.getValue();
+                if (propertyTagId != null && fieldValueBoolean) {
+                    addFieldCondition(getCriteriaBuilder().not(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId))));
+                }
             }
         } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
-            final Integer propertyTagId = getPropertyTagId(CommonFilterConstants.PROPERTY_TAG, fieldName);
-
-            if (propertyTagId != null && fieldValue != null) {
-                addExistsCondition(getPropertyTagSubquery(propertyTagId, fieldValue));
+            final FilterFieldStringMapData mapField = (FilterFieldStringMapData) field;
+            for (final Map.Entry<Integer, String> entry : mapField.getData().entrySet()) {
+                final Integer propertyTagId = entry.getKey();
+                final String fieldValue = entry.getValue();
+                if (propertyTagId != null && fieldValue != null) {
+                    addExistsCondition(getPropertyTagSubquery(propertyTagId, (String) field.getData()));
+                }
             }
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
-    }
-
-    /**
-     * Get the PropertyTag ID from a field name
-     *
-     * @param fieldName The field name
-     * @param value The value to get the Property Tag ID from.
-     * @return The ID of the PropertyTag
-     */
-    private Integer getPropertyTagId(String fieldName, String value) {
-        try {
-            final Pattern pattern = Pattern.compile("^" + fieldName + "(?<PropertyTagID>\\d+)$");
-            final Matcher matcher = pattern.matcher(value);
-
-            while (matcher.find()) {
-                final String propertyTagIdString = matcher.group("PropertyTagID");
-
-                if (propertyTagIdString != null) {
-                    final Integer propertyTagIdInt = Integer.parseInt(propertyTagIdString);
-                    return propertyTagIdInt;
-                }
-
-                /* should only match once */
-                break;
-            }
-        } catch (final NumberFormatException ex) {
-            /*
-             * could not parse integer, so fail. this shouldn't happen though, as the string is matched by a regex that will
-             * only allow numbers
-             */
-            LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldName);
-        }
-
-        return null;
     }
 
     /**

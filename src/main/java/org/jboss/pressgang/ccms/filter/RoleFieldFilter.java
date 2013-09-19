@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -23,7 +24,7 @@ public class RoleFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData roleIds;
+    private FilterFieldIntegerListData roleIds;
     private FilterFieldStringData roleName;
     private FilterFieldStringData roleDescription;
 
@@ -35,7 +36,7 @@ public class RoleFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        roleIds = new FilterFieldStringData(CommonFilterConstants.ROLE_IDS_FILTER_VAR, CommonFilterConstants.ROLE_IDS_FILTER_VAR_DESC);
+        roleIds = new FilterFieldIntegerListData(CommonFilterConstants.ROLE_IDS_FILTER_VAR, CommonFilterConstants.ROLE_IDS_FILTER_VAR_DESC);
         roleName = new FilterFieldStringData(CommonFilterConstants.ROLE_NAME_FILTER_VAR, CommonFilterConstants.ROLE_NAME_FILTER_VAR_DESC);
         roleDescription = new FilterFieldStringData(CommonFilterConstants.ROLE_DESCRIPTION_FILTER_VAR,
                 CommonFilterConstants.ROLE_DESCRIPTION_FILTER_VAR_DESC);

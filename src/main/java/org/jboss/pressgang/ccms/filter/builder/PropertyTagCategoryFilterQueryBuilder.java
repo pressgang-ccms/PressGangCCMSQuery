@@ -2,27 +2,32 @@ package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.PropertyTagCategoryFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.PropertyTagCategory;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class PropertyTagCategoryFilterQueryBuilder extends BaseFilterQueryBuilder<PropertyTagCategory> {
     public PropertyTagCategoryFilterQueryBuilder(final EntityManager entityManager) {
-        super(PropertyTagCategory.class, entityManager);
+        super(PropertyTagCategory.class, new PropertyTagCategoryFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.PROP_CATEGORY_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("propertyTagCategoryId", fieldValue);
-            }
+            addIdInCollectionCondition("propertyTagCategoryId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.PROP_CATEGORY_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("propertyTagCategoryName", fieldValue);
+            processStringField((FilterFieldStringData) field, "propertyTagCategoryName");
         } else if (fieldName.equals(CommonFilterConstants.PROP_CATEGORY_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("propertyTagCategoryDescription", fieldValue);
+            processStringField((FilterFieldStringData) field, "propertyTagCategoryDescription");
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 }

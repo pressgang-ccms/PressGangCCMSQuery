@@ -6,6 +6,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.jboss.pressgang.ccms.filter.TopicFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFilterQueryBuilder;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
@@ -17,7 +18,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> {
 
     public TopicFilterQueryBuilder(final EntityManager entityManager) {
-        super(Topic.class, entityManager);
+        super(Topic.class, new TopicFieldFilter(), entityManager);
     }
 
     @Override

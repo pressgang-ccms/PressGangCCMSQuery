@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -22,7 +23,7 @@ public class BlobConstantFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData blobConstantIds;
+    private FilterFieldIntegerListData blobConstantIds;
     private FilterFieldStringData blobConstantName;
 
     public BlobConstantFieldFilter() {
@@ -33,7 +34,7 @@ public class BlobConstantFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        blobConstantIds = new FilterFieldStringData(CommonFilterConstants.BLOB_CONSTANT_IDS_FILTER_VAR,
+        blobConstantIds = new FilterFieldIntegerListData(CommonFilterConstants.BLOB_CONSTANT_IDS_FILTER_VAR,
                 CommonFilterConstants.BLOB_CONSTANT_IDS_FILTER_VAR_DESC);
         blobConstantName = new FilterFieldStringData(CommonFilterConstants.BLOB_CONSTANT_NAME_FILTER_VAR,
                 CommonFilterConstants.BLOB_CONSTANT_NAME_FILTER_VAR_DESC);

@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.jboss.pressgang.ccms.filter.constants.FilterConstants;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.filter.structures.FilterStringLogic;
 import org.jboss.pressgang.ccms.filter.utils.JPAUtils;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.slf4j.Logger;
@@ -22,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T> {
     private static final Logger log = LoggerFactory.getLogger(BaseFilterQueryBuilder.class);
-    protected static final String ID_REGEX = "^((\\s)*(\\-)?\\d+(\\s)*,?)*((\\s)*(\\-)?\\d+(\\s)*)$";
 
     protected String filterFieldsLogic = FilterConstants.LOGIC_FILTER_VAR_DEFAULT_VALUE;
     private final List<Predicate> fieldConditions = new ArrayList<Predicate>();
@@ -31,20 +33,45 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
     private final Root<T> from;
     private final Class<T> clazz;
     private final EntityManager entityManager;
+    private final BaseFieldFilter fieldFilter;
+    private boolean processed = false;
 
-    protected BaseFilterQueryBuilder(final Class<T> clazz, final EntityManager entityManager) {
+    protected BaseFilterQueryBuilder(final Class<T> clazz, final BaseFieldFilter fieldFilter, final EntityManager entityManager) {
         criteriaBuilder = entityManager.getCriteriaBuilder();
         this.entityManager = entityManager;
         this.clazz = clazz;
+        this.fieldFilter = fieldFilter;
         criteriaQuery = criteriaBuilder.createQuery(clazz);
         from = criteriaQuery.from(clazz);
         criteriaQuery.select(from);
     }
 
+    protected void processField(final FilterFieldDataBase<?> field) {
+        if (field.getName().equals(CommonFilterConstants.LOGIC_FILTER_VAR)) {
+            filterFieldsLogic = field.getDataString();
+        }
+    }
+
+    public void process() {
+        // If this has been processed before then reset and start from scratch
+        if (processed) {
+            reset();
+        }
+
+        // Process the filter strings
+        processed = true;
+        for (final FilterFieldDataBase<?> field : getFieldFilter().getFields()) {
+            // Only process fields that have assigned values
+            if (field.getData() != null) {
+                processField(field);
+            }
+        }
+    }
+
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
-        if (fieldName.equals(CommonFilterConstants.LOGIC_FILTER_VAR)) {
-            filterFieldsLogic = fieldValue;
+    public void addFilterField(final String fieldName, final String fieldValue) {
+        if (getFieldFilter().hasFieldName(fieldName)) {
+            getFieldFilter().setFieldValue(fieldName, fieldValue);
         } else {
             log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
         }
@@ -52,6 +79,10 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
 
     @Override
     public Predicate getFilterConditions() {
+        if (!processed) {
+            process();
+        }
+
         if (fieldConditions.isEmpty()) return null;
 
         if (fieldConditions.size() > 1) {
@@ -64,6 +95,10 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
         } else {
             return fieldConditions.get(0);
         }
+    }
+
+    protected BaseFieldFilter getFieldFilter() {
+        return fieldFilter;
     }
 
     @Override
@@ -93,6 +128,8 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
     @Override
     public void reset() {
         fieldConditions.clear();
+        getFieldFilter().resetAllValues();
+        processed = false;
     }
 
     protected Path<?> getRootPath() {
@@ -105,6 +142,32 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
 
     protected void addFieldCondition(final Predicate condition) {
         fieldConditions.add(condition);
+    }
+
+    protected void processStringField(final FilterFieldStringData field, final String propertyName) {
+        final FilterFieldStringData stringField = (FilterFieldStringData) field;
+        if (stringField.getSearchLogic() == FilterStringLogic.MATCHES) {
+            addEqualsCondition(propertyName, stringField.getData());
+        } else {
+            if (stringField.isCaseInsensitive()) {
+                addLikeCondition(propertyName, stringField.getData());
+            } else {
+                addLikeIgnoresCaseCondition(propertyName, stringField.getData());
+            }
+        }
+    }
+
+    protected void processNotStringField(final FilterFieldStringData field, final String propertyName) {
+        final FilterFieldStringData stringField = (FilterFieldStringData) field;
+        if (stringField.getSearchLogic() == FilterStringLogic.MATCHES) {
+            addNotEqualsCondition(propertyName, stringField.getData());
+        } else {
+            if (stringField.isCaseInsensitive()) {
+                addNotLikeCondition(propertyName, stringField.getData());
+            } else {
+                addNotLikeIgnoresCaseCondition(propertyName, stringField.getData());
+            }
+        }
     }
 
     /**
@@ -337,6 +400,29 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      */
     protected void addEqualsCondition(final String propertyName, final String value) {
         fieldConditions.add(getCriteriaBuilder().equal(getRootPath().get(propertyName).as(String.class), value));
+    }
+
+    /**
+     * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
+     * {@code field != '%value'}
+     *
+     * @param propertyName The name of the field as defined in the Entity mapping class.
+     * @param value        The value to search against.
+     */
+    protected void addNotEqualsCondition(final String propertyName, final String value) {
+        fieldConditions.add(getCriteriaBuilder().notEqual(getRootPath().get(propertyName).as(String.class), value));
+    }
+
+    /**
+     * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
+     * {@code lower(field) = '%value'}
+     *
+     * @param propertyName The name of the field as defined in the Entity mapping class.
+     * @param value        The value to search against.
+     */
+    protected void addEqualsIgnoreCaseCondition(final String propertyName, final String value) {
+        final Expression<String> propertyNameField = getCriteriaBuilder().lower(getRootPath().get(propertyName).as(String.class));
+        fieldConditions.add(getCriteriaBuilder().equal(propertyNameField, value.toString()));
     }
 
     /**

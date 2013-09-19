@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -23,7 +24,7 @@ public class ImageFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData imageIds;
+    private FilterFieldIntegerListData imageIds;
     private FilterFieldStringData imageOriginalFilename;
     private FilterFieldStringData imageDescription;
 
@@ -35,7 +36,8 @@ public class ImageFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        imageIds = new FilterFieldStringData(CommonFilterConstants.IMAGE_IDS_FILTER_VAR, CommonFilterConstants.IMAGE_IDS_FILTER_VAR_DESC);
+        imageIds = new FilterFieldIntegerListData(CommonFilterConstants.IMAGE_IDS_FILTER_VAR,
+                CommonFilterConstants.IMAGE_IDS_FILTER_VAR_DESC);
         imageOriginalFilename = new FilterFieldStringData(CommonFilterConstants.IMAGE_ORIGINAL_FILENAME_FILTER_VAR,
                 CommonFilterConstants.IMAGE_ORIGINAL_FILENAME_FILTER_VAR_DESC);
         imageDescription = new FilterFieldStringData(CommonFilterConstants.IMAGE_DESCRIPTION_FILTER_VAR,

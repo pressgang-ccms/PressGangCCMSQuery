@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringListData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class TranslatedContentSpecFieldFilter extends BaseFieldFilter {
@@ -24,9 +25,9 @@ public class TranslatedContentSpecFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData translatedContentSpecIds;
-    private FilterFieldStringData zanataIds;
-    private FilterFieldStringData notZanataIds;
+    private FilterFieldIntegerListData translatedContentSpecIds;
+    private FilterFieldStringListData zanataIds;
+    private FilterFieldStringListData notZanataIds;
 
     public TranslatedContentSpecFieldFilter() {
         resetAllValues();
@@ -36,13 +37,13 @@ public class TranslatedContentSpecFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        translatedContentSpecIds = new FilterFieldStringData(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR,
+        translatedContentSpecIds = new FilterFieldIntegerListData(CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR,
                 CommonFilterConstants.TRANSLATED_CONTENT_SPEC_IDS_FILTER_VAR_DESC);
 
         /* Zanata ID's */
-        zanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_FILTER_VAR,
+        zanataIds = new FilterFieldStringListData(CommonFilterConstants.ZANATA_IDS_FILTER_VAR,
                 CommonFilterConstants.ZANATA_IDS_FILTER_VAR_DESC);
-        notZanataIds = new FilterFieldStringData(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR,
+        notZanataIds = new FilterFieldStringListData(CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR,
                 CommonFilterConstants.ZANATA_IDS_NOT_FILTER_VAR_DESC);
 
         addFilterVar(translatedContentSpecIds);

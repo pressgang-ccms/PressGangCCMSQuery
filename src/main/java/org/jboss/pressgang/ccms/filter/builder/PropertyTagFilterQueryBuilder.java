@@ -2,27 +2,32 @@ package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.PropertyTagFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.PropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class PropertyTagFilterQueryBuilder extends BaseFilterQueryBuilder<PropertyTag> {
     public PropertyTagFilterQueryBuilder(final EntityManager entityManager) {
-        super(PropertyTag.class, entityManager);
+        super(PropertyTag.class, new PropertyTagFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.PROP_TAG_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("propertyTagId", fieldValue);
-            }
+            addIdInCollectionCondition("propertyTagId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.PROP_TAG_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("propertyTagName", fieldValue);
+            processStringField((FilterFieldStringData) field, "propertyTagName");
         } else if (fieldName.equals(CommonFilterConstants.PROP_TAG_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("propertyTagDescription", fieldValue);
+            processStringField((FilterFieldStringData) field, "propertyTagDescription");
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 }

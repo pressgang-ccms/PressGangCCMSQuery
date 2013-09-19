@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -25,7 +26,7 @@ public class FilterFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData filterIds;
+    private FilterFieldIntegerListData filterIds;
     private FilterFieldStringData filterName;
     private FilterFieldStringData filterDescription;
     private FilterFieldIntegerData filterType;
@@ -38,7 +39,7 @@ public class FilterFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        filterIds = new FilterFieldStringData(CommonFilterConstants.FILTER_IDS_FILTER_VAR,
+        filterIds = new FilterFieldIntegerListData(CommonFilterConstants.FILTER_IDS_FILTER_VAR,
                 CommonFilterConstants.FILTER_IDS_FILTER_VAR_DESC);
         filterName = new FilterFieldStringData(CommonFilterConstants.FILTER_NAME_FILTER_VAR,
                 CommonFilterConstants.FILTER_NAME_FILTER_VAR_DESC);

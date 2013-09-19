@@ -6,29 +6,34 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.FileFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.base.ILocaleFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.File;
 import org.jboss.pressgang.ccms.model.LanguageFile;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class FileFilterQueryBuilder extends BaseFilterQueryBuilder<File> implements ILocaleFilterQueryBuilder {
     public FileFilterQueryBuilder(final EntityManager entityManager) {
-        super(File.class, entityManager);
+        super(File.class, new FileFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.FILE_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("fileId", fieldValue);
-            }
+            addIdInCollectionCondition("fileId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.FILE_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("description", fieldValue);
+            processStringField((FilterFieldStringData) field, "description");
         } else if (fieldName.equals(CommonFilterConstants.FILE_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("fileName", fieldValue);
+            processStringField((FilterFieldStringData) field, "fileName");
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 

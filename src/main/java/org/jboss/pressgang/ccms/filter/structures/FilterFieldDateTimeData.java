@@ -38,12 +38,12 @@ public class FilterFieldDateTimeData extends FilterFieldDataBase<DateTime> {
             if (value == null || value.length() == 0) data = null;
             else data = new DateTime(ISODateTimeFormat.dateTime().parseDateTime(value));
         } catch (final Exception ex) {
-            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", description, value);
+            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
         }
     }
 
     @Override
-    public String toString() {
+    public String getDataString() {
         return data == null ? null : ISODateTimeFormat.dateTime().print(data);
     }
 }

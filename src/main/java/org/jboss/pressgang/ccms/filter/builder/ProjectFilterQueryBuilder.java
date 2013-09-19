@@ -2,27 +2,32 @@ package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.ProjectFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.Project;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class ProjectFilterQueryBuilder extends BaseFilterQueryBuilder<Project> {
     public ProjectFilterQueryBuilder(final EntityManager entityManager) {
-        super(Project.class, entityManager);
+        super(Project.class, new ProjectFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.PROJECT_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("projectId", fieldValue);
-            }
+            addIdInCollectionCondition("projectId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.PROJECT_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("projectName", fieldValue);
+            processStringField((FilterFieldStringData) field, "projectName");
         } else if (fieldName.equals(CommonFilterConstants.PROJECT_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("projectDescription", fieldValue);
+            processStringField((FilterFieldStringData) field, "projectDescription");
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 }

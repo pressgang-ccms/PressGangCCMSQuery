@@ -2,7 +2,12 @@ package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
 
+import java.util.List;
+
+import org.jboss.pressgang.ccms.filter.FilterFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.Filter;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.slf4j.Logger;
@@ -12,28 +17,23 @@ public class FilterFilterQueryBuilder extends BaseFilterQueryBuilder<Filter> {
     private static final Logger LOG = LoggerFactory.getLogger(FilterFilterQueryBuilder.class);
 
     public FilterFilterQueryBuilder(final EntityManager entityManager) {
-        super(Filter.class, entityManager);
+        super(Filter.class, new FilterFieldFilter(), entityManager);
     }
 
     @Override
-    public void processFilterString(final String fieldName, final String fieldValue) {
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
         if (fieldName.equals(CommonFilterConstants.FILTER_IDS_FILTER_VAR)) {
-            if (fieldValue.trim().length() != 0 && fieldValue.matches(ID_REGEX)) {
-                addIdInCommaSeparatedListCondition("filterId", fieldValue);
-            }
+            addIdInCollectionCondition("filterId", (List<Integer>) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.FILTER_NAME_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("filterName", fieldValue);
+            processStringField((FilterFieldStringData) field, "filterName");
         } else if (fieldName.equals(CommonFilterConstants.FILTER_DESCRIPTION_FILTER_VAR)) {
-            addLikeIgnoresCaseCondition("filterDescription", fieldValue);
+            processStringField((FilterFieldStringData) field, "filterDescription");
         } else if (fieldName.equals(CommonFilterConstants.FILTER_TYPE_FILTER_VAR)) {
-            try {
-                final Integer typeId = Integer.parseInt(fieldValue);
-                addEqualsCondition("filterClassType", typeId);
-            } catch (final NumberFormatException ex) {
-                LOG.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", fieldName, fieldValue);
-            }
+            addEqualsCondition("filterClassType", (Integer) field.getData());
         } else {
-            super.processFilterString(fieldName, fieldValue);
+            super.processField(field);
         }
     }
 }

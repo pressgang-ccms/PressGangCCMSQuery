@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseFieldFilter;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerListData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class TranslatedContentSpecNodeFieldFilter extends BaseFieldFilter {
@@ -22,7 +22,7 @@ public class TranslatedContentSpecNodeFieldFilter extends BaseFieldFilter {
         }
     });
 
-    private FilterFieldStringData csTranslatedNodeIds;
+    private FilterFieldIntegerListData csTranslatedNodeIds;
 
     public TranslatedContentSpecNodeFieldFilter() {
         resetAllValues();
@@ -32,7 +32,7 @@ public class TranslatedContentSpecNodeFieldFilter extends BaseFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        csTranslatedNodeIds = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR,
+        csTranslatedNodeIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_TRANSLATED_NODE_IDS_FILTER_VAR_DESC);
 
         addFilterVar(csTranslatedNodeIds);

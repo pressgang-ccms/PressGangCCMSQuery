@@ -5,8 +5,20 @@ import java.util.List;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 public class FilterFieldStringData extends FilterFieldDataBase<String> {
+    private FilterStringLogic searchLogic = FilterStringLogic.CONTAINS;
+    private boolean caseInsensitive = true;
+
     public FilterFieldStringData(final String name, final String description) {
         super(name, description);
+    }
+
+    @Override
+    public String getName() {
+        if (searchLogic == FilterStringLogic.CONTAINS) {
+            return super.getName();
+        } else {
+            return super.getName() + searchLogic.toString();
+        }
     }
 
     @Override
@@ -26,5 +38,21 @@ public class FilterFieldStringData extends FilterFieldDataBase<String> {
     @Override
     public String toString() {
         return data == null ? null : data.toString();
+    }
+
+    public FilterStringLogic getSearchLogic() {
+        return searchLogic;
+    }
+
+    public void setSearchLogic(FilterStringLogic searchLogic) {
+        this.searchLogic = searchLogic;
+    }
+
+    public boolean isCaseInsensitive() {
+        return caseInsensitive;
+    }
+
+    public void setCaseInsensitive(boolean caseInsensitive) {
+        this.caseInsensitive = caseInsensitive;
     }
 }

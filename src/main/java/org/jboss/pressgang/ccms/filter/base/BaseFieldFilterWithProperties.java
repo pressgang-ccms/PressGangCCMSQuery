@@ -1,16 +1,10 @@
 package org.jboss.pressgang.ccms.filter.base;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldBooleanMapData;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringMapData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BaseFieldFilterWithProperties extends BaseMultiFieldFilter {
     private FilterFieldStringMapData propertyTags;

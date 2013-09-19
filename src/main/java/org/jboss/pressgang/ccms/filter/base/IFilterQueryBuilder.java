@@ -12,12 +12,17 @@ import javax.persistence.criteria.Predicate;
  */
 public interface IFilterQueryBuilder<T> {
     /**
-     * Process a Filter Key/Value Pair string so that the relevant condition is added to the query builder.
+     * Processes the assigned filter filters and converts them into conditions that can be used in a query.
+     */
+    void process();
+
+    /**
+     * Adds a Filter Key/Value Pair string so that the relevant condition is added to the query builder.
      *
      * @param fieldName
      * @param fieldValue
      */
-    void processFilterString(String fieldName, String fieldValue);
+    void addFilterField(String fieldName, String fieldValue);
 
     /**
      * Get the where JPA predicate for the filter.
