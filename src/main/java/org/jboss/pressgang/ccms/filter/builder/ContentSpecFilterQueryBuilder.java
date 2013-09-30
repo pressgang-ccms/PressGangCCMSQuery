@@ -125,15 +125,32 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
 
         if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR)) {
             addIdInCollectionCondition("contentSpecId", (List<Integer>) field.getData());
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TYPE_FILTER_VAR)) {
+            addEqualsCondition("contentSpecType", (Integer) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR)) {
             final FilterFieldStringData stringField = (FilterFieldStringData) field;
             addExistsCondition(getMetaDataSubquery(CommonConstants.CS_TITLE_TITLE, stringField.getData(), stringField.getSearchLogic()));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR)) {
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_SUBTITLE_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR)) {
             final FilterFieldStringData stringField = (FilterFieldStringData) field;
             addExistsCondition(getMetaDataSubquery(CommonConstants.CS_PRODUCT_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR)) {
             final FilterFieldStringData stringField = (FilterFieldStringData) field;
             addExistsCondition(getMetaDataSubquery(CommonConstants.CS_VERSION_TITLE, stringField.getData(), stringField.getSearchLogic()));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_EDITION_FILTER_VAR)) {
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_EDITION_TITLE, stringField.getData(), stringField.getSearchLogic()));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_ABSTRACT_FILTER_VAR)) {
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_ABSTRACT_TITLE, stringField.getData(), stringField.getSearchLogic()));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_BRAND_FILTER_VAR)) {
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_BRAND_TITLE, stringField.getData(), stringField.getSearchLogic()));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR)) {
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_DAYS)) {
             final DateTime date = new DateTime().minusDays((Integer) field.getData());
             final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class,

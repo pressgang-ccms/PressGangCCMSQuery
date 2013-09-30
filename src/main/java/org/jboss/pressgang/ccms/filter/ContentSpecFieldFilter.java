@@ -23,8 +23,14 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         {
             put(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_EDITION_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_EDITION_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_ABSTRACT_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_ABSTRACT_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_BRAND_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_BRAND_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR,
+                    CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR_DESC);
             put(CommonFilterConstants.HAS_ERRORS_FILTER_VAR, CommonFilterConstants.HAS_ERRORS_FILTER_VAR_DESC);
             put(CommonFilterConstants.EDITED_IN_LAST_DAYS, CommonFilterConstants.EDITED_IN_LAST_DAYS_DESC);
             put(CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS, CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS_DESC);
@@ -36,9 +42,15 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
     });
 
     private FilterFieldIntegerListData contentSpecIds;
+    private FilterFieldIntegerData contentSpecType;
     private FilterFieldStringData contentSpecTitle;
+    private FilterFieldStringData contentSpecSubtitle;
     private FilterFieldStringData contentSpecProduct;
     private FilterFieldStringData contentSpecVersion;
+    private FilterFieldStringData contentSpecEdition;
+    private FilterFieldStringData contentSpecAbstract;
+    private FilterFieldStringData contentSpecBrand;
+    private FilterFieldStringData contentSpecCopyrightHolder;
     private FilterFieldIntegerData editedInLastDays;
     private FilterFieldIntegerData notEditedInLastDays;
     private FilterFieldIntegerData editedInLastMins;
@@ -57,12 +69,24 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
 
         contentSpecIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
+        contentSpecType = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_TYPE_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR_DESC);
         contentSpecTitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR_DESC);
+        contentSpecSubtitle = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR_DESC);
         contentSpecProduct = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_PRODUCT_FILTER_VAR_DESC);
         contentSpecVersion = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_VERSION_FILTER_VAR_DESC);
+        contentSpecEdition = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_EDITION_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_EDITION_FILTER_VAR_DESC);
+        contentSpecAbstract = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_ABSTRACT_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_ABSTRACT_FILTER_VAR_DESC);
+        contentSpecBrand = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_BRAND_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_BRAND_FILTER_VAR_DESC);
+        contentSpecCopyrightHolder = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR_DESC);
         
         /* Edited in last days */
         editedInLastDays = new FilterFieldIntegerData(CommonFilterConstants.EDITED_IN_LAST_DAYS,
@@ -89,9 +113,15 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
 
     private void setupSingleFilterVars() {
         addFilterVar(contentSpecIds);
+        addFilterVar(contentSpecType);
         addFilterVar(contentSpecTitle);
+        addFilterVar(contentSpecSubtitle);
         addFilterVar(contentSpecProduct);
         addFilterVar(contentSpecVersion);
+        addFilterVar(contentSpecEdition);
+        addFilterVar(contentSpecAbstract);
+        addFilterVar(contentSpecBrand);
+        addFilterVar(contentSpecCopyrightHolder);
         addFilterVar(hasErrors);
         addFilterVar(editedInLastDays);
         addFilterVar(notEditedInLastDays);
