@@ -151,6 +151,9 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_HOLDER_FILTER_VAR)) {
             final FilterFieldStringData stringField = (FilterFieldStringData) field;
             addExistsCondition(getMetaDataSubquery(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, stringField.getData(), stringField.getSearchLogic()));
+        } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR)) {
+            final FilterFieldStringData stringField = (FilterFieldStringData) field;
+            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_PUBLICAN_CFG_TITLE, stringField.getData(), stringField.getSearchLogic()));
         } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_DAYS)) {
             final DateTime date = new DateTime().minusDays((Integer) field.getData());
             final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class,
