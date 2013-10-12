@@ -21,6 +21,7 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         private static final long serialVersionUID = 4454656533723964663L;
 
         {
+            put(CommonFilterConstants.CONTENT_SPEC_TYPE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_TYPE_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_TITLE_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_SUBTITLE_FILTER_VAR_DESC);
