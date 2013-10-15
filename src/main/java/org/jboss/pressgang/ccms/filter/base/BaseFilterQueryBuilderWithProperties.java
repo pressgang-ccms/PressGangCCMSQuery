@@ -53,7 +53,7 @@ public abstract class BaseFilterQueryBuilderWithProperties<T, U extends ToProper
                 final Integer propertyTagId = entry.getKey();
                 final String fieldValue = entry.getValue();
                 if (propertyTagId != null && fieldValue != null) {
-                    addExistsCondition(getPropertyTagSubquery(propertyTagId, (String) field.getData()));
+                    addExistsCondition(getPropertyTagSubquery(propertyTagId, fieldValue));
                 }
             }
         } else {
