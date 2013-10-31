@@ -8,9 +8,11 @@ import javax.persistence.criteria.Subquery;
 
 import org.jboss.pressgang.ccms.filter.TopicFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFilterQueryBuilder;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 /**
  * Provides the query elements required by Filter.buildQuery() to get a list of Topic elements
@@ -19,6 +21,20 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
     public TopicFilterQueryBuilder(final EntityManager entityManager) {
         super(Topic.class, new TopicFieldFilter(), entityManager);
+    }
+
+    @Override
+    public void processField(final FilterFieldDataBase<?> field) {
+        final String fieldName = field.getBaseName();
+
+        if (fieldName.equals(CommonFilterConstants.TOPIC_MIN_HASH)) {
+            final Integer fieldIntegerValue = (Integer) field.getData();
+            if (fieldIntegerValue != null) {
+                addEqualsCondition("minHash", fieldIntegerValue);
+            }
+        } else {
+            super.processField(field);
+        }
     }
 
     @Override

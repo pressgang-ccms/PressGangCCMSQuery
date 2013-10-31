@@ -333,7 +333,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * Add a Field Search Condition that will check if the id field exists in a comma separated list of ids. eg.
      * {@code field IN (value)}
      *
-     * @param propertyName The name of the field id as defined in the Entity mapping class.
+     * @param property The name of the field id as defined in the Entity mapping class.
      * @param value        The comma separated list of ids.
      * @throws NumberFormatException Thrown if one of the Strings cannot be converted to an Integer.
      */
