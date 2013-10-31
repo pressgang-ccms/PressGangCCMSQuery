@@ -65,6 +65,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
             put(CommonFilterConstants.TOPIC_HAS_NOT_RELATIONSHIPS, CommonFilterConstants.TOPIC_HAS_NOT_RELATIONSHIPS_DESC);
             put(CommonFilterConstants.TOPIC_HAS_NOT_INCOMING_RELATIONSHIPS,
                     CommonFilterConstants.TOPIC_HAS_NOT_INCOMING_RELATIONSHIPS_DESC);
+            put(CommonFilterConstants.TOPIC_MIN_HASH, CommonFilterConstants.TOPIC_MIN_HASH_DESC);
         }
     });
 
@@ -96,6 +97,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
     private FilterFieldBooleanData hasBugzillaBugs;
     private FilterFieldIntegerListData topicIncludedInSpec;
     private FilterFieldIntegerListData notTopicIncludedInSpec;
+    private FilterFieldIntegerData topicMinHash;
 
     private FilterFieldBooleanData notHasXMLErrors;
     private FilterFieldBooleanData notHasRelationships;
@@ -200,6 +202,9 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.ENDEDITDATE_FILTER_VAR,
                 CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
 
+        setTopicMinHash(new FilterFieldIntegerData(CommonFilterConstants.TOPIC_MIN_HASH,
+                CommonFilterConstants.TOPIC_MIN_HASH));
+
         addFilterVar(topicTextSearch);
         addFilterVar(topicIds);
         addFilterVar(topicIncludedInSpec);
@@ -232,6 +237,8 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         addFilterVar(notHasIncomingRelationships);
         addFilterVar(notHasBugzillaBugs);
         addFilterVar(notHasOpenBugzillaBugs);
+
+        addFilterVar(getTopicMinHash());
     }
 
     public Map<String, String> getFilterValues() {
@@ -447,7 +454,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         return notEditedInLastMins;
     }
 
-    public void setNotEditedInLastMins(FilterFieldIntegerData notEditedInLastMins) {
+    public void setNotEditedInLastMins(final FilterFieldIntegerData notEditedInLastMins) {
         this.notEditedInLastMins = notEditedInLastMins;
     }
 
@@ -455,7 +462,15 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         return editedInLastMins;
     }
 
-    public void setEditedInLastMins(FilterFieldIntegerData editedInLastMins) {
+    public void setEditedInLastMins(final FilterFieldIntegerData editedInLastMins) {
         this.editedInLastMins = editedInLastMins;
+    }
+
+    public FilterFieldIntegerData getTopicMinHash() {
+        return topicMinHash;
+    }
+
+    public void setTopicMinHash(final FilterFieldIntegerData topicMinHash) {
+        this.topicMinHash = topicMinHash;
     }
 }
