@@ -392,6 +392,15 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
     }
 
     /**
+     * Add a Field Search Condition that will check if the result of a subquery doesn't exist.
+     *
+     * @param subquery The subquery to check if it's result doesn't exist.
+     */
+    protected void addNotExistsCondition(final Subquery<?> subquery) {
+        addFieldCondition(getCriteriaBuilder().not(getCriteriaBuilder().exists(subquery)));
+    }
+
+    /**
      * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
      * {@code field = '%value'}
      *

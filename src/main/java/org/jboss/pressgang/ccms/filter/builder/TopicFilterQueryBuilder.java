@@ -9,6 +9,7 @@ import javax.persistence.criteria.Subquery;
 import org.jboss.pressgang.ccms.filter.TopicFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.model.MinHash;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
@@ -30,7 +31,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
         if (fieldName.equals(CommonFilterConstants.TOPIC_MIN_HASH)) {
             final Integer fieldIntegerValue = (Integer) field.getData();
             if (fieldIntegerValue != null) {
-                addEqualsCondition("minHash", fieldIntegerValue);
+                addExistsCondition(getMatchingMinHash(fieldIntegerValue));
             }
         } else {
             super.processField(field);
@@ -91,5 +92,19 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             return queryBuilder.and(localePredicate, queryBuilder.isNotNull(getRootPath().get("topicLocale")));
 
         return localePredicate;
+    }
+
+    public Subquery<MinHash> getMatchingMinHash(final Integer minHash) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<MinHash> subQuery = getCriteriaQuery().subquery(MinHash.class);
+        final Root<MinHash> root = subQuery.from(MinHash.class);
+        subQuery.select(root);
+
+        // Create the condition
+        final Predicate minHashMatch = criteriaBuilder.equal(root.get("minHash"), minHash);
+        final Predicate topicIdMatch = criteriaBuilder.equal(getRootPath(), root.get("topic"));
+        subQuery.where(criteriaBuilder.and(topicIdMatch, minHashMatch));
+
+        return subQuery;
     }
 }

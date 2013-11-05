@@ -35,7 +35,7 @@ public abstract class BaseFilterQueryBuilderWithProperties<T, U extends ToProper
                 final Integer propertyTagId = entry.getKey();
                 final Boolean fieldValueBoolean = entry.getValue();
                 if (propertyTagId != null && fieldValueBoolean) {
-                    addFieldCondition(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId)));
+                    addExistsCondition(getPropertyTagExistsSubquery(propertyTagId));
                 }
             }
         } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG_NOT_EXISTS)) {
@@ -44,7 +44,7 @@ public abstract class BaseFilterQueryBuilderWithProperties<T, U extends ToProper
                 final Integer propertyTagId = entry.getKey();
                 final Boolean fieldValueBoolean = entry.getValue();
                 if (propertyTagId != null && fieldValueBoolean) {
-                    addFieldCondition(getCriteriaBuilder().not(getCriteriaBuilder().exists(getPropertyTagExistsSubquery(propertyTagId))));
+                    addNotExistsCondition(getPropertyTagExistsSubquery(propertyTagId));
                 }
             }
         } else if (fieldName.startsWith(CommonFilterConstants.PROPERTY_TAG)) {
