@@ -127,6 +127,12 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
      */
     public Subquery<Topic> getMatchingMinHash(final Integer topicId, final Float threshold) {
         try {
+            // get the source topic
+            final Topic sourceTopic = getEntityManager().find(Topic.class, topicId);
+            if (sourceTopic.getMinHashes().size() == 0) {
+                return null;
+            }
+
             Float fixedThreshold = Constants.MIN_DOCUMENT_SIMILARITY;
             if (threshold > Constants.MAX_DOCUMENT_SIMILARITY) {
                 fixedThreshold = Constants.MAX_DOCUMENT_SIMILARITY;
@@ -152,8 +158,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 ++bands;
             }
 
-            // get the source topic
-            final Topic sourceTopic = getEntityManager().find(Topic.class, topicId);
+
 
             final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
             final CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
@@ -173,19 +178,19 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                     }
 
                     rowMatches.add(criteriaBuilder.and(
-                        criteriaBuilder.equal(minHashRoot.<Integer>get("MinHashFuncID"), sourceMinHash.getMinHashFuncID()),
-                        criteriaBuilder.equal(minHashRoot.<Integer>get("MinHash"), sourceMinHash.getMinHash())
+                        criteriaBuilder.equal(minHashRoot.<Integer>get("minHashFuncID"), sourceMinHash.getMinHashFuncID()),
+                        criteriaBuilder.equal(minHashRoot.<Integer>get("minHash"), sourceMinHash.getMinHash())
                     ));
                 }
 
                 final Predicate minHashOrs = criteriaBuilder.or(rowMatches.toArray(new Predicate[]{}));
 
                 final CriteriaQuery<Integer> query = criteriaQuery
-                        .select(minHashRoot.<Integer>get("TopicID"))
+                        .select(minHashRoot.<Topic>get("topic").<Integer>get("topicId"))
                         .distinct(true)
                         .where(minHashOrs)
-                        .groupBy(minHashRoot.<Integer>get("TopicID"))
-                        .having(criteriaBuilder.equal(criteriaBuilder.count(criteriaBuilder.count(minHashRoot.<Integer>get("TopicID"))), rowMatches.size()));
+                        .groupBy(minHashRoot.<Integer>get("topic").<Integer>get("topicId"))
+                        .having(criteriaBuilder.equal(criteriaBuilder.count(minHashRoot.<Integer>get("topic").<Integer>get("topicId")), rowMatches.size()));
 
                 candidates.addAll(getEntityManager().createQuery(query).getResultList());
             }
@@ -193,7 +198,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             // at this point candidates should now list topic ids that are a potential match to the source topic.
             final CriteriaQuery<Topic> topicCQ = criteriaBuilder.createQuery(Topic.class);
             final Root<Topic> topicRoot = criteriaQuery.from(Topic.class);
-            final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("TopicID"));
+            final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("topic").<Integer>get("topicId"));
             for (final Integer candidate : candidates) {
                 in.value(candidate);
             }
@@ -202,7 +207,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
             // we now have a list of topics that are possible candidates for a match. Now we compare the minhash values
             // to see what the similarity actually is.
-            final CriteriaBuilder.In<Integer> inSubQuery = criteriaBuilder.in(topicRoot.<Integer>get("TopicID"));
+            final CriteriaBuilder.In<Integer> inSubQuery = criteriaBuilder.in(topicRoot.<Integer>get("topic").<Integer>get("topicId"));
             for (final Topic topic : topics) {
                 int matches = 0;
                 for (final MinHash minHash : sourceTopic.getMinHashes()) {
