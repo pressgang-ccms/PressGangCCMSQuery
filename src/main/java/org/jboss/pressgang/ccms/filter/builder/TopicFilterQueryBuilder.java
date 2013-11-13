@@ -165,7 +165,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             }
 
             // get the source topic
-            final Topic sourceTopic = null;
+            final Topic sourceTopic = getEntityManager().find(Topic.class, topicId);
 
             final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
             final CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
@@ -202,10 +202,43 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 candidates.addAll(getEntityManager().createQuery(query).getResultList());
             }
 
-            // at this point candidates should now list topics that are a potential match to the source topic.
+            // at this point candidates should now list topic ids that are a potential match to the source topic.
+            final CriteriaQuery<Topic> topicCQ = criteriaBuilder.createQuery(Topic.class);
+            final Root<Topic> topicRoot = criteriaQuery.from(Topic.class);
 
-            // todo: fix this
-            return null;
+            final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("TopicID"));
+            for (final Integer candidate : candidates) {
+                in.value(candidate);
+            }
+
+            final CriteriaQuery<Topic> topicQuery = topicCQ.select(topicRoot).where(in);
+
+            final List<Topic> topics = getEntityManager().createQuery(topicQuery).getResultList();
+
+            // we now have a list of topics that are possible candidates for a match
+            final CriteriaBuilder.In<Integer> inSubQuery = criteriaBuilder.in(topicRoot.<Integer>get("TopicID"));
+            for (final Topic topic : topics) {
+                int matches = 0;
+                for (final MinHash minHash : sourceTopic.getMinHashes()) {
+                    for (final MinHash otherMinHash : topic.getMinHashes()) {
+                        if (minHash.getMinHashFuncID().equals(otherMinHash.getMinHashFuncID())) {
+                            if (minHash.getMinHash().equals(otherMinHash.getMinHash())) {
+                                ++matches;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (matches / Constants.NUM_MIN_HASHES >= fixedThreshold) {
+                    inSubQuery.value(topic.getId());
+                }
+            }
+
+            final Subquery<Topic> subQuery = getCriteriaQuery().subquery(Topic.class);
+            subQuery.where(inSubQuery);
+
+            return subQuery;
 
         } catch (final Exception ex) {
             return null;
