@@ -136,10 +136,10 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
      */
     public Subquery<Topic> getMatchingMinHash(final Integer topicId, final Float threshold) {
         try {
-            Float fixedThreshold = 0.6f;
-            if (threshold > 0.9) {
-                fixedThreshold = 0.9f;
-            } else if (threshold >= 0.6) {
+            Float fixedThreshold = Constants.MIN_DOCUMENT_SIMILARITY;
+            if (threshold > Constants.MAX_DOCUMENT_SIMILARITY) {
+                fixedThreshold = Constants.MAX_DOCUMENT_SIMILARITY;
+            } else if (threshold >= Constants.MIN_DOCUMENT_SIMILARITY) {
                 fixedThreshold = threshold;
             }
 
