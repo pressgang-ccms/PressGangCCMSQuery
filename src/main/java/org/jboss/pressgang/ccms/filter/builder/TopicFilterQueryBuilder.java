@@ -198,7 +198,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             // at this point candidates should now list topic ids that are a potential match to the source topic.
             final CriteriaQuery<Topic> topicCQ = criteriaBuilder.createQuery(Topic.class);
             final Root<Topic> topicRoot = criteriaQuery.from(Topic.class);
-            final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("topic").<Integer>get("topicId"));
+            final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("topicId"));
             for (final Integer candidate : candidates) {
                 in.value(candidate);
             }
@@ -207,7 +207,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
             // we now have a list of topics that are possible candidates for a match. Now we compare the minhash values
             // to see what the similarity actually is.
-            final CriteriaBuilder.In<Integer> inSubQuery = criteriaBuilder.in(topicRoot.<Integer>get("topic").<Integer>get("topicId"));
+            final CriteriaBuilder.In<Integer> inSubQuery = criteriaBuilder.in(topicRoot.<Integer>get("topicId"));
             for (final Topic topic : topics) {
                 int matches = 0;
                 for (final MinHash minHash : sourceTopic.getMinHashes()) {
