@@ -224,7 +224,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                     }
                 }
 
-                if (matches / Constants.NUM_MIN_HASHES >= fixedThreshold) {
+                if ((float)matches / Constants.NUM_MIN_HASHES >= fixedThreshold) {
                     matchingTopics.add(topic.getId());
                 }
             }
