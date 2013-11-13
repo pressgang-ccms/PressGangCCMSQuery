@@ -230,7 +230,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             }
 
             final Subquery<Topic> subQuery = getCriteriaQuery().subquery(Topic.class);
-            subQuery.where(inSubQuery);
+            subQuery.select(topicRoot).where(inSubQuery);
 
             return subQuery;
 
