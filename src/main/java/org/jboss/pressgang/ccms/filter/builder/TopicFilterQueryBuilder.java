@@ -38,7 +38,10 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 final String[] components = fieldStringValue.split(":");
                 if (components.length == 2) {
                     try {
-                        addExistsCondition(getMatchingMinHash(Integer.parseInt(components[0]), Float.parseFloat(components[1])));
+                        final Subquery<Topic> subQuery = getMatchingMinHash(Integer.parseInt(components[0]), Float.parseFloat(components[1]));
+                         if (subQuery != null) {
+                            addExistsCondition(subQuery);
+                         }
                     } catch (final NumberFormatException ex) {
 
                     }
