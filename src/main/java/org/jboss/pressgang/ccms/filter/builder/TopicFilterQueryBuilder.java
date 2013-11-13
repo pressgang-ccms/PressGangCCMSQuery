@@ -150,7 +150,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
             // The number of full bands that we be used to generate the sql query
             int bands = Constants.NUM_MIN_HASHES / lhsRows;
-            // Any remaining topics that don't fall into a band
+            // Any remaining topics that don't fall into a complete band
             if(Constants.NUM_MIN_HASHES % lhsRows != 0) {
                 ++bands;
             }
