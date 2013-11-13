@@ -138,7 +138,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             int lhsRows = 0;
             for (int rows = Constants.LSH_SIXTY_PERCENT_ROWS; rows < Constants.LSH_NINETY_PERCENT_ROWS; ++rows) {
                 final int bands = Constants.NUM_MIN_HASHES / rows;
-                final double thisThreshold = Math.pow(1/bands, 1/rows);
+                final double thisThreshold = Math.pow(1.0/bands, 1.0/rows);
 
                 if (lastThreshold == null) {
                     lastThreshold = thisThreshold;
