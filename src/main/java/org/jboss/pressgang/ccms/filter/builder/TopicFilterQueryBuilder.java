@@ -114,16 +114,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
      *
      * The documentation above suggests hashing the minhash values that fall into a band, and then comparing
      * these hashed band values to find candidates. Our implementation will defer this to the database by
-     * AND'ing the minhash values that fall into a band, and OR'ing the logic for multiple bands. In psuedo SQL this
-     * looks like:
-     *
-     * SELECT *
-     * FROM TOPIC
-     * WHERE (Topic.Minhash1 == SourceTopic.Minhash1 AND  Topic.Minhash2 == SourceTopic.Minhash2 AND Topic.Minhash3 == SourceTopic.Minhash3)
-     * OR (Topic.Minhash4 == SourceTopic.Minhash4 AND  Topic.Minhash5 == SourceTopic.Minhash5 AND Topic.Minhash6 == SourceTopic.Minhash6)
-     *
-     * Here we have 3 rows (the AND'ed minhashes) and 2 bands (the OR'ed statements). Should any topic in the database
-     * match all the minhashes from the source topic in a band, it will be considered a candidate pair.
+     * finding the number of topics that have matching minhash values in all rows in a band.
      *
      * The number of rows and bands is calculated such that the threshold is approximately Math.pow(1/b, 1/r). This
      * formula means that increasing the threshold results in an increased number of rows and a decreased number
