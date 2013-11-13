@@ -171,7 +171,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
             for (int band = 0; band < bands; ++band) {
                 final List<Predicate> rowMatches = new ArrayList<Predicate>();
-                for (int row = band * lhsRows; row < Constants.NUM_MIN_HASHES; ++row) {
+                for (int row = band * lhsRows; row < (band * lhsRows) + lhsRows && row < Constants.NUM_MIN_HASHES; ++row) {
                     MinHash sourceMinHash = null;
                     for (final MinHash minHash : sourceTopic.getMinHashes()) {
                         if (row == minHash.getMinHashFuncID()) {
