@@ -133,7 +133,11 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
             // get the source topic
             final Topic sourceTopic = getEntityManager().find(Topic.class, topicId);
             if (sourceTopic.getMinHashes().size() == 0) {
-                return null;
+                /*
+                    If the source topic does not have a minhash signature, force the search query to
+                    match a non existent topic id so no results are returned.
+                 */
+                return new ArrayList<Integer>(){{add(-1);}};
             }
 
             Float fixedThreshold = Constants.MIN_DOCUMENT_SIMILARITY;
@@ -228,6 +232,8 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                     matchingTopics.add(topic.getId());
                 }
             }
+
+
 
             return matchingTopics;
 
