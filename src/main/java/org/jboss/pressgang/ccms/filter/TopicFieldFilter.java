@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFieldFilter;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
+import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 /**
@@ -25,7 +26,7 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
         }
     });
 
-    private FilterFieldIntegerData topicMinHash;
+    private FilterFieldStringData topicMinHash;
 
     public TopicFieldFilter() {
         resetAllValues();
@@ -35,7 +36,7 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        topicMinHash = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_MIN_HASH, CommonFilterConstants.TOPIC_MIN_HASH_DESC);
+        topicMinHash = new FilterFieldStringData(CommonFilterConstants.TOPIC_MIN_HASH, CommonFilterConstants.TOPIC_MIN_HASH_DESC);
 
         addFilterVar(topicMinHash);
     }
@@ -62,11 +63,11 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
         return retValue;
     }
 
-    public FilterFieldIntegerData getTopicMinHash() {
+    public FilterFieldStringData getTopicMinHash() {
         return topicMinHash;
     }
 
-    public void setTopicMinHash(final FilterFieldIntegerData topicMinHash) {
+    public void setTopicMinHash(final FilterFieldStringData topicMinHash) {
         this.topicMinHash = topicMinHash;
     }
 }
