@@ -200,7 +200,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
             // at this point candidates should now list topic ids that are a potential match to the source topic.
             final CriteriaQuery<Topic> topicCQ = criteriaBuilder.createQuery(Topic.class);
-            final Root<Topic> topicRoot = criteriaQuery.from(Topic.class);
+            final Root<Topic> topicRoot = topicCQ.from(Topic.class);
             final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("topicId"));
             for (final Integer candidate : candidates) {
                 in.value(candidate);
