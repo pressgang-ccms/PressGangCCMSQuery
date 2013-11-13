@@ -134,15 +134,12 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 fixedThreshold = threshold;
             }
 
-            Double lastThreshold = null;
             int lhsRows = 0;
             for (int rows = Constants.LSH_SIXTY_PERCENT_ROWS; rows < Constants.LSH_NINETY_PERCENT_ROWS; ++rows) {
                 final int bands = Constants.NUM_MIN_HASHES / rows;
                 final double thisThreshold = Math.pow(1.0/bands, 1.0/rows);
 
-                if (lastThreshold == null) {
-                    lastThreshold = thisThreshold;
-                } else if (thisThreshold > fixedThreshold) {
+                if (rows != Constants.LSH_SIXTY_PERCENT_ROWS && thisThreshold > fixedThreshold) {
                     lhsRows = rows - 1;
                     break;
                 }
