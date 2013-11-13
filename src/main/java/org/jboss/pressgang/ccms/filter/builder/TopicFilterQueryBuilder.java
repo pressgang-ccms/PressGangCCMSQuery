@@ -11,6 +11,7 @@ import org.jboss.pressgang.ccms.model.MinHash;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.model.constants.Constants;
+import org.jboss.pressgang.ccms.model.utils.TopicUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -38,7 +39,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 final String[] components = fieldStringValue.split(":");
                 if (components.length == 2) {
                     try {
-                        final List<Integer> matchingTopics = getMatchingMinHash(Integer.parseInt(components[0]), Float.parseFloat(components[1]));
+                        final List<Integer> matchingTopics = TopicUtilities.getMatchingMinHash(getEntityManager(), Integer.parseInt(components[0]), Float.parseFloat(components[1]));
                          if (matchingTopics != null) {
                              addIdInCollectionCondition("topicId", matchingTopics);
                          }
@@ -108,137 +109,5 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
         return localePredicate;
     }
 
-    /**
-     * Matching the minhash signature of a document relies on a process known as locality sensitive hashing.
-     * A good explaination of this process can be found at http://infolab.stanford.edu/~ullman/mmds/ch3.pdf.
-     *
-     * To implement this feature, we need to group the minhash signatures into bands. When two topics share
-     * the same minhash in a single band, they are considered a candidate pair for further testing.
-     *
-     * The documentation above suggests hashing the minhash values that fall into a band, and then comparing
-     * these hashed band values to find candidates. Our implementation will defer this to the database by
-     * finding the number of topics that have matching minhash values in all rows in a band.
-     *
-     * The number of rows and bands is calculated such that the threshold is approximately Math.pow(1/b, 1/r). This
-     * formula means that increasing the threshold results in an increased number of rows and a decreased number
-     * of bands. We get a close approximation by running through a bunch of combinations and seeing what fits best.
-     *
-     * @param topicId The topic whose minhash signature we will be matching to.
-     * @param threshold How similar we want two documents to be to be considered a match. This will be forced to a value
-     *                  between 0.6 and 0.9.
-     * @return
-     */
-    public List<Integer> getMatchingMinHash(final Integer topicId, final Float threshold) {
-        try {
-            // get the source topic
-            final Topic sourceTopic = getEntityManager().find(Topic.class, topicId);
-            if (sourceTopic.getMinHashes().size() == 0) {
-                /*
-                    If the source topic does not have a minhash signature, force the search query to
-                    match a non existent topic id so no results are returned.
-                 */
-                return new ArrayList<Integer>(){{add(-1);}};
-            }
 
-            Float fixedThreshold = Constants.MIN_DOCUMENT_SIMILARITY;
-            if (threshold > Constants.MAX_DOCUMENT_SIMILARITY) {
-                fixedThreshold = Constants.MAX_DOCUMENT_SIMILARITY;
-            } else if (threshold >= Constants.MIN_DOCUMENT_SIMILARITY) {
-                fixedThreshold = threshold;
-            }
-
-            int lhsRows = 0;
-            for (int rows = Constants.LSH_SIXTY_PERCENT_ROWS; rows < Constants.LSH_NINETY_PERCENT_ROWS; ++rows) {
-                final int bands = Constants.NUM_MIN_HASHES / rows;
-                final double thisThreshold = Math.pow(1.0/bands, 1.0/rows);
-
-                if (rows != Constants.LSH_SIXTY_PERCENT_ROWS && thisThreshold > fixedThreshold) {
-                    lhsRows = rows - 1;
-                    break;
-                }
-            }
-
-            // The number of full bands that we be used to generate the sql query
-            int bands = Constants.NUM_MIN_HASHES / lhsRows;
-            // Any remaining topics that don't fall into a complete band
-            if(Constants.NUM_MIN_HASHES % lhsRows != 0) {
-                ++bands;
-            }
-
-
-
-            final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-            final CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
-            final Root<MinHash> minHashRoot = criteriaQuery.from(MinHash.class);
-
-            final Set<Integer> candidates = new HashSet<Integer>();
-
-            for (int band = 0; band < bands; ++band) {
-                final List<Predicate> rowMatches = new ArrayList<Predicate>();
-                for (int row = band * lhsRows; row < (band * lhsRows) + lhsRows && row < Constants.NUM_MIN_HASHES; ++row) {
-                    MinHash sourceMinHash = null;
-                    for (final MinHash minHash : sourceTopic.getMinHashes()) {
-                        if (row == minHash.getMinHashFuncID()) {
-                            sourceMinHash = minHash;
-                            break;
-                        }
-                    }
-
-                    rowMatches.add(criteriaBuilder.and(
-                        criteriaBuilder.equal(minHashRoot.<Integer>get("minHashFuncID"), sourceMinHash.getMinHashFuncID()),
-                        criteriaBuilder.equal(minHashRoot.<Integer>get("minHash"), sourceMinHash.getMinHash())
-                    ));
-                }
-
-                final Predicate minHashOrs = criteriaBuilder.or(rowMatches.toArray(new Predicate[]{}));
-
-                final CriteriaQuery<Integer> query = criteriaQuery
-                        .select(minHashRoot.<Topic>get("topic").<Integer>get("topicId"))
-                        .distinct(true)
-                        .where(minHashOrs)
-                        .groupBy(minHashRoot.<Integer>get("topic").<Integer>get("topicId"))
-                        .having(criteriaBuilder.equal(criteriaBuilder.count(minHashRoot.<Integer>get("topic").<Integer>get("topicId")), rowMatches.size()));
-
-                candidates.addAll(getEntityManager().createQuery(query).getResultList());
-            }
-
-            // at this point candidates should now list topic ids that are a potential match to the source topic.
-            final CriteriaQuery<Topic> topicCQ = criteriaBuilder.createQuery(Topic.class);
-            final Root<Topic> topicRoot = topicCQ.from(Topic.class);
-            final CriteriaBuilder.In<Integer> in = criteriaBuilder.in(topicRoot.<Integer>get("topicId"));
-            for (final Integer candidate : candidates) {
-                in.value(candidate);
-            }
-            final CriteriaQuery<Topic> topicQuery = topicCQ.select(topicRoot).where(in);
-            final List<Topic> topics = getEntityManager().createQuery(topicQuery).getResultList();
-
-            // we now have a list of topics that are possible candidates for a match. Now we compare the minhash values
-            // to see what the similarity actually is.
-            final List<Integer> matchingTopics = new ArrayList<Integer>();
-            for (final Topic topic : topics) {
-                int matches = 0;
-                for (final MinHash minHash : sourceTopic.getMinHashes()) {
-                    for (final MinHash otherMinHash : topic.getMinHashes()) {
-                        if (minHash.getMinHashFuncID().equals(otherMinHash.getMinHashFuncID())) {
-                            if (minHash.getMinHash().equals(otherMinHash.getMinHash())) {
-                                ++matches;
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                if ((float)matches / Constants.NUM_MIN_HASHES >= fixedThreshold) {
-                    matchingTopics.add(topic.getId());
-                }
-            }
-
-
-
-            return matchingTopics;
-
-        } catch (final Exception ex) {
-            return null;
-        }
-    }
 }
