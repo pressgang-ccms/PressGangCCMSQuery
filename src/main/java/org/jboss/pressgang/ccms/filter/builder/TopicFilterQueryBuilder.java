@@ -38,9 +38,9 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 final String[] components = fieldStringValue.split(":");
                 if (components.length == 2) {
                     try {
-                        final Subquery<Topic> subQuery = getMatchingMinHash(Integer.parseInt(components[0]), Float.parseFloat(components[1]));
-                         if (subQuery != null) {
-                            addExistsCondition(subQuery);
+                        final List<Integer> matchingTopics = getMatchingMinHash(Integer.parseInt(components[0]), Float.parseFloat(components[1]));
+                         if (matchingTopics != null) {
+                             addIdInCollectionCondition("topicId", matchingTopics);
                          }
                     } catch (final NumberFormatException ex) {
 
@@ -128,7 +128,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
      *                  between 0.6 and 0.9.
      * @return
      */
-    public Subquery<Topic> getMatchingMinHash(final Integer topicId, final Float threshold) {
+    public List<Integer> getMatchingMinHash(final Integer topicId, final Float threshold) {
         try {
             // get the source topic
             final Topic sourceTopic = getEntityManager().find(Topic.class, topicId);
@@ -210,7 +210,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
             // we now have a list of topics that are possible candidates for a match. Now we compare the minhash values
             // to see what the similarity actually is.
-            final CriteriaBuilder.In<Integer> inSubQuery = criteriaBuilder.in(topicRoot.<Integer>get("topicId"));
+            final List<Integer> matchingTopics = new ArrayList<Integer>();
             for (final Topic topic : topics) {
                 int matches = 0;
                 for (final MinHash minHash : sourceTopic.getMinHashes()) {
@@ -225,14 +225,11 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 }
 
                 if (matches / Constants.NUM_MIN_HASHES >= fixedThreshold) {
-                    inSubQuery.value(topic.getId());
+                    matchingTopics.add(topic.getId());
                 }
             }
 
-            final Subquery<Topic> subQuery = getCriteriaQuery().subquery(Topic.class);
-            subQuery.select(topicRoot).where(inSubQuery);
-
-            return subQuery;
+            return matchingTopics;
 
         } catch (final Exception ex) {
             return null;
