@@ -17,6 +17,7 @@ import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.filter.structures.FilterStringLogic;
 import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
+import org.jboss.pressgang.ccms.model.config.ApplicationConfig;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpecToPropertyTag;
@@ -82,7 +83,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     public Predicate getMatchingLocaleString(final String locale) {
         if (locale == null) return null;
 
-        final String defaultLocale = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+        final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Predicate localePredicate = criteriaBuilder.equal(getRootPath().get("locale"), locale);
@@ -97,7 +98,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
     public Predicate getNotMatchingLocaleString(final String locale) {
         if (locale == null) return null;
 
-        final String defaultLocale = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+        final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Predicate localePredicate = criteriaBuilder.notEqual(getRootPath().get("locale"), locale);

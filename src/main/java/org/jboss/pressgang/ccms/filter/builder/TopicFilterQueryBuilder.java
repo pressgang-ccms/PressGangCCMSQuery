@@ -1,24 +1,20 @@
 package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+import java.util.List;
 
 import org.jboss.pressgang.ccms.filter.TopicFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
-import org.jboss.pressgang.ccms.model.MinHash;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
-import org.jboss.pressgang.ccms.model.constants.Constants;
+import org.jboss.pressgang.ccms.model.config.ApplicationConfig;
 import org.jboss.pressgang.ccms.model.utils.TopicUtilities;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Provides the query elements required by Filter.buildQuery() to get a list of Topic elements
@@ -83,7 +79,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
     public Predicate getMatchingLocaleString(final String locale) {
         if (locale == null) return null;
 
-        final String defaultLocale = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+        final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder queryBuilder = getCriteriaBuilder();
         final Predicate localePredicate = queryBuilder.equal(getRootPath().get("topicLocale"), locale);
@@ -98,7 +94,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
     public Predicate getNotMatchingLocaleString(final String locale) {
         if (locale == null) return null;
 
-        final String defaultLocale = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+        final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder queryBuilder = getCriteriaBuilder();
         final Predicate localePredicate = queryBuilder.notEqual(getRootPath().get("topicLocale"), locale);

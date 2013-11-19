@@ -16,7 +16,7 @@ import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.model.TranslatedTopic;
 import org.jboss.pressgang.ccms.model.TranslatedTopicData;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.model.config.ApplicationConfig;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
     public Predicate getMatchingLocaleString(final String locale) {
         if (locale == null) return null;
 
-        final String defaultLocale = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+        final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Predicate localePredicate = criteriaBuilder.equal(getOriginalRootPath().get("translationLocale"), locale);
@@ -81,7 +81,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
     public Predicate getNotMatchingLocaleString(final String locale) {
         if (locale == null) return null;
 
-        final String defaultLocale = System.getProperty(CommonConstants.DEFAULT_LOCALE_PROPERTY);
+        final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
         final Predicate localePredicate = criteriaBuilder.notEqual(getOriginalRootPath().get("translationLocale"), locale);
