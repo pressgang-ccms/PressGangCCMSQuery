@@ -35,7 +35,9 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 final String[] components = fieldStringValue.split(":");
                 if (components.length == 2) {
                     try {
-                        final List<Integer> matchingTopics = TopicUtilities.getMatchingMinHash(getEntityManager(), Integer.parseInt(components[0]), Float.parseFloat(components[1]));
+                        final Integer sourceTopicId = Integer.parseInt(components[0]);
+                        final Float minimumSimilarity = Float.parseFloat(components[1]);
+                        final List<Integer> matchingTopics = TopicUtilities.getMatchingMinHash(getEntityManager(), sourceTopicId, minimumSimilarity);
                          if (matchingTopics != null) {
                              addIdInCollectionCondition("topicId", matchingTopics);
                          }
