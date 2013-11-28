@@ -36,11 +36,17 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 if (components.length == 2) {
                     try {
                         final Integer sourceTopicId = Integer.parseInt(components[0]);
-                        final Float minimumSimilarity = Float.parseFloat(components[1]);
-                        final List<Integer> matchingTopics = TopicUtilities.getMatchingMinHash(getEntityManager(), sourceTopicId, minimumSimilarity);
-                         if (matchingTopics != null) {
-                             addIdInCollectionCondition("topicId", matchingTopics);
-                         }
+                        final Float threshold = Float.parseFloat(components[1]);
+
+                        if (threshold < org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY ||
+                                threshold > org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY) {
+                            throw new IllegalArgumentException("threshold must be between " + org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY + " and " + org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY);
+                        }
+
+                        final List<Integer> matchingTopics = TopicUtilities.getMatchingMinHash(getEntityManager(), sourceTopicId, threshold);
+                        if (matchingTopics != null) {
+                            addIdInCollectionCondition("topicId", matchingTopics);
+                        }
                     } catch (final NumberFormatException ex) {
 
                     }
