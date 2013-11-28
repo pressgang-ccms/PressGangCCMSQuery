@@ -40,7 +40,9 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
                         if (threshold < org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY ||
                                 threshold > org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY) {
-                            throw new IllegalArgumentException("threshold must be between " + org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY + " and " + org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY);
+                            throw new IllegalArgumentException("The threshold measurement on the " + CommonFilterConstants.TOPIC_MIN_HASH +
+                                    " filter option must be between " + org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY +
+                                    " and " + org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY);
                         }
 
                         final List<Integer> matchingTopics = TopicUtilities.getMatchingMinHash(getEntityManager(), sourceTopicId, threshold);
