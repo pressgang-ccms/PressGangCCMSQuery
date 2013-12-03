@@ -16,8 +16,8 @@
 
     <scm>
         <url>https://github.com/pressgang-ccms/PressGangCCMSQuery</url>
-        <connection>scm:git@github.com:pressgang-ccms/PressGangCCMSQuery.git</connection>
-        <developerConnection>scm:git@github.com:pressgang-ccms/PressGangCCMSQuery.git</developerConnection>
+        <connection>scm:git:git@github.com:pressgang-ccms/PressGangCCMSQuery.git</connection>
+        <developerConnection>scm:git:git@github.com:pressgang-ccms/PressGangCCMSQuery.git</developerConnection>
     </scm>
 
     <properties>
