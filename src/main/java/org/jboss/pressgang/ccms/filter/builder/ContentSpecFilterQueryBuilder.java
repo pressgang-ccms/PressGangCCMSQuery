@@ -202,6 +202,18 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                 final Predicate notNullPredicate = getCriteriaBuilder().isNotNull(getRootPath().get("failedContentSpec"));
                 addFieldCondition(getCriteriaBuilder().and(notEmptyPredicate, notNullPredicate));
             }
+        } else if (fieldName.equals(CommonFilterConstants.CREATED_BY_VAR)) {
+            final String fieldStringValue = (String) field.getData();
+            if (fieldStringValue != null) {
+                final List<Integer> ids = EntityUtilities.getCreatedBy(getEntityManager(), ContentSpec.class, "contentSpecId", fieldStringValue);
+                addIdInCollectionCondition("contentSpecId", ids);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.EDITED_BY_VAR)) {
+            final String fieldStringValue = (String) field.getData();
+            if (fieldStringValue != null) {
+                final List<Integer> ids = EntityUtilities.getEditedBy(getEntityManager(), ContentSpec.class, "contentSpecId", fieldStringValue);
+                addIdInCollectionCondition("contentSpecId", ids);
+            }
         } else {
             super.processField(field);
         }

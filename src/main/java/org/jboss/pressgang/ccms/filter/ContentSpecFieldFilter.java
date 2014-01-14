@@ -47,6 +47,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
             put(CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES, CommonFilterConstants.NOT_EDITED_IN_LAST_MINUTES_DESC);
             put(CommonFilterConstants.STARTEDITDATE_FILTER_VAR, CommonFilterConstants.STARTEDITDATE_FILTER_VAR_DESC);
             put(CommonFilterConstants.ENDEDITDATE_FILTER_VAR, CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+            put(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
         }
     });
 
@@ -72,6 +74,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
     private FilterFieldDateTimeData startEditDate;
     private FilterFieldDateTimeData endEditDate;
     private FilterFieldBooleanData hasErrors;
+    private FilterFieldStringData createdBy;
+    private FilterFieldStringData editedBy;
 
     public ContentSpecFieldFilter() {
         resetAllValues();
@@ -131,6 +135,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
 
         hasErrors = new FilterFieldBooleanData(CommonFilterConstants.HAS_ERRORS_FILTER_VAR,
                 CommonFilterConstants.HAS_ERRORS_FILTER_VAR_DESC);
+        createdBy = new FilterFieldStringData(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+        editedBy = new FilterFieldStringData(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
 
         setupSingleFilterVars();
     }
@@ -158,6 +164,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         addFilterVar(notEditedInLastMins);
         addFilterVar(startEditDate);
         addFilterVar(endEditDate);
+        addFilterVar(createdBy);
+        addFilterVar(editedBy);
     }
 
     @Override

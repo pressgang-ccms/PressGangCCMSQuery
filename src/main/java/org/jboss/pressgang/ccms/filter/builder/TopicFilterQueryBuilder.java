@@ -10,6 +10,7 @@ import java.util.List;
 import org.jboss.pressgang.ccms.filter.TopicFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
+import org.jboss.pressgang.ccms.filter.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.model.Topic;
 import org.jboss.pressgang.ccms.model.TopicToTag;
 import org.jboss.pressgang.ccms.model.config.ApplicationConfig;
@@ -29,7 +30,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
     public void processField(final FilterFieldDataBase<?> field) {
         final String fieldName = field.getBaseName();
 
-        if (fieldName.equals(CommonFilterConstants.TOPIC_MIN_HASH)) {
+        if (fieldName.equals(CommonFilterConstants.TOPIC_MIN_HASH_VAR)) {
             final String fieldStringValue = (String) field.getData();
             if (fieldStringValue != null) {
                 final String[] components = fieldStringValue.split(":");
@@ -40,7 +41,7 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
                         if (threshold < org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY ||
                                 threshold > org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY) {
-                            throw new IllegalArgumentException("The threshold measurement on the " + CommonFilterConstants.TOPIC_MIN_HASH +
+                            throw new IllegalArgumentException("The threshold measurement on the " + CommonFilterConstants.TOPIC_MIN_HASH_VAR +
                                     " filter option must be between " + org.jboss.pressgang.ccms.model.constants.Constants.MIN_DOCUMENT_SIMILARITY +
                                     " and " + org.jboss.pressgang.ccms.model.constants.Constants.MAX_DOCUMENT_SIMILARITY);
                         }
@@ -53,6 +54,18 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
 
                     }
                 }
+            }
+        } else if (fieldName.equals(CommonFilterConstants.CREATED_BY_VAR)) {
+            final String fieldStringValue = (String) field.getData();
+            if (fieldStringValue != null) {
+                final List<Integer> ids = EntityUtilities.getCreatedBy(getEntityManager(), Topic.class, "topicId", fieldStringValue);
+                addIdInCollectionCondition("topicId", ids);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.EDITED_BY_VAR)) {
+            final String fieldStringValue = (String) field.getData();
+            if (fieldStringValue != null) {
+                final List<Integer> ids = EntityUtilities.getEditedBy(getEntityManager(), Topic.class, "topicId", fieldStringValue);
+                addIdInCollectionCondition("topicId", ids);
             }
         } else {
             super.processField(field);

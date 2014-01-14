@@ -13,6 +13,7 @@ import org.apache.lucene.util.Version;
 import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.search.FullTextSession;
@@ -27,6 +28,7 @@ import org.jboss.pressgang.ccms.model.FilterTag;
 import org.jboss.pressgang.ccms.model.Project;
 import org.jboss.pressgang.ccms.model.Tag;
 import org.jboss.pressgang.ccms.model.Topic;
+import org.jboss.pressgang.ccms.model.base.AuditedEntity;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
 import org.jboss.pressgang.ccms.model.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
@@ -321,5 +323,29 @@ public class EntityUtilities {
         if (retValue.size() == 0) retValue.add(-1);
 
         return retValue;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends AuditedEntity> List<Integer> getCreatedBy(final EntityManager entityManager, final Class<T> clazz,
+            final String idName, final String username) {
+        final AuditReader reader = AuditReaderFactory.get(entityManager);
+        final AuditQuery query = reader.createQuery()
+                .forRevisionsOfEntity(clazz, true, false)
+                .addProjection(AuditEntity.property("originalId." + idName).distinct())
+                .add(AuditEntity.revisionProperty("userName").eq(username))
+                .add(AuditEntity.revisionType().eq(RevisionType.ADD));
+        return query.getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends AuditedEntity> List<Integer> getEditedBy(final EntityManager entityManager, final Class<T> clazz,
+            final String idName, final String username) {
+        final AuditReader reader = AuditReaderFactory.get(entityManager);
+        final AuditQuery query = reader.createQuery()
+                .forRevisionsOfEntity(clazz, true, false)
+                .addProjection(AuditEntity.property("originalId." + idName).distinct())
+                .add(AuditEntity.revisionProperty("userName").eq(username))
+                .add(AuditEntity.revisionType().eq(RevisionType.MOD));
+        return query.getResultList();
     }
 }

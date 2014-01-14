@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.filter.base.BaseTopicFieldFilter;
-import org.jboss.pressgang.ccms.filter.structures.FilterFieldIntegerData;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -22,11 +21,15 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
         private static final long serialVersionUID = -6343139695468503659L;
 
         {
-            put(CommonFilterConstants.TOPIC_MIN_HASH, CommonFilterConstants.TOPIC_MIN_HASH_DESC);
+            put(CommonFilterConstants.TOPIC_MIN_HASH_VAR, CommonFilterConstants.TOPIC_MIN_HASH_VAR_DESC);
+            put(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+            put(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
         }
     });
 
     private FilterFieldStringData topicMinHash;
+    private FilterFieldStringData createdBy;
+    private FilterFieldStringData editedBy;
 
     public TopicFieldFilter() {
         resetAllValues();
@@ -36,9 +39,13 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
     protected void resetAllValues() {
         super.resetAllValues();
 
-        topicMinHash = new FilterFieldStringData(CommonFilterConstants.TOPIC_MIN_HASH, CommonFilterConstants.TOPIC_MIN_HASH_DESC);
+        topicMinHash = new FilterFieldStringData(CommonFilterConstants.TOPIC_MIN_HASH_VAR, CommonFilterConstants.TOPIC_MIN_HASH_VAR_DESC);
+        createdBy = new FilterFieldStringData(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+        editedBy = new FilterFieldStringData(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
 
         addFilterVar(topicMinHash);
+        addFilterVar(createdBy);
+        addFilterVar(editedBy);
     }
 
     /**
