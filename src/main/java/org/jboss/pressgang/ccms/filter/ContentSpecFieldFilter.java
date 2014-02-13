@@ -48,7 +48,9 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
             put(CommonFilterConstants.STARTEDITDATE_FILTER_VAR, CommonFilterConstants.STARTEDITDATE_FILTER_VAR_DESC);
             put(CommonFilterConstants.ENDEDITDATE_FILTER_VAR, CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
             put(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+            put(CommonFilterConstants.NOT_CREATED_BY_VAR, CommonFilterConstants.NOT_CREATED_BY_VAR_DESC);
             put(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
+            put(CommonFilterConstants.NOT_EDITED_BY_VAR, CommonFilterConstants.NOT_EDITED_BY_VAR_DESC);
         }
     });
 
@@ -75,7 +77,9 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
     private FilterFieldDateTimeData endEditDate;
     private FilterFieldBooleanData hasErrors;
     private FilterFieldStringData createdBy;
+    private FilterFieldStringData notCreatedBy;
     private FilterFieldStringData editedBy;
+    private FilterFieldStringData notEditedBy;
 
     public ContentSpecFieldFilter() {
         resetAllValues();
@@ -136,7 +140,9 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         hasErrors = new FilterFieldBooleanData(CommonFilterConstants.HAS_ERRORS_FILTER_VAR,
                 CommonFilterConstants.HAS_ERRORS_FILTER_VAR_DESC);
         createdBy = new FilterFieldStringData(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+        notCreatedBy = new FilterFieldStringData(CommonFilterConstants.NOT_CREATED_BY_VAR, CommonFilterConstants.NOT_CREATED_BY_VAR_DESC);
         editedBy = new FilterFieldStringData(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
+        notEditedBy = new FilterFieldStringData(CommonFilterConstants.NOT_EDITED_BY_VAR, CommonFilterConstants.NOT_EDITED_BY_VAR_DESC);
 
         setupSingleFilterVars();
     }
@@ -165,7 +171,9 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         addFilterVar(startEditDate);
         addFilterVar(endEditDate);
         addFilterVar(createdBy);
+        addFilterVar(notCreatedBy);
         addFilterVar(editedBy);
+        addFilterVar(notEditedBy);
     }
 
     @Override

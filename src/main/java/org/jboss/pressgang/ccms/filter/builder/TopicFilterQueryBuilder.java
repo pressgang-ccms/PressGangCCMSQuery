@@ -61,11 +61,23 @@ public class TopicFilterQueryBuilder extends BaseTopicFilterQueryBuilder<Topic> 
                 final List<Integer> ids = EntityUtilities.getCreatedBy(getEntityManager(), Topic.class, "topicId", fieldStringValue);
                 addIdInCollectionCondition("topicId", ids);
             }
+        } else if (fieldName.equals(CommonFilterConstants.NOT_CREATED_BY_VAR)) {
+            final String fieldStringValue = (String) field.getData();
+            if (fieldStringValue != null) {
+                final List<Integer> ids = EntityUtilities.getCreatedBy(getEntityManager(), Topic.class, "topicId", fieldStringValue);
+                addIdNotInCollectionCondition("topicId", ids);
+            }
         } else if (fieldName.equals(CommonFilterConstants.EDITED_BY_VAR)) {
             final String fieldStringValue = (String) field.getData();
             if (fieldStringValue != null) {
                 final List<Integer> ids = EntityUtilities.getEditedBy(getEntityManager(), Topic.class, "topicId", fieldStringValue);
                 addIdInCollectionCondition("topicId", ids);
+            }
+        } else if (fieldName.equals(CommonFilterConstants.NOT_EDITED_BY_VAR)) {
+            final String fieldStringValue = (String) field.getData();
+            if (fieldStringValue != null) {
+                final List<Integer> ids = EntityUtilities.getEditedBy(getEntityManager(), Topic.class, "topicId", fieldStringValue);
+                addIdNotInCollectionCondition("topicId", ids);
             }
         } else {
             super.processField(field);

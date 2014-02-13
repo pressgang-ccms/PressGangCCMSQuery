@@ -23,13 +23,17 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
         {
             put(CommonFilterConstants.TOPIC_MIN_HASH_VAR, CommonFilterConstants.TOPIC_MIN_HASH_VAR_DESC);
             put(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+            put(CommonFilterConstants.NOT_CREATED_BY_VAR, CommonFilterConstants.NOT_CREATED_BY_VAR_DESC);
             put(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
+            put(CommonFilterConstants.NOT_EDITED_BY_VAR, CommonFilterConstants.NOT_EDITED_BY_VAR_DESC);
         }
     });
 
     private FilterFieldStringData topicMinHash;
     private FilterFieldStringData createdBy;
+    private FilterFieldStringData notCreatedBy;
     private FilterFieldStringData editedBy;
+    private FilterFieldStringData notEditedBy;
 
     public TopicFieldFilter() {
         resetAllValues();
@@ -41,11 +45,15 @@ public class TopicFieldFilter extends BaseTopicFieldFilter {
 
         topicMinHash = new FilterFieldStringData(CommonFilterConstants.TOPIC_MIN_HASH_VAR, CommonFilterConstants.TOPIC_MIN_HASH_VAR_DESC);
         createdBy = new FilterFieldStringData(CommonFilterConstants.CREATED_BY_VAR, CommonFilterConstants.CREATED_BY_VAR_DESC);
+        notCreatedBy = new FilterFieldStringData(CommonFilterConstants.NOT_CREATED_BY_VAR, CommonFilterConstants.NOT_CREATED_BY_VAR_DESC);
         editedBy = new FilterFieldStringData(CommonFilterConstants.EDITED_BY_VAR, CommonFilterConstants.EDITED_BY_VAR_DESC);
+        notEditedBy = new FilterFieldStringData(CommonFilterConstants.NOT_EDITED_BY_VAR, CommonFilterConstants.NOT_EDITED_BY_VAR_DESC);
 
         addFilterVar(topicMinHash);
         addFilterVar(createdBy);
+        addFilterVar(notCreatedBy);
         addFilterVar(editedBy);
+        addFilterVar(notEditedBy);
     }
 
     /**
