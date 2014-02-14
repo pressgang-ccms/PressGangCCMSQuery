@@ -39,7 +39,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
                     CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_YEAR_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR,
                     CommonFilterConstants.CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR_DESC);
-            put(CommonFilterConstants.CONTENT_SPEC_DTD_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_DTD_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_FORMAT_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_FORMAT_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_NOT_FORMAT_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_NOT_FORMAT_FILTER_VAR_DESC);
             put(CommonFilterConstants.HAS_ERRORS_FILTER_VAR, CommonFilterConstants.HAS_ERRORS_FILTER_VAR_DESC);
             put(CommonFilterConstants.EDITED_IN_LAST_DAYS, CommonFilterConstants.EDITED_IN_LAST_DAYS_DESC);
             put(CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS, CommonFilterConstants.NOT_EDITED_IN_LAST_DAYS_DESC);
@@ -68,7 +69,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
     private FilterFieldStringData contentSpecCopyrightHolder;
     private FilterFieldStringData contentSpecCopyrightYear;
     private FilterFieldStringData contentSpecPublicanCfg;
-    private FilterFieldStringData contentSpecDTD;
+    private FilterFieldIntegerData contentSpecFormat;
+    private FilterFieldIntegerData contentSpecNotFormat;
     private FilterFieldIntegerData editedInLastDays;
     private FilterFieldIntegerData notEditedInLastDays;
     private FilterFieldIntegerData editedInLastMins;
@@ -117,8 +119,10 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
                 CommonFilterConstants.CONTENT_SPEC_COPYRIGHT_YEAR_FILTER_VAR_DESC);
         contentSpecPublicanCfg = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_PUBLICAN_CFG_FILTER_VAR_DESC);
-        contentSpecDTD = new FilterFieldStringData(CommonFilterConstants.CONTENT_SPEC_DTD_FILTER_VAR,
-                CommonFilterConstants.CONTENT_SPEC_DTD_FILTER_VAR_DESC);
+        contentSpecFormat = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_FORMAT_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_FORMAT_FILTER_VAR_DESC);
+        contentSpecNotFormat = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NOT_FORMAT_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_NOT_FORMAT_FILTER_VAR_DESC);
         
         /* Edited in last days */
         editedInLastDays = new FilterFieldIntegerData(CommonFilterConstants.EDITED_IN_LAST_DAYS,
@@ -162,7 +166,8 @@ public class ContentSpecFieldFilter extends BaseFieldFilterWithProperties {
         addFilterVar(contentSpecCopyrightHolder);
         addFilterVar(contentSpecCopyrightYear);
         addFilterVar(contentSpecPublicanCfg);
-        addFilterVar(contentSpecDTD);
+        addFilterVar(contentSpecFormat);
+        addFilterVar(contentSpecNotFormat);
         addFilterVar(hasErrors);
         addFilterVar(editedInLastDays);
         addFilterVar(notEditedInLastDays);

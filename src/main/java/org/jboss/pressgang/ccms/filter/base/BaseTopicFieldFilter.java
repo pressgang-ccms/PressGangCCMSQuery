@@ -65,6 +65,8 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
             put(CommonFilterConstants.TOPIC_HAS_NOT_RELATIONSHIPS, CommonFilterConstants.TOPIC_HAS_NOT_RELATIONSHIPS_DESC);
             put(CommonFilterConstants.TOPIC_HAS_NOT_INCOMING_RELATIONSHIPS,
                     CommonFilterConstants.TOPIC_HAS_NOT_INCOMING_RELATIONSHIPS_DESC);
+            put(CommonFilterConstants.TOPIC_FORMAT_VAR, CommonFilterConstants.TOPIC_FORMAT_VAR_DESC);
+            put(CommonFilterConstants.TOPIC_NOT_FORMAT_VAR, CommonFilterConstants.TOPIC_NOT_FORMAT_VAR_DESC);
         }
     });
 
@@ -96,6 +98,8 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
     private FilterFieldBooleanData hasBugzillaBugs;
     private FilterFieldIntegerListData topicIncludedInSpec;
     private FilterFieldIntegerListData notTopicIncludedInSpec;
+    private FilterFieldIntegerData topicFormat;
+    private FilterFieldIntegerData topicNotFormat;
 
     private FilterFieldBooleanData notHasXMLErrors;
     private FilterFieldBooleanData notHasRelationships;
@@ -188,6 +192,11 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
                 CommonFilterConstants.TOPIC_HAS_BUGZILLA_BUGS_DESC);
         notHasBugzillaBugs = new FilterFieldBooleanData(CommonFilterConstants.TOPIC_HAS_NOT_BUGZILLA_BUGS,
                 CommonFilterConstants.TOPIC_HAS_NOT_BUGZILLA_BUGS_DESC);
+        
+        /* Format */
+        topicFormat = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_FORMAT_VAR, CommonFilterConstants.TOPIC_FORMAT_VAR_DESC);
+        topicNotFormat = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_NOT_FORMAT_VAR,
+                CommonFilterConstants.TOPIC_NOT_FORMAT_VAR_DESC);
 
         topicTextSearch = new FilterFieldStringData(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR,
                 CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR_DESC);
@@ -218,6 +227,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         addFilterVar(editedInLastDays);
         addFilterVar(hasBugzillaBugs);
         addFilterVar(hasOpenBugzillaBugs);
+        addFilterVar(topicFormat);
 
         addFilterVar(notTopicIds);
         addFilterVar(notTopicIncludedInSpec);
@@ -226,6 +236,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         addFilterVar(notTopicDescription);
         addFilterVar(notTopicRelatedTo);
         addFilterVar(notTopicRelatedFrom);
+        addFilterVar(topicNotFormat);
 
         addFilterVar(notHasXMLErrors);
         addFilterVar(notHasRelationships);

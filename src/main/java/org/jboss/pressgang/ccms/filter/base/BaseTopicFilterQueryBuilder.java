@@ -247,6 +247,10 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
             if (fieldValueBoolean) {
                 addSizeLessThanCondition("topicToBugzillaBugs", 1);
             }
+        } else if (fieldName.equals(CommonFilterConstants.TOPIC_FORMAT_VAR)) {
+            addEqualsCondition("xmlFormat", (Integer) field.getData());
+        } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_FORMAT_VAR)) {
+            addNotEqualsCondition("xmlFormat", (Integer) field.getData());
         } else {
             super.processField(field);
         }
