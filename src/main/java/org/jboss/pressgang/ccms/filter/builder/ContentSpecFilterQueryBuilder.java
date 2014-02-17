@@ -176,7 +176,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                 default:
                     formatString = CommonConstants.DOCBOOK_45_TITLE;
             }
-            addExistsCondition(getMetaDataSubquery(CommonConstants.CS_FORMAT_TITLE, formatString, FilterStringLogic.MATCHES));
+            addFieldCondition(getFormatPredicate(formatString, false));
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NOT_FORMAT_FILTER_VAR)) {
             final Integer formatId = (Integer) field.getData();
             final String formatString;
@@ -188,7 +188,7 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                 default:
                     formatString = CommonConstants.DOCBOOK_45_TITLE;
             }
-            addNotExistsCondition(getMetaDataSubquery(CommonConstants.CS_FORMAT_TITLE, formatString, FilterStringLogic.MATCHES));
+            addFieldCondition(getFormatPredicate(formatString, true));
         } else if (fieldName.equals(CommonFilterConstants.EDITED_IN_LAST_DAYS)) {
             final DateTime date = new DateTime().minusDays((Integer) field.getData());
             final List<Integer> editedContentSpecIds = EntityUtilities.getEditedEntities(getEntityManager(), ContentSpec.class,
@@ -280,6 +280,49 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final Predicate contentSpecIdMatch = criteriaBuilder.equal(getRootPath(), root.get("contentSpec"));
         final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
         subQuery.where(criteriaBuilder.and(contentSpecIdMatch, propertyTagIdMatch));
+
+        return subQuery;
+    }
+
+    protected Predicate getFormatPredicate(final String format, boolean not) {
+        final Subquery<CSNode> formatSubQuery = getMetaDataSubquery(CommonConstants.CS_FORMAT_TITLE, format, FilterStringLogic.MATCHES);
+        final Predicate formatExists;
+        if (not) {
+            formatExists = getCriteriaBuilder().not(getCriteriaBuilder().exists(formatSubQuery));
+        } else {
+            formatExists = getCriteriaBuilder().exists(formatSubQuery);
+        }
+
+        // DocBook 4.5 is the default so find any content specs that don't have a "Format" metadata
+        if (CommonConstants.DOCBOOK_45_TITLE.equals(format)) {
+            final Predicate notExists = getCriteriaBuilder().exists(getMetaDataDoesntExistSubquery(CommonConstants.CS_FORMAT_TITLE));
+            if (not) {
+                return getCriteriaBuilder().and(formatExists, notExists);
+            } else {
+                return getCriteriaBuilder().or(formatExists, getCriteriaBuilder().not(notExists));
+            }
+        } else {
+            return formatExists;
+        }
+    }
+
+    /**
+     * Create a Subquery to check if a Content Spec has a metadata field with the specified value.
+     *
+     * @param metaDataTitle The Title of the metadata to be checked.
+     * @return A subquery that can be used in an exists statement to see if a Content Spec has a metadata field with the specified value.
+     */
+    private Subquery<CSNode> getMetaDataDoesntExistSubquery(final String metaDataTitle) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<CSNode> subQuery = getCriteriaQuery().subquery(CSNode.class);
+        final Root<CSNode> root = subQuery.from(CSNode.class);
+        subQuery.select(root);
+
+        // Create the Condition for the subquery
+        final Predicate contentSpecIdMatch = criteriaBuilder.equal(getRootPath(), root.get("contentSpec"));
+        final Predicate isMetaData = criteriaBuilder.equal(root.get("CSNodeType").as(Integer.class), CommonConstants.CS_NODE_META_DATA);
+        final Predicate metaDataTitleMatch = criteriaBuilder.equal((root.get("CSNodeTitle").as(String.class)), metaDataTitle);
+        subQuery.where(criteriaBuilder.and(contentSpecIdMatch, isMetaData, metaDataTitleMatch));
 
         return subQuery;
     }
