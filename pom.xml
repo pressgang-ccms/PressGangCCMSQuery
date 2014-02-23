@@ -11,7 +11,7 @@
 
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-query</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <name>PressGang CCMS Query</name>
 
     <scm>
@@ -21,7 +21,7 @@
     </scm>
 
     <properties>
-        <pressgang.ccms.version>1.4-SNAPSHOT</pressgang.ccms.version>
+        <pressgang.ccms.version>1.4</pressgang.ccms.version>
         <jodatime.version>2.1</jodatime.version>
         <jdal.core.version>1.2.0</jdal.core.version>
         <slf4j.version>1.6.4</slf4j.version>
