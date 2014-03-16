@@ -121,7 +121,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
         return entityManager;
     }
 
-    protected Root<T> getCriteriaRoot() {
+    public Root<T> getCriteriaRoot() {
         return from;
     }
 
@@ -270,7 +270,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param propertyName The name of the field id as defined in the Entity mapping class.
      * @param values       The List of Ids to be compared to.
      */
-    protected void addIdInCollectionCondition(final String propertyName, final Collection<Integer> values) {
+    protected void addIdInCollectionCondition(final String propertyName, final Collection<?> values) {
         addIdInCollectionCondition(getRootPath().get(propertyName), values);
     }
 
@@ -280,7 +280,7 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param property The field id as defined in the Entity mapping class.
      * @param values   The List of Ids to be compared to.
      */
-    protected void addIdInCollectionCondition(final Expression<?> property, final Collection<Integer> values) {
+    protected void addIdInCollectionCondition(final Expression<?> property, final Collection<?> values) {
         if (values == null || values.isEmpty()) {
             fieldConditions.add(getCriteriaBuilder().equal(property, -1));
         } else {

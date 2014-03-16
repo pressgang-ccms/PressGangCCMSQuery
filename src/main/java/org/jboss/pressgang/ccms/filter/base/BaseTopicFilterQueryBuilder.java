@@ -92,7 +92,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
 
             if (endCreateDate != null) {
                 final Predicate restriction = criteriaBuilder.lessThanOrEqualTo(getRootPath().get("topicTimeStamp").as(Date.class),
-                        startCreateDate);
+                        endCreateDate);
 
                 if (startCreateDate != null) {
                     thisRestriction = criteriaBuilder.and(thisRestriction, restriction);
