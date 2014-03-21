@@ -199,17 +199,17 @@ public class FilterUtilities {
                      * FilterCategory that specifies the logic to use, in which case
                      * the default logic defined above will be used.
                      */
-                    final Set<FilterCategory> filterCatgeories = filter.getFilterCategories();
-                    for (final FilterCategory filterCatgeory : filterCatgeories) {
-                        final boolean categoryMatch = category.equals(filterCatgeory.getCategory());
+                    final Set<FilterCategory> filterCategories = filter.getFilterCategories();
+                    for (final FilterCategory filterCategory : filterCategories) {
+                        final boolean categoryMatch = category.equals(filterCategory.getCategory());
                         /*
                          * project or filterCatgeory.getProject() might be null.
                          * CollectionUtilities.isEqual deals with this situation
                          */
-                        final boolean projectMatch = CollectionUtilities.isEqual(project, filterCatgeory.getProject());
+                        final boolean projectMatch = CollectionUtilities.isEqual(project, filterCategory.getProject());
 
                         if (categoryMatch && projectMatch) {
-                            final int categoryState = filterCatgeory.getCategoryState();
+                            final int categoryState = filterCategory.getCategoryState();
 
                             if (categoryState == CommonFilterConstants.CATEGORY_INTERNAL_AND_STATE)
                                 catInternalLogic = CommonFilterConstants.AND_LOGIC;
