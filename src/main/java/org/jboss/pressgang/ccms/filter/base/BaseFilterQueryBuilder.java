@@ -408,7 +408,18 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param value        The value to search against.
      */
     protected void addEqualsCondition(final String propertyName, final String value) {
-        fieldConditions.add(getCriteriaBuilder().equal(getRootPath().get(propertyName).as(String.class), value));
+        addEqualsCondition(getRootPath().get(propertyName).as(String.class), value);
+    }
+
+    /**
+     * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
+     * {@code field = 'value'}
+     *
+     * @param property The field property.
+     * @param value    The value to search against.
+     */
+    protected void addEqualsCondition(final Expression<String> property, final String value) {
+        fieldConditions.add(getCriteriaBuilder().equal(property, value));
     }
 
     /**
@@ -442,7 +453,18 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
      * @param value        The value to search against.
      */
     protected void addEqualsCondition(final String propertyName, final Integer value) {
-        fieldConditions.add(getCriteriaBuilder().equal(getRootPath().get(propertyName).as(Integer.class), value));
+        addEqualsCondition(getRootPath().get(propertyName).as(Integer.class), value);
+    }
+
+    /**
+     * Add a Field Search Condition that will search a field for a specified value using the following SQL logic:
+     * {@code field = 'value'}
+     *
+     * @param property The field property.
+     * @param value    The value to search against.
+     */
+    protected void addEqualsCondition(final Expression<Integer> property, final Integer value) {
+        fieldConditions.add(getCriteriaBuilder().equal(property, value));
     }
 
     /**
