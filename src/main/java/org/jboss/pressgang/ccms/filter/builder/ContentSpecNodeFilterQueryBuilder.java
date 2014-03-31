@@ -1,19 +1,25 @@
 package org.jboss.pressgang.ccms.filter.builder;
 
 import javax.persistence.EntityManager;
-
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 import org.jboss.pressgang.ccms.filter.ContentSpecNodeFieldFilter;
 import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilder;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
+import org.jboss.pressgang.ccms.model.contentspec.CSInfoNode;
 import org.jboss.pressgang.ccms.model.contentspec.CSNode;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
 public class ContentSpecNodeFilterQueryBuilder extends BaseFilterQueryBuilder<CSNode> {
+    private final Join<CSInfoNode, CSNode> csInfoNode;
+
     public ContentSpecNodeFilterQueryBuilder(final EntityManager entityManager) {
         super(CSNode.class, new ContentSpecNodeFieldFilter(), entityManager);
+        csInfoNode = ((Root< CSNode >) getRootPath()).join("CSInfoNode", JoinType.LEFT);
     }
 
     @Override
@@ -31,9 +37,9 @@ public class ContentSpecNodeFilterQueryBuilder extends BaseFilterQueryBuilder<CS
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_REVISION_FILTER_VAR)) {
             addEqualsCondition("entityRevision", (Integer) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_ID_FILTER_VAR)) {
-            addEqualsCondition(getRootPath().get("CSInfoNode").get("topicId").as(Integer.class), (Integer) field.getData());
+            addEqualsCondition(csInfoNode.get("topicId").as(Integer.class), (Integer) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR)) {
-            addEqualsCondition(getRootPath().get("CSInfoNode").get("topicRevision").as(Integer.class), (Integer) field.getData());
+            addEqualsCondition(csInfoNode.get("topicRevision").as(Integer.class), (Integer) field.getData());
         } else if (fieldName.equals(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR)) {
             addIdInCollectionCondition(getRootPath().get("contentSpec").get("contentSpecId"), (List<Integer>) field.getData());
         } else {
