@@ -277,7 +277,7 @@ public class EntityUtilities {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Integer> getTextSearchTopicMatch(final EntityManager entityManager, final String phrase) {
+    /*public static List<Integer> getTextSearchTopicMatch(final EntityManager entityManager, final String phrase) {
         final List<Integer> retValue = new ArrayList<Integer>();
 
         try {
@@ -294,10 +294,10 @@ public class EntityUtilities {
             final Query query = parser.parse(phrase);
 
             // build a lucene query
-            /*
-             * final org.apache.lucene.search.Query query = qb .keyword() .onFields("TopicSearchText") .matching(phrase)
-             * .createQuery();
-             */
+            //
+            // final org.apache.lucene.search.Query query = qb .keyword() .onFields("TopicSearchText") .matching(phrase)
+            // .createQuery();
+            //
 
             // build a hibernate query
             final org.hibernate.search.FullTextQuery hibQuery = fullTextSession.createFullTextQuery(query, Topic.class);
@@ -316,14 +316,14 @@ public class EntityUtilities {
             log.error("Probably an error using Lucene", ex);
         }
 
-        /*
-         * an empty list will be interpreted as no restriction as opposed to return none. so add a non existent topic id so no
-         * matches are made
-         */
+        //
+        // an empty list will be interpreted as no restriction as opposed to return none. so add a non existent topic id so no
+        // matches are made
+        //
         if (retValue.size() == 0) retValue.add(-1);
 
         return retValue;
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
     public static <T extends AuditedEntity> List<Integer> getCreatedBy(final EntityManager entityManager, final Class<T> clazz,
