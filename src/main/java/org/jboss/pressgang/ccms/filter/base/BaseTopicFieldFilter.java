@@ -86,7 +86,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
     private FilterFieldStringData notTopicXML;
     private FilterFieldBooleanData hasRelationships;
     private FilterFieldBooleanData hasIncomingRelationships;
-    private FilterFieldStringData topicTextSearch;
+    //private FilterFieldStringData topicTextSearch;
     private FilterFieldBooleanData hasXMLErrors;
     private FilterFieldDateTimeData startEditDate;
     private FilterFieldDateTimeData endEditDate;
@@ -209,7 +209,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         endEditDate = new FilterFieldDateTimeData(CommonFilterConstants.ENDEDITDATE_FILTER_VAR,
                 CommonFilterConstants.ENDEDITDATE_FILTER_VAR_DESC);
 
-        addFilterVar(topicTextSearch);
+        //addFilterVar(topicTextSearch);
         addFilterVar(topicIds);
         addFilterVar(topicIncludedInSpec);
         addFilterVar(topicXML);
@@ -338,9 +338,9 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         return hasIncomingRelationships;
     }
 
-    public FilterFieldStringData getTopicTextSearch() {
+    /*public FilterFieldStringData getTopicTextSearch() {
         return topicTextSearch;
-    }
+    }*/
 
     public FilterFieldBooleanData getHasXMLErrors() {
         return hasXMLErrors;
