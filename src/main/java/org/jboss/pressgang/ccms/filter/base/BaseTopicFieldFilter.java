@@ -29,7 +29,7 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         private static final long serialVersionUID = -6343139695468503659L;
 
         {
-            put(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR, CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR_DESC);
+            //put(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR, CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR_DESC);
             put(CommonFilterConstants.TOPIC_IDS_FILTER_VAR, CommonFilterConstants.TOPIC_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.TOPIC_IS_INCLUDED_IN_SPEC, CommonFilterConstants.TOPIC_IS_INCLUDED_IN_SPEC_DESC);
             put(CommonFilterConstants.TOPIC_XML_FILTER_VAR, CommonFilterConstants.TOPIC_XML_FILTER_VAR_DESC);
@@ -198,8 +198,8 @@ public abstract class BaseTopicFieldFilter extends BaseFieldFilterWithProperties
         topicNotFormat = new FilterFieldIntegerData(CommonFilterConstants.TOPIC_NOT_FORMAT_VAR,
                 CommonFilterConstants.TOPIC_NOT_FORMAT_VAR_DESC);
 
-        topicTextSearch = new FilterFieldStringData(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR,
-                CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR_DESC);
+        /*topicTextSearch = new FilterFieldStringData(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR,
+                CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR_DESC);*/
         startCreateDate = new FilterFieldDateTimeData(CommonFilterConstants.STARTDATE_FILTER_VAR,
                 CommonFilterConstants.STARTDATE_FILTER_VAR_DESC);
         endCreateDate = new FilterFieldDateTimeData(CommonFilterConstants.ENDDATE_FILTER_VAR,

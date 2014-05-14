@@ -276,8 +276,8 @@ public class EntityUtilities {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    /*public static List<Integer> getTextSearchTopicMatch(final EntityManager entityManager, final String phrase) {
+    /*@SuppressWarnings("unchecked")
+    public static List<Integer> getTextSearchTopicMatch(final EntityManager entityManager, final String phrase) {
         final List<Integer> retValue = new ArrayList<Integer>();
 
         try {
