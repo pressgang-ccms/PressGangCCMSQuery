@@ -177,12 +177,7 @@ public abstract class BaseTopicFilterQueryBuilder<T> extends BaseFilterQueryBuil
         } else if (fieldName.equals(CommonFilterConstants.TOPIC_NOT_RELATED_FROM)) {
             final List<Integer> relatedTopicIds = EntityUtilities.getOutgoingRelatedTopicIDs(getEntityManager(), (Integer) field.getData());
             addIdNotInCollectionCondition("topicId", relatedTopicIds);
-        }
-        // Removing hibernate search for easier deployment in a cluster (https://bugzilla.redhat.com/show_bug.cgi?id=1090748)
-        /*else if (fieldName.equals(CommonFilterConstants.TOPIC_TEXT_SEARCH_FILTER_VAR)) {
-            final List<Integer> matchingTopicIds = EntityUtilities.getTextSearchTopicMatch(getEntityManager(), (String) field.getData());
-            addIdInCollectionCondition("topicId", matchingTopicIds);
-        }*/ else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_XML_ERRORS)) {
+        } else if (fieldName.equals(CommonFilterConstants.TOPIC_HAS_XML_ERRORS)) {
             final Boolean hasXMLErrors = (Boolean) field.getData();
             if (hasXMLErrors) {
                 final Predicate notEmptyPredicate = getCriteriaBuilder().notEqual(

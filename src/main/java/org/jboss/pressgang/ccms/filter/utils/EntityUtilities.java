@@ -276,55 +276,6 @@ public class EntityUtilities {
         return null;
     }
 
-    /*@SuppressWarnings("unchecked")
-    public static List<Integer> getTextSearchTopicMatch(final EntityManager entityManager, final String phrase) {
-        final List<Integer> retValue = new ArrayList<Integer>();
-
-        try {
-            // get the Hibernate session from the EntityManager
-            final Session session = (Session) entityManager.getDelegate();
-            // get a Hibernate full text session. we use the Hibernate version,
-            // instead of the JPA version,
-            // because we can use the Hibernate versions to do projections
-            final FullTextSession fullTextSession = Search.getFullTextSession(session);
-            // create a query parser
-            final QueryParser parser = new QueryParser(Version.LUCENE_31, "TopicSearchText",
-                    fullTextSession.getSearchFactory().getAnalyzer(Topic.class));
-            // parse the query string
-            final Query query = parser.parse(phrase);
-
-            // build a lucene query
-            //
-            // final org.apache.lucene.search.Query query = qb .keyword() .onFields("TopicSearchText") .matching(phrase)
-            // .createQuery();
-            //
-
-            // build a hibernate query
-            final org.hibernate.search.FullTextQuery hibQuery = fullTextSession.createFullTextQuery(query, Topic.class);
-            // set the projection to return the id's of any topic's that match
-            // the query
-            hibQuery.setProjection("topicId");
-            // get the results. because we setup a projection, there is no trip
-            // to the database
-            final List<Object[]> results = hibQuery.list();
-            // extract the data into the List<Integer>
-            for (final Object[] projection : results) {
-                final Integer id = (Integer) projection[0];
-                retValue.add(id);
-            }
-        } catch (final Exception ex) {
-            log.error("Probably an error using Lucene", ex);
-        }
-
-        //
-        // an empty list will be interpreted as no restriction as opposed to return none. so add a non existent topic id so no
-        // matches are made
-        //
-        if (retValue.size() == 0) retValue.add(-1);
-
-        return retValue;
-    }*/
-
     @SuppressWarnings("unchecked")
     public static <T extends AuditedEntity> List<Integer> getCreatedBy(final EntityManager entityManager, final Class<T> clazz,
             final String idName, final String username) {
