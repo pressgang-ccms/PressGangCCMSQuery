@@ -223,6 +223,25 @@ public class EntityUtilities {
         return entityIds;
     }
 
+    public static <E> List<Integer> getEditedEntities(final EntityManager entityManager, final Class<E> type, final String pkColumnName,
+                                                      final Number startRevision, final Number endRevision) {
+        if (startRevision == null && startRevision == null) return null;
+
+        final AuditReader reader = AuditReaderFactory.get(entityManager);
+
+        final AuditQuery query = reader.createQuery().forRevisionsOfEntity(type, true, false)
+                .addOrder(AuditEntity.revisionProperty("timestamp").asc())
+                .addProjection(AuditEntity.property("originalId." + pkColumnName).distinct());
+
+        if (startRevision != null) query.add(AuditEntity.revisionNumber().ge(startRevision));
+
+        if (endRevision != null) query.add(AuditEntity.revisionNumber().le(endRevision));
+
+        final List<Integer> entityIds = query.getResultList();
+
+        return entityIds;
+    }
+
     /**
      * @return A comma separated list of topic ids that have been included in a content spec
      * @throws Exception
