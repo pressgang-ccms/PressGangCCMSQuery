@@ -223,7 +223,7 @@ public class EntityUtilities {
         return entityIds;
     }
 
-    public static <E> List<Integer> getEditedEntities(final EntityManager entityManager, final Class<E> type, final String pkColumnName,
+    public static <E> List<Integer> getEditedEntitiesByRevision(final EntityManager entityManager, final Class<E> type, final String pkColumnName,
                                                       final Number startRevision, final Number endRevision) {
         if (startRevision == null && startRevision == null) return null;
 
