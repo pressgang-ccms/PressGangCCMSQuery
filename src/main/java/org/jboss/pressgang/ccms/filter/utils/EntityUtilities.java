@@ -248,9 +248,13 @@ public class EntityUtilities {
 
             final Set<Integer> topicIds = new HashSet<Integer>();
             for (final CSNode node : contentSpec.getCSNodes()) {
-                if (!node.isTopicNode()) {
-                    continue;
-                } else if (node.getEntityId() != null) {
+                // Check for info nodes
+                if (node.getCSInfoNode() != null && node.getCSInfoNode().getTopicId() != null) {
+                    topicIds.add(node.getCSInfoNode().getTopicId());
+                }
+
+                // Check for topic nodes
+                if (node.isTopicNode() && node.getEntityId() != null) {
                     topicIds.add(node.getEntityId());
                 }
             }
