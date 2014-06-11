@@ -30,6 +30,10 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                     CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_ID_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR,
                     CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_IDS_FILTER_VAR,
+                    CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_IDS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_IDS_FILTER_VAR,
+                    CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR, CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
         }
     });
@@ -41,6 +45,8 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
     private FilterFieldIntegerData csNodeEntityRev;
     private FilterFieldIntegerData csInfoNodeTopicId;
     private FilterFieldIntegerData csInfoNodeTopicRev;
+    private FilterFieldIntegerListData csNodeEntityIds;
+    private FilterFieldIntegerListData csInfoNodeTopicIds;
     private FilterFieldIntegerListData contentSpecIds;
 
     public ContentSpecNodeFieldFilter() {
@@ -65,6 +71,10 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
                 CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_ID_FILTER_VAR_DESC);
         csInfoNodeTopicRev = new FilterFieldIntegerData(CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_REVISION_FILTER_VAR_DESC);
+        csNodeEntityIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_IDS_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_NODE_ENTITY_IDS_FILTER_VAR_DESC);
+        csInfoNodeTopicIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_IDS_FILTER_VAR,
+                CommonFilterConstants.CONTENT_SPEC_NODE_INFO_TOPIC_IDS_FILTER_VAR_DESC);
         contentSpecIds = new FilterFieldIntegerListData(CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR,
                 CommonFilterConstants.CONTENT_SPEC_IDS_FILTER_VAR_DESC);
 
@@ -75,6 +85,8 @@ public class ContentSpecNodeFieldFilter extends BaseFieldFilter {
         addFilterVar(csNodeEntityRev);
         addFilterVar(csInfoNodeTopicId);
         addFilterVar(csInfoNodeTopicRev);
+        addFilterVar(csNodeEntityIds);
+        addFilterVar(csInfoNodeTopicIds);
         addFilterVar(contentSpecIds);
     }
 
