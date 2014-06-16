@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class FilterFieldIntegerListData extends FilterFieldListDataBase<Integer> {
     private static final Logger log = LoggerFactory.getLogger(FilterFieldIntegerListData.class);
-    private static final Pattern ID_REGEX = Pattern.compile("^((\\s)*(\\-)?\\d+(\\s)*,?)*((\\s)*(\\-)?\\d+(\\s)*)$");
+    private static final Pattern ID_REGEX = Pattern.compile("^(\\s*\\-?\\d+\\s*,?)*(\\s*\\-?\\d+\\s*)$");
 
     public FilterFieldIntegerListData(final String name, final String description) {
         super(name, description);
