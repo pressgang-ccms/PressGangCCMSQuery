@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.filter.structures;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -35,8 +37,11 @@ public class FilterFieldDateTimeData extends FilterFieldDataBase<DateTime> {
     @Override
     public void setData(final String value) {
         try {
-            if (value == null || value.length() == 0) data = null;
-            else data = new DateTime(ISODateTimeFormat.dateTime().parseDateTime(value));
+            if (isNullOrEmpty(value)) {
+                data = null;
+            } else {
+                data = new DateTime(ISODateTimeFormat.dateTime().parseDateTime(value));
+            }
         } catch (final Exception ex) {
             log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
         }

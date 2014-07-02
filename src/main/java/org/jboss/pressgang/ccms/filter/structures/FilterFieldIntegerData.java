@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.filter.structures;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,7 @@ public class FilterFieldIntegerData extends FilterFieldDataBase<Integer> {
     @Override
     public void setData(final String value) {
         try {
-            data = (value == null ? null : Integer.parseInt(value));
+            data = isNullOrEmpty(value) ? null : Integer.parseInt(value);
         } catch (final NumberFormatException ex) {
             // could not parse integer, so silently fail
             log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);

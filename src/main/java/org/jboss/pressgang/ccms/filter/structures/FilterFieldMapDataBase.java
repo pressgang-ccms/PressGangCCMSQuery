@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.filter.structures;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,17 +37,21 @@ public abstract class FilterFieldMapDataBase<U> extends FilterFieldDataBase<Map<
 
     @Override
     public void setData(String value) {
-        try {
-            final List<String> vars = Arrays.asList(value.split(","));
+        if (isNullOrEmpty(value)) {
+            data = null;
+        } else {
+            try {
+                final List<String> vars = Arrays.asList(value.split(","));
 
-            for (final String var : vars) {
-                String[] dataVars = var.split("=", 2);
+                for (final String var : vars) {
+                    String[] dataVars = var.split("=", 2);
 
-                put(Integer.parseInt(dataVars[0]), dataVars[1]);
+                    put(Integer.parseInt(dataVars[0]), dataVars[1]);
+                }
+            } catch (final Exception ex) {
+                // could not parse, so silently fail
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
             }
-        } catch (final Exception ex) {
-            // could not parse, so silently fail
-            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
         }
     }
 

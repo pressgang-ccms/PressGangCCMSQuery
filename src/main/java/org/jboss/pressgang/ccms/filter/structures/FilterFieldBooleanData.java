@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.filter.structures;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 public class FilterFieldBooleanData extends FilterFieldDataBase<Boolean> {
 
     public FilterFieldBooleanData(final String name, final String description) {
@@ -18,7 +20,7 @@ public class FilterFieldBooleanData extends FilterFieldDataBase<Boolean> {
 
     @Override
     public void setData(final String value) {
-        data = (value == null ? null : (Boolean.parseBoolean(value) ? true : null));
+        data = isNullOrEmpty(value) ? null : (Boolean.parseBoolean(value) ? true : null);
     }
 
     @Override
