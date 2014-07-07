@@ -5,7 +5,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-
 import java.util.List;
 
 import org.jboss.pressgang.ccms.filter.TagFieldFilter;
@@ -13,6 +12,7 @@ import org.jboss.pressgang.ccms.filter.base.BaseFilterQueryBuilderWithProperties
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldDataBase;
 import org.jboss.pressgang.ccms.filter.structures.FilterFieldStringData;
 import org.jboss.pressgang.ccms.model.Tag;
+import org.jboss.pressgang.ccms.model.TagToProject;
 import org.jboss.pressgang.ccms.model.TagToPropertyTag;
 import org.jboss.pressgang.ccms.utils.constants.CommonFilterConstants;
 
@@ -31,6 +31,12 @@ public class TagFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<
             processStringField((FilterFieldStringData) field, "tagName");
         } else if (fieldName.equals(CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR)) {
             processStringField((FilterFieldStringData) field, "tagDescription");
+        } else if (fieldName.equals(CommonFilterConstants.PROJECT_IDS_FILTER_VAR)) {
+            final List<Integer> projectIds = (List<Integer>) field.getData();
+            addExistsCondition(getTagInProjectSubquery(projectIds));
+        } else if (fieldName.equals(CommonFilterConstants.NOT_PROJECT_IDS_FILTER_VAR)) {
+            final List<Integer> projectIds = (List<Integer>) field.getData();
+            addNotExistsCondition(getTagInProjectSubquery(projectIds));
         } else {
             super.processField(field);
         }
@@ -63,6 +69,20 @@ public class TagFilterQueryBuilder extends BaseFilterQueryBuilderWithProperties<
         final Predicate tagIdMatch = criteriaBuilder.equal(getRootPath(), root.get("tag"));
         final Predicate propertyTagIdMatch = criteriaBuilder.equal(root.get("propertyTag").get("propertyTagId"), propertyTagId);
         subQuery.where(criteriaBuilder.and(tagIdMatch, propertyTagIdMatch));
+
+        return subQuery;
+    }
+
+    protected Subquery<TagToProject> getTagInProjectSubquery(final List<Integer> projectIds) {
+        final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
+        final Subquery<TagToProject> subQuery = getCriteriaQuery().subquery(TagToProject.class);
+        final Root<TagToProject> root = subQuery.from(TagToProject.class);
+        subQuery.select(root);
+
+        // Create the Condition for the subquery
+        final Predicate tagIdMatch = criteriaBuilder.equal(getRootPath(), root.get("tag"));
+        final Predicate projectIdMatch = root.get("project").get("projectId").in(projectIds);
+        subQuery.where(criteriaBuilder.and(tagIdMatch, projectIdMatch));
 
         return subQuery;
     }

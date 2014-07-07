@@ -355,6 +355,18 @@ public abstract class BaseFilterQueryBuilder<T> implements IFilterQueryBuilder<T
     }
 
     /**
+     * Add a Field Search Condition that will check if the id field exists in an array of values. eg. {@code field IN (values)}
+     *
+     * @param property The field id as defined in the Entity mapping class.
+     * @param values   The List of Ids to be compared to.
+     */
+    protected void addIdNotInCollectionCondition(final Expression<?> property, final Collection<?> values) {
+        if (values != null && !values.isEmpty()) {
+            fieldConditions.add(getCriteriaBuilder().not(property.in(values)));
+        }
+    }
+
+    /**
      * Add a Field Search Condition that will check if the id field does not exist in an array of id values that are represented
      * as a String. eg. {@code field NOT IN (values)}
      *
