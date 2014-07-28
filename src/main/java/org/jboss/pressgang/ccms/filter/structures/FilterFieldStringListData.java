@@ -19,6 +19,8 @@
 
 package org.jboss.pressgang.ccms.filter.structures;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,11 +47,15 @@ public class FilterFieldStringListData extends FilterFieldListDataBase<String> {
 
     @Override
     public void setData(String value) {
-        try {
-            data = Arrays.asList(value.split("\\s*,\\s*"));
-        } catch (final Exception ex) {
-            // could not parse, so silently fail
-            log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
+        if (isNullOrEmpty(value)) {
+            data = null;
+        } else {
+            try {
+                data = Arrays.asList(value.split("\\s*,\\s*"));
+            } catch (final Exception ex) {
+                // could not parse, so silently fail
+                log.debug("Malformed Filter query parameter for the \"{}\" parameter. Value = {}", name, value);
+            }
         }
     }
 

@@ -19,6 +19,8 @@
 
 package org.jboss.pressgang.ccms.filter.structures;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 public class FilterFieldIntegerListData extends FilterFieldListDataBase<Integer> {
     private static final Logger log = LoggerFactory.getLogger(FilterFieldIntegerListData.class);
-    private static final Pattern ID_REGEX = Pattern.compile("^((\\s)*(\\-)?\\d+(\\s)*,?)*((\\s)*(\\-)?\\d+(\\s)*)$");
+    private static final Pattern ID_REGEX = Pattern.compile("^(\\s*\\-?\\d+\\s*,?)*(\\s*\\-?\\d+\\s*)$");
 
     public FilterFieldIntegerListData(final String name, final String description) {
         super(name, description);
@@ -47,7 +49,9 @@ public class FilterFieldIntegerListData extends FilterFieldListDataBase<Integer>
 
     @Override
     public void setData(String value) {
-        if (ID_REGEX.matcher(value).matches()) {
+        if (isNullOrEmpty(value)) {
+            data = null;
+        } else if (ID_REGEX.matcher(value).matches()) {
             final List<Integer> idValues = new ArrayList<Integer>();
             for (final String id : value.split("\\s*,\\s*")) {
                 idValues.add(Integer.parseInt(id.trim()));

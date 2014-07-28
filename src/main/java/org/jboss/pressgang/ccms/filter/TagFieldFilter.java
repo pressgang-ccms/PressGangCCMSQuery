@@ -39,12 +39,16 @@ public class TagFieldFilter extends BaseFieldFilterWithProperties {
             put(CommonFilterConstants.TAG_IDS_FILTER_VAR, CommonFilterConstants.TAG_IDS_FILTER_VAR_DESC);
             put(CommonFilterConstants.TAG_NAME_FILTER_VAR, CommonFilterConstants.TAG_NAME_FILTER_VAR_DESC);
             put(CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR, CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR_DESC);
+            put(CommonFilterConstants.NOT_PROJECT_IDS_FILTER_VAR, CommonFilterConstants.NOT_PROJECT_IDS_FILTER_VAR_DESC);
+            put(CommonFilterConstants.PROJECT_IDS_FILTER_VAR, CommonFilterConstants.PROJECT_IDS_FILTER_VAR_DESC);
         }
     });
 
     private FilterFieldIntegerListData tagIds;
     private FilterFieldStringData tagName;
     private FilterFieldStringData tagDescription;
+    private FilterFieldIntegerListData projectIds;
+    private FilterFieldIntegerListData notProjectIds;
 
     public TagFieldFilter() {
         resetAllValues();
@@ -58,10 +62,16 @@ public class TagFieldFilter extends BaseFieldFilterWithProperties {
         tagName = new FilterFieldStringData(CommonFilterConstants.TAG_NAME_FILTER_VAR, CommonFilterConstants.TAG_NAME_FILTER_VAR_DESC);
         tagDescription = new FilterFieldStringData(CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR,
                 CommonFilterConstants.TAG_DESCRIPTION_FILTER_VAR_DESC);
+        projectIds = new FilterFieldIntegerListData(CommonFilterConstants.PROJECT_IDS_FILTER_VAR,
+                CommonFilterConstants.PROJECT_IDS_FILTER_VAR_DESC);
+        notProjectIds = new FilterFieldIntegerListData(CommonFilterConstants.NOT_PROJECT_IDS_FILTER_VAR,
+                CommonFilterConstants.NOT_PROJECT_IDS_FILTER_VAR_DESC);
 
         addFilterVar(tagIds);
         addFilterVar(tagName);
         addFilterVar(tagDescription);
+        addFilterVar(projectIds);
+        addFilterVar(notProjectIds);
     }
 
     @Override

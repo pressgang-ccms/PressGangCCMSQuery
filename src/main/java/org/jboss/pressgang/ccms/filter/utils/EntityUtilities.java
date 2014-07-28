@@ -26,17 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
-import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.Search;
 import org.jboss.pressgang.ccms.filter.base.IFieldFilter;
 import org.jboss.pressgang.ccms.model.Category;
 import org.jboss.pressgang.ccms.model.Filter;
@@ -273,9 +267,13 @@ public class EntityUtilities {
 
             final Set<Integer> topicIds = new HashSet<Integer>();
             for (final CSNode node : contentSpec.getCSNodes()) {
-                if (!node.isTopicNode()) {
-                    continue;
-                } else if (node.getEntityId() != null) {
+                // Check for info nodes
+                if (node.getCSInfoNode() != null && node.getCSInfoNode().getTopicId() != null) {
+                    topicIds.add(node.getCSInfoNode().getTopicId());
+                }
+
+                // Check for topic nodes
+                if (node.isTopicNode() && node.getEntityId() != null) {
                     topicIds.add(node.getEntityId());
                 }
             }
