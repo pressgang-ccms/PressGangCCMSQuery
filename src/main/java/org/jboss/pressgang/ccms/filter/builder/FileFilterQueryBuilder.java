@@ -62,7 +62,7 @@ public class FileFilterQueryBuilder extends BaseFilterQueryBuilder<File> impleme
         final Subquery<LanguageFile> subquery = getCriteriaQuery().subquery(LanguageFile.class);
         final Root<LanguageFile> from = subquery.from(LanguageFile.class);
         final Predicate languageFileEqual = criteriaBuilder.equal(getRootPath(), from.get("file"));
-        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale"), locale);
+        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale").get("value"), locale);
         subquery.where(criteriaBuilder.and(languageFileEqual, localeEqual));
 
         return criteriaBuilder.exists(subquery);
@@ -74,7 +74,7 @@ public class FileFilterQueryBuilder extends BaseFilterQueryBuilder<File> impleme
         final Subquery<LanguageFile> subquery = getCriteriaQuery().subquery(LanguageFile.class);
         final Root<LanguageFile> from = subquery.from(LanguageFile.class);
         final Predicate languageFileEqual = criteriaBuilder.equal(getRootPath(), from.get("file"));
-        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale"), locale);
+        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale").get("value"), locale);
         subquery.where(criteriaBuilder.and(languageFileEqual, localeEqual));
 
         return criteriaBuilder.not(criteriaBuilder.exists(subquery));

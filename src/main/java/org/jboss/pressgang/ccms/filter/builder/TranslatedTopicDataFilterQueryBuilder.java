@@ -88,10 +88,10 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Predicate localePredicate = criteriaBuilder.equal(getOriginalRootPath().get("translationLocale"), locale);
+        final Predicate localePredicate = criteriaBuilder.equal(getOriginalRootPath().get("locale").get("value"), locale);
 
         if (defaultLocale != null && defaultLocale.toLowerCase().equals(locale.toLowerCase()))
-            return criteriaBuilder.or(localePredicate, criteriaBuilder.isNull(getOriginalRootPath().get("translationLocale")));
+            return criteriaBuilder.or(localePredicate, criteriaBuilder.isNull(getOriginalRootPath().get("locale").get("value")));
 
         return localePredicate;
     }
@@ -103,10 +103,10 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Predicate localePredicate = criteriaBuilder.notEqual(getOriginalRootPath().get("translationLocale"), locale);
+        final Predicate localePredicate = criteriaBuilder.notEqual(getOriginalRootPath().get("locale").get("value"), locale);
 
         if (defaultLocale != null && defaultLocale.toLowerCase().equals(locale.toLowerCase()))
-            return criteriaBuilder.and(localePredicate, criteriaBuilder.isNotNull(getOriginalRootPath().get("translationLocale")));
+            return criteriaBuilder.and(localePredicate, criteriaBuilder.isNotNull(getOriginalRootPath().get("locale").get("value")));
 
         return localePredicate;
     }

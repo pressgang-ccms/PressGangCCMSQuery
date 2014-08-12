@@ -105,10 +105,10 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Predicate localePredicate = criteriaBuilder.equal(getRootPath().get("locale"), locale);
+        final Predicate localePredicate = criteriaBuilder.equal(getRootPath().get("locale").get("value"), locale);
 
         if (defaultLocale != null && defaultLocale.toLowerCase().equals(locale.toLowerCase()))
-            return criteriaBuilder.or(localePredicate, criteriaBuilder.isNull(getRootPath().get("locale")));
+            return criteriaBuilder.or(localePredicate, criteriaBuilder.isNull(getRootPath().get("locale").get("value")));
 
         return localePredicate;
     }
@@ -120,10 +120,10 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
         final String defaultLocale = ApplicationConfig.getInstance().getDefaultLocale();
 
         final CriteriaBuilder criteriaBuilder = getCriteriaBuilder();
-        final Predicate localePredicate = criteriaBuilder.notEqual(getRootPath().get("locale"), locale);
+        final Predicate localePredicate = criteriaBuilder.notEqual(getRootPath().get("locale").get("value"), locale);
 
         if (defaultLocale != null && defaultLocale.toLowerCase().equals(locale.toLowerCase()))
-            return criteriaBuilder.and(localePredicate, criteriaBuilder.isNotNull(getRootPath().get("locale")));
+            return criteriaBuilder.and(localePredicate, criteriaBuilder.isNotNull(getRootPath().get("locale").get("value")));
 
         return localePredicate;
     }

@@ -64,7 +64,7 @@ public class ImageFilterQueryBuilder extends BaseFilterQueryBuilder<ImageFile> i
         final Subquery<LanguageImage> subquery = getCriteriaQuery().subquery(LanguageImage.class);
         final Root<LanguageImage> from = subquery.from(LanguageImage.class);
         final Predicate languageImageEqual = criteriaBuilder.equal(getRootPath(), from.get("imageFile"));
-        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale"), locale);
+        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale").get("value"), locale);
         subquery.where(criteriaBuilder.and(languageImageEqual, localeEqual));
 
         return criteriaBuilder.exists(subquery);
@@ -76,7 +76,7 @@ public class ImageFilterQueryBuilder extends BaseFilterQueryBuilder<ImageFile> i
         final Subquery<LanguageImage> subquery = getCriteriaQuery().subquery(LanguageImage.class);
         final Root<LanguageImage> from = subquery.from(LanguageImage.class);
         final Predicate languageImageEqual = criteriaBuilder.equal(getRootPath(), from.get("imageFile"));
-        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale"), locale);
+        final Predicate localeEqual = criteriaBuilder.equal(from.get("locale").get("value"), locale);
         subquery.where(criteriaBuilder.and(languageImageEqual, localeEqual));
 
         return criteriaBuilder.not(criteriaBuilder.exists(subquery));
