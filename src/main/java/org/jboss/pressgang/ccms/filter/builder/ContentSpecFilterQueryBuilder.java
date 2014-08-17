@@ -267,6 +267,11 @@ public class ContentSpecFilterQueryBuilder extends BaseFilterQueryBuilderWithPro
                 final List<Integer> ids = EntityUtilities.getEditedBy(getEntityManager(), ContentSpec.class, "contentSpecId", fieldStringValue);
                 addIdNotInCollectionCondition("contentSpecId", ids);
             }
+        } else if (fieldName.equals(CommonFilterConstants.TRANSLATION_ENABLED_FILTER_VAR)) {
+            final Boolean fieldValueBoolean = (Boolean) field.getData();
+            if (fieldValueBoolean) {
+                addFieldCondition(getCriteriaBuilder().equal(getRootPath().get("translationDetails").get("enabled"), true));
+            }
         } else {
             super.processField(field);
         }
