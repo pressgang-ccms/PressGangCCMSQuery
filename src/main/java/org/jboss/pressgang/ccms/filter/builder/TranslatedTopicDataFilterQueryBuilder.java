@@ -238,7 +238,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         subQuery.select(criteriaBuilder.max(root.get("translatedTopic").get("topicRevision").as(Integer.class)));
 
         final Predicate topicIdMatch = criteriaBuilder.equal(root.get("translatedTopic").get("topicId"), translatedTopic.get("topicId"));
-        final Predicate localeMatch = criteriaBuilder.equal(getOriginalRootPath().get("translationLocale"), root.get("translationLocale"));
+        final Predicate localeMatch = criteriaBuilder.equal(getOriginalRootPath().get("locale").get("localeId"), root.get("locale").get("localeId"));
         subQuery.where(criteriaBuilder.and(topicIdMatch, localeMatch));
 
         subQuery.groupBy(root.get("translatedTopic").get("topicId"));
@@ -253,7 +253,7 @@ public class TranslatedTopicDataFilterQueryBuilder extends BaseTopicFilterQueryB
         subQuery.select(criteriaBuilder.max(root.get("translatedTopic").get("topicRevision").as(Integer.class)));
 
         final Predicate topicIdMatch = criteriaBuilder.equal(root.get("translatedTopic").get("topicId"), translatedTopic.get("topicId"));
-        final Predicate localeMatch = criteriaBuilder.equal(getOriginalRootPath().get("translationLocale"), root.get("translationLocale"));
+        final Predicate localeMatch = criteriaBuilder.equal(getOriginalRootPath().get("locale").get("localeId"), root.get("locale").get("localeId"));
         final Predicate complete = criteriaBuilder.ge(root.get("translationPercentage").as(Integer.class), 100);
         subQuery.where(criteriaBuilder.and(topicIdMatch, localeMatch, complete));
 
